@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="OmniSharp.Extensions.LanguageProtocol" Version="0.13.0-alpha0041" />
+    </ItemGroup>
+
+</Project>
