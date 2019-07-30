@@ -1,32 +1,38 @@
+using System.Collections.Generic;
+
 namespace SkriptInsight.Model.Parser.Patterns
 {
-    public class PatternParseResult
+    public class ParseResult
     {
-        public PatternParseResultType ResultType { get; set; }
+        public ParseResultType ResultType { get; set; }
 
         public ParseContext Context { get; set; }
 
-        public bool IsSuccess => ResultType == PatternParseResultType.Success;
+        public bool IsSuccess => ResultType == ParseResultType.Success;
 
-        public int ParseMark { get; set; } = 0;
+        public int ParseMark { get; set; }
         
         public bool IsOptionallyMatched { get; set; }
 
-        public static PatternParseResult Success(ParseContext ctx)
+        public List<ParseMatch> Matches { get; set; }
+        
+        public static ParseResult Success(ParseContext ctx)
         {
-            return new PatternParseResult
+            return new ParseResult
             {
-                ResultType = PatternParseResultType.Success,
-                Context = ctx
+                ResultType = ParseResultType.Success,
+                Context = ctx,
+                Matches = ctx.Matches
             };
         }
         
-        public static PatternParseResult Failure(ParseContext ctx)
+        public static ParseResult Failure(ParseContext ctx)
         {
-            return new PatternParseResult
+            return new ParseResult
             {
-                ResultType = PatternParseResultType.Failure,
-                Context = ctx
+                ResultType = ParseResultType.Failure,
+                Context = ctx,
+                Matches = ctx.Matches
             };
         }
     }

@@ -1,7 +1,10 @@
 namespace SkriptInsight.Model.Parser.Patterns.Impl
 {
-    public class AbstractGroupPatternElement
+    public abstract class AbstractGroupPatternElement : AbstractSkriptPatternElement
     {
-        
+        public AbstractGroupPatternElement(string contents)
+        {
+            
+        }
     }
 }

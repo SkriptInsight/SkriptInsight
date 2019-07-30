@@ -1,7 +1,7 @@
 namespace SkriptInsight.Model.Parser.Types
 {
-    public class ISkriptTypeBase
+    public interface ISkriptTypeBase
     {
-        
+        IExpression Parse(ParseContext ctx);
     }
 }

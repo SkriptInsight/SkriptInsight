@@ -1,7 +1,7 @@
 namespace SkriptInsight.Model.Parser.Types.Impl
 {
     [TypeDescription("string")]
-    public class StringType : SkriptType<string>
+    public class SkriptString : SkriptType<string>
     {
         protected override Expression<string> ParseExpression(ParseContext ctx)
         {
@@ -10,7 +10,7 @@ namespace SkriptInsight.Model.Parser.Types.Impl
             {
                 ctx.StartRangeMeasure("String content");
 
-                var closingPos = ctx.FindNextBracket('"', null);
+                var closingPos = ctx.FindNextBracket('"', true);
                 if (closingPos > -1)
                 {
                     var value = ctx.ReadUntilPosition(closingPos);

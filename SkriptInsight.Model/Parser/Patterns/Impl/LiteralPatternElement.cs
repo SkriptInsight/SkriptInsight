@@ -11,11 +11,11 @@ namespace SkriptInsight.Model.Parser.Patterns.Impl
 
         public string Value { get; set; }
 
-        public override PatternParseResult Parse(ParseContext ctx)
+        public override ParseResult Parse(ParseContext ctx)
         {
             return ctx.ReadNext(Value.Length).EqualsIgnoreCase(Value)
-                ? PatternParseResult.Success(ctx)
-                : PatternParseResult.Failure(ctx);
+                ? ParseResult.Success(ctx)
+                : ParseResult.Failure(ctx);
         }
 
         public override string RenderPattern()

@@ -2,20 +2,27 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 
 namespace SkriptInsight.Model.Parser.Types
 {
-    public abstract class SkriptValue<T>
+    public class Expression<T> : IExpression
     {
-        protected SkriptValue(ParseMatch match)
+        
+        public Expression(T val, ParseMatch match, Range contentRange = null)
         {
+            Value = val;
             Range = match.Range;
             Context = match.Context;
+            ContentRange = contentRange ?? Range;
         }
+        
+        public object Value { get; set; }
 
-        public T Value { get; set; }
-
-        public ISkriptType<T> Type { get; set; }
-
+        public T GenericValue
+        {
+            get => (T) Value;
+            set => Value = value;
+        }
+        
         public Range Range { get; set; }
-
+        public Range ContentRange { get; set; }
         public ParseContext Context { get; set; }
     }
 }

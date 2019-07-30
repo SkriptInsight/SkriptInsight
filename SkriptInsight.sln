@@ -2,6 +2,12 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkriptInsight.Host.Lsp", "SkriptInsight.Host.Lsp\SkriptInsight.Host.Lsp.csproj", "{D3FCC15D-E83D-42F5-BFF5-00A493C59668}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hosts", "Hosts", "{217C4A5D-C55D-4DD9-B580-D61F1ADE08B8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkriptInsight.Model", "SkriptInsight.Model\SkriptInsight.Model.csproj", "{7C5E1D0B-D3E1-4568-BAEF-2CE1B37B7F73}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkriptInsight.Tests", "SkriptInsight.Tests\SkriptInsight.Tests.csproj", "{CEED2DE8-D53F-47C9-826A-91D67A6026C4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +18,16 @@ Global
 		{D3FCC15D-E83D-42F5-BFF5-00A493C59668}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3FCC15D-E83D-42F5-BFF5-00A493C59668}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3FCC15D-E83D-42F5-BFF5-00A493C59668}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C5E1D0B-D3E1-4568-BAEF-2CE1B37B7F73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C5E1D0B-D3E1-4568-BAEF-2CE1B37B7F73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C5E1D0B-D3E1-4568-BAEF-2CE1B37B7F73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C5E1D0B-D3E1-4568-BAEF-2CE1B37B7F73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEED2DE8-D53F-47C9-826A-91D67A6026C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEED2DE8-D53F-47C9-826A-91D67A6026C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEED2DE8-D53F-47C9-826A-91D67A6026C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEED2DE8-D53F-47C9-826A-91D67A6026C4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D3FCC15D-E83D-42F5-BFF5-00A493C59668} = {217C4A5D-C55D-4DD9-B580-D61F1ADE08B8}
 	EndGlobalSection
 EndGlobal

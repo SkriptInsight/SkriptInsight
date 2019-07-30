@@ -1,20 +1,23 @@
 namespace SkriptInsight.Model.Parser.Patterns.Impl
 {
-    public class OptionalPatternElement : AbstractSkriptPatternElement
+    [GroupPatternElementInfo('[', ']')]
+    public class OptionalPatternElement : AbstractGroupPatternElement
     {
+        public OptionalPatternElement(string contents) : base(contents)
+        {
+            Element = SkriptPattern.ParsePattern(ParseContext.FromCode(contents));
+        }
+
         public AbstractSkriptPatternElement Element { get; set; }
 
-        public OptionalPatternElement(AbstractSkriptPatternElement element)
+        public override ParseResult Parse(ParseContext ctx)
         {
-            Element = element;
-        }
-        
-        public override PatternParseResult Parse(ParseContext ctx)
-        {
+            var oldPos = ctx.CurrentPosition;
             var parseResult = Element.Parse(ctx);
 
             if (parseResult.IsSuccess) return parseResult;
-            parseResult.ResultType = PatternParseResultType.Success;
+            ctx.CurrentPosition = oldPos;
+            parseResult.ResultType = ParseResultType.Success;
             parseResult.IsOptionallyMatched = true;
 
             return parseResult;
