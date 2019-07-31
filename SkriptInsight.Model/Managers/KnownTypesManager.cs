@@ -20,7 +20,7 @@ namespace SkriptInsight.Model.Managers
 
             public string[] Types { get; }
 
-            public Type Type { get; set; }
+            public Type Type { get; }
 
             public ISkriptTypeBase CreateNewInstance() => (ISkriptTypeBase) Activator.CreateInstance(Type);
         }
