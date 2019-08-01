@@ -4,11 +4,11 @@ namespace SkriptInsight.Model.Parser.Types
 {
     public abstract class SkriptType<T> : ISkriptTypeBase
     {
-        protected abstract Expression<T> ParseExpression(ParseContext ctx);
+        protected abstract Expression<T> ParseExpression(ParseContext ctx, SyntaxValueAcceptanceConstraint constraint);
         
-        public IExpression Parse(ParseContext ctx)
+        public IExpression Parse(ParseContext ctx, SyntaxValueAcceptanceConstraint constraint)
         {
-            return ParseExpression(ctx);
+            return ParseExpression(ctx, SyntaxValueAcceptanceConstraint.None);
         }
     }
 }

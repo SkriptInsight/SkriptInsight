@@ -26,7 +26,7 @@ namespace SkriptInsight.Model.Parser.Patterns.Impl
                 return new ChoiceGroupElement(SkriptPattern.ParsePattern(ParseContext.FromCode(match)), parseMark);
             }
 
-            private ChoiceGroupElement(AbstractSkriptPatternElement element, int mark = 0)
+            public ChoiceGroupElement(AbstractSkriptPatternElement element, int mark = 0)
             {
                 Element = element;
                 ParseMark = mark;
@@ -37,6 +37,15 @@ namespace SkriptInsight.Model.Parser.Patterns.Impl
             public int ParseMark { get; }
 
             public override string ToString() => $"{(ParseMark > 0 ? $"{ParseMark}¦" : "")}{Element.RenderPattern()}";
+
+            public static implicit operator ChoiceGroupElement(AbstractSkriptPatternElement e)
+            {
+                return new ChoiceGroupElement(e);
+            }
+        }
+
+        public ChoicePatternElement()
+        {
         }
 
         public ChoicePatternElement(string contents) : base(contents)
@@ -46,30 +55,31 @@ namespace SkriptInsight.Model.Parser.Patterns.Impl
                 .ToList();
         }
 
-        public List<ChoiceGroupElement> Elements { get; }
+        public List<ChoiceGroupElement> Elements { get; } = new List<ChoiceGroupElement>();
 
+        public bool SaveChoice { get; set; } = true;
+        
         public override ParseResult Parse(ParseContext ctx)
         {
             var oldPos = ctx.CurrentPosition;
-
 
             var matchedChoice = Elements.FirstOrDefault(e =>
             {
                 ctx.CurrentPosition = oldPos;
                 ctx.StartMatch();
                 var result = e.Element.Parse(ctx);
-                
+
                 if (result?.IsSuccess ?? false)
-                    ctx.EndMatch();
+                    ctx.EndMatch(SaveChoice);
                 else
                     ctx.UndoMatch();
 
                 return result?.IsSuccess ?? false;
             });
             if (matchedChoice == null) return ParseResult.Failure(ctx);
-            
+
             var success = ParseResult.Success(ctx);
-            success.ParseMark ^= matchedChoice.ParseMark; 
+            success.ParseMark ^= matchedChoice.ParseMark;
             return success;
         }
 

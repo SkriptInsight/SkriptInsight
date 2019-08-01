@@ -8,6 +8,10 @@ namespace SkriptInsight.Model.Parser.Patterns.Impl
             Element = SkriptPattern.ParsePattern(ParseContext.FromCode(contents));
         }
 
+        public OptionalPatternElement()
+        {
+        }
+
         public AbstractSkriptPatternElement Element { get; set; }
 
         public override ParseResult Parse(ParseContext ctx)

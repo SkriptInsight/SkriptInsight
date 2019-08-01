@@ -3,7 +3,11 @@ namespace SkriptInsight.Model.Parser.Patterns.Impl
     [GroupPatternElementInfo('<', '>')]
     public class RegexMatchPatternElement : AbstractGroupPatternElement
     {
-        public string Expression { get; }
+        public string Expression { get; set; }
+
+        public RegexMatchPatternElement()
+        {
+        }
 
         public RegexMatchPatternElement(string contents) : base(contents)
         {

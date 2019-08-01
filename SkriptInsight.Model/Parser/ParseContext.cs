@@ -1,11 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using Range = OmniSharp.Extensions.LanguageServer.Protocol.Models.Range;
 
 namespace SkriptInsight.Model.Parser
 {
+    [JsonObject]
     public class ParseContext : IEnumerable<char>
     {
         private ParseContext()
@@ -148,10 +151,11 @@ namespace SkriptInsight.Model.Parser
 
         #region Match
 
+        [JsonIgnore]
         public List<ParseMatch> Matches { get; } = new List<ParseMatch>();
 
-        [JsonIgnore] public Stack<int> CurrentMatchStack { get; } = new Stack<int>();
-        [JsonIgnore] public Stack<int> TemporaryRangeStack { get; } = new Stack<int>();
+        [System.Text.Json.Serialization.JsonIgnore] public Stack<int> CurrentMatchStack { get; } = new Stack<int>();
+        [System.Text.Json.Serialization.JsonIgnore] public Stack<int> TemporaryRangeStack { get; } = new Stack<int>();
 
         public void StartRangeMeasure(string description = "")
         {
@@ -180,17 +184,18 @@ namespace SkriptInsight.Model.Parser
             CurrentMatchStack.TryPop(out _);
         }
 
-        public ParseMatch EndMatch()
+        public ParseMatch EndMatch(bool save = true)
         {
             var startingPos = CurrentMatchStack.Pop();
-            var endingPos = CurrentPosition;
+            var endingPos = Math.Min(CurrentPosition, Text.Length);
             var result = new ParseMatch
             {
                 Context = this,
                 Range = new Range(new Position(CurrentLine, startingPos), new Position(CurrentLine, endingPos)),
                 Content = Text.Substring(startingPos, endingPos - startingPos)
             };
-            Matches.Add(result);
+            if (save)
+                Matches.Add(result);
             return result;
         }
 

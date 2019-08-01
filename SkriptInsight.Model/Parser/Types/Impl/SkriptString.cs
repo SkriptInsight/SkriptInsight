@@ -1,9 +1,12 @@
+using SkriptInsight.Model.Parser.Patterns;
+
 namespace SkriptInsight.Model.Parser.Types.Impl
 {
     [TypeDescription("string")]
     public class SkriptString : SkriptType<string>
     {
-        protected override Expression<string> ParseExpression(ParseContext ctx)
+        protected override Expression<string> ParseExpression(ParseContext ctx,
+            SyntaxValueAcceptanceConstraint constraint)
         {
             ctx.StartMatch();
             if (ctx.ReadNext(1) == "\"")

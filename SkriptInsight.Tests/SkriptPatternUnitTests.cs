@@ -60,9 +60,24 @@ namespace SkriptInsight.Tests
             var skPattern = SkriptPattern.ParsePattern(pattern);
 
             var result = skPattern.Parse(input);
-            
+
             Assert.True(result.IsSuccess);
             Assert.True(result.Context.HasFinishedLine);
+        }
+
+        [Theory]
+        [InlineData("\"test\"")]
+        [InlineData("\"test1\" abc \"test2\"", false)]
+        [InlineData("\"test1\" and \"test2\"")]
+        [InlineData("\"test1\", \"test2\", \"test3\", \"test4\", \"test5\"")]
+        public void MultiStringsPatternMatchesCorrectly(string input, bool shouldFinish = true)
+        {
+            var pattern = SkriptPattern.ParsePattern("%strings%");
+
+            var result = pattern.Parse(input);
+            //TODO: Implement match structure to see what elements matched for each child node
+            Assert.Single(result.Matches);
+            Assert.Equal(shouldFinish, result.Context.HasFinishedLine);
         }
     }
 }

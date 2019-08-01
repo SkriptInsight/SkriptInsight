@@ -15,10 +15,10 @@ namespace SkriptInsight.Model.Managers
             public KnownType(Type type)
             {
                 Type = type;
-                Types = type.GetCustomAttributes<TypeDescriptionAttribute>().Select(c => c.TypeName).ToArray();
+                SkriptRepresentations = type.GetCustomAttributes<TypeDescriptionAttribute>().Select(c => c.TypeName).ToArray();
             }
 
-            public string[] Types { get; }
+            public string[] SkriptRepresentations { get; }
 
             public Type Type { get; }
 
@@ -48,7 +48,7 @@ namespace SkriptInsight.Model.Managers
         [CanBeNull]
         public KnownType GetTypeByName(string name)
         {
-            return KnownTypes.FirstOrDefault(t => t.Types.Contains(name));
+            return KnownTypes.FirstOrDefault(t => t.SkriptRepresentations.Contains(name));
         }
     }
 }

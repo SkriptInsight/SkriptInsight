@@ -7,7 +7,7 @@ namespace SkriptInsight.Model.Parser.Types
         
         public Expression(T val, ParseMatch match, Range contentRange = null)
         {
-            Value = val;
+            GenericValue = val;
             Range = match.Range;
             Context = match.Context;
             ContentRange = contentRange ?? Range;
