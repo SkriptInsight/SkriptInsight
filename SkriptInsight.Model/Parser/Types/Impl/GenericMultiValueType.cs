@@ -83,9 +83,9 @@ namespace SkriptInsight.Model.Parser.Types.Impl
             if (count > 0) ctx.ReadUntilPosition(ourContext.CurrentPosition);
 
             if (count > 0)
-                return new Expression<List<object>>(
+                return new Expression<List<IExpression>>(
                     ourContext.Matches
-                        .Select(c => typeInstance.Parse(c.Content)?.Value)
+                        .Select(c => typeInstance.Parse(c.RawContent))
                         .Where(c => c != null)
                         .ToList(),
                     ctx.EndMatch(), ctx.EndRangeMeasure());
