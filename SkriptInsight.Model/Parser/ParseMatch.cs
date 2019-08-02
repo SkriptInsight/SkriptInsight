@@ -10,6 +10,6 @@ namespace SkriptInsight.Model.Parser
 
         public Range Range { get; set; }
 
-        public string Content { get; set; }
+        public string RawContent { get; set; }
     }
 }

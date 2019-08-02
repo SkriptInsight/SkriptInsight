@@ -11,5 +11,7 @@ namespace SkriptInsight.Model.Parser.Types
         Range ContentRange { get; set; }
 
         ParseContext Context { get; set; }
+
+        ParseMatch Match { get; set; }
     }
 }

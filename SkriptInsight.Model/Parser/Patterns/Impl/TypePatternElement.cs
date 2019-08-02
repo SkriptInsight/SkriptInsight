@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Newtonsoft.Json;
 using SkriptInsight.Model.Managers;
 using SkriptInsight.Model.Parser.Types;
 using SkriptInsight.Model.Parser.Types.Impl;
@@ -43,6 +44,14 @@ namespace SkriptInsight.Model.Parser.Patterns.Impl
                 skriptTypeInstance = type?.CreateNewInstance();
 
             var result = skriptTypeInstance?.Parse(ctx, Constraint);
+
+            if (result != null)
+            {
+                var match = new ExpressionParseMatch(result);
+                JsonConvert.PopulateObject(result.Match.ToJson(), match);
+                match.Context = match.Context;
+                ctx.Matches.Add(match);
+            }
 
             return result != null ? ParseResult.Success(ctx) : ParseResult.Failure(ctx);
         }

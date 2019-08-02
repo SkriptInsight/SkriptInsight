@@ -184,7 +184,7 @@ namespace SkriptInsight.Model.Parser
             CurrentMatchStack.TryPop(out _);
         }
 
-        public ParseMatch EndMatch(bool save = true)
+        public ParseMatch EndMatch(bool save = false)
         {
             var startingPos = CurrentMatchStack.Pop();
             var endingPos = Math.Min(CurrentPosition, Text.Length);
@@ -192,7 +192,7 @@ namespace SkriptInsight.Model.Parser
             {
                 Context = this,
                 Range = new Range(new Position(CurrentLine, startingPos), new Position(CurrentLine, endingPos)),
-                Content = Text.Substring(startingPos, endingPos - startingPos)
+                RawContent = Text.Substring(startingPos, endingPos - startingPos)
             };
             if (save)
                 Matches.Add(result);

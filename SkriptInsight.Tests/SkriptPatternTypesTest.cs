@@ -52,8 +52,8 @@ namespace SkriptInsight.Tests
             
             Assert.True(result.IsSuccess);
             Assert.Equal(2, result.Matches.Count);
-            Assert.Equal("1", result.Matches.ElementAtOrDefault(0)?.Content);
-            Assert.Equal("2", result.Matches.ElementAtOrDefault(1)?.Content);
+            Assert.Equal("1", result.Matches.ElementAtOrDefault(0)?.RawContent);
+            Assert.Equal("2", result.Matches.ElementAtOrDefault(1)?.RawContent);
 
         }
 
