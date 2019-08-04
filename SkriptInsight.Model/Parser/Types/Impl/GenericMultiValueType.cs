@@ -18,7 +18,8 @@ namespace SkriptInsight.Model.Parser.Types.Impl
         }
 
         private static SkriptPattern CreateNextValuePatternForType(string typeName)
-        {
+                 {
+            //%type%[[ ](,|or|and)[ ]]
             return new SkriptPattern
             {
                 Children =
@@ -93,6 +94,12 @@ namespace SkriptInsight.Model.Parser.Types.Impl
             ctx.UndoRangeMeasure();
             ctx.UndoMatch();
             return null;
+        }
+
+        public string Render(IExpression value)
+        {
+            var typeInstance = Type.CreateNewInstance();
+            return typeInstance.Render(value);
         }
     }
 }

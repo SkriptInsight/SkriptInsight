@@ -29,5 +29,10 @@ namespace SkriptInsight.Model.Parser.Types.Impl
             ctx.UndoMatch();
             return null;
         }
+
+        protected override string RenderExpression(Expression<string> value)
+        {
+            return $"\"{value.GenericValue}\"";
+        }
     }
 }

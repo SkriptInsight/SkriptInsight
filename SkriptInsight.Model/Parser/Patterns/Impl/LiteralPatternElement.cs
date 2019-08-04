@@ -22,5 +22,11 @@ namespace SkriptInsight.Model.Parser.Patterns.Impl
         {
             return Value;
         }
+
+        public static explicit operator LiteralPatternElement(string str)
+        {
+            return new LiteralPatternElement(str);
+        }
+        
     }
 }
