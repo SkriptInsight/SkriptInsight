@@ -15,7 +15,7 @@ namespace SkriptInsight.Model.Parser
         {
         }
 
-        public string Text { get; set; }
+        public string Text { get; set; } = "";
 
         public int CurrentLine { get; set; }
 
@@ -72,18 +72,18 @@ namespace SkriptInsight.Model.Parser
             return this.JsonClone();
         }
 
-        public int FindNextBracket(char bracket, (char, char)[] matchExclusions = null)
+        public int FindNextBracket(char bracket, (char, char)[]? matchExclusions = null)
         {
             return FindNextBracket(bracket, bracket, true, false, matchExclusions);
         }
 
-        public int FindNextBracket(char bracket, bool escapeByDouble = false, (char, char)[] matchExclusions = null)
+        public int FindNextBracket(char bracket, bool escapeByDouble = false, (char, char)[]? matchExclusions = null)
         {
             return FindNextBracket(bracket, bracket, true, escapeByDouble, matchExclusions);
         }
 
         public int FindNextBracket(char opening, char closing, bool matchByPair = false, bool escapeByDouble = false,
-            (char, char)[] matchExclusions = null)
+            (char, char)[]? matchExclusions = null)
         {
             var exclusionStack = new Stack<int>();
             var openedBracketStack = new Stack<int>();

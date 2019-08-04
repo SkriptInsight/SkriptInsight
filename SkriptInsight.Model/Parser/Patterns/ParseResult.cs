@@ -6,15 +6,15 @@ namespace SkriptInsight.Model.Parser.Patterns
     {
         public ParseResultType ResultType { get; set; }
 
-        public ParseContext Context { get; set; }
+        public ParseContext? Context { get; set; }
 
         public bool IsSuccess => ResultType == ParseResultType.Success;
 
         public int ParseMark { get; set; }
         
-        public bool IsOptionallyMatched { get; set; }
+        public bool IsOptionallyMatched { get; set; } 
 
-        public List<ParseMatch> Matches { get; set; }
+        public List<ParseMatch> Matches { get; set; } = new List<ParseMatch>();
         
         public static ParseResult Success(ParseContext ctx)
         {

@@ -8,8 +8,8 @@ namespace SkriptInsight.Model.Parser.Types
         {
             GenericValue = val;
             Match = match;
-            Range = match.Range;
-            Context = match.Context;
+            Range = match?.Range;
+            Context = match?.Context;
             ContentRange = contentRange ?? Range;
         }
         
