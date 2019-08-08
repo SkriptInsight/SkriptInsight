@@ -18,7 +18,7 @@ namespace SkriptInsight.Model.Parser.Patterns
         };
 
         public bool FastFail { get; set; }
-        
+
         public static SkriptPattern ParsePattern(ParseContext ctx)
         {
             var pattern = new SkriptPattern();
@@ -61,21 +61,26 @@ namespace SkriptInsight.Model.Parser.Patterns
             var shouldFastFail = false;
             var results = Children.WithContext().Select(c =>
             {
+                //Store old position in case of a rollback needed.
                 var oldPos = ctx.CurrentPosition;
-                var ourPattern = this;
+                //Pass the current element context to the parse context
                 ctx.ElementContext = c;
+
+                //If a match fails and this pattern needs perform a fastfail (optionals), return a failure imediately   
                 if (shouldFastFail && FastFail) return ParseResult.Failure(ctx);
-                
+
                 var parse = c.Current.Parse(ctx);
                 if (!parse.IsSuccess) ctx.CurrentPosition = oldPos;
-                shouldFastFail |= !parse.IsSuccess; 
-                
+                shouldFastFail |= !parse.IsSuccess;
+
                 return parse;
             }).ToList();
-            
+
             if (!results.All(c => c.IsSuccess)) return ParseResult.Failure(ctx);
-            
+
             var finalResult = ParseResult.Success(ctx);
+            
+            //Calculate Parse Marks for this final result
             finalResult.ParseMark = results.Select(c => c.ParseMark).Aggregate(0, (left, right) => left ^ right);
             return finalResult;
         }
