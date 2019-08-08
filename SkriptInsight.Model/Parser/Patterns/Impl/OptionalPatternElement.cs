@@ -3,6 +3,8 @@ namespace SkriptInsight.Model.Parser.Patterns.Impl
     [GroupPatternElementInfo('[', ']')]
     public class OptionalPatternElement : AbstractGroupPatternElement
     {
+        private AbstractSkriptPatternElement _element;
+
         public OptionalPatternElement(string contents) : base(contents)
         {
             Element = SkriptPattern.ParsePattern(ParseContext.FromCode(contents));
@@ -12,7 +14,15 @@ namespace SkriptInsight.Model.Parser.Patterns.Impl
         {
         }
 
-        public AbstractSkriptPatternElement Element { get; set; }
+        public AbstractSkriptPatternElement Element
+        {
+            get => _element;
+            set
+            {
+                if (value is SkriptPattern sp) sp.FastFail = true;
+                _element = value;
+            }
+        }
 
         public override ParseResult Parse(ParseContext ctx)
         {

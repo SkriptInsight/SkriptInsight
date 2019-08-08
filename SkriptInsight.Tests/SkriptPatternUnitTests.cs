@@ -104,5 +104,18 @@ namespace SkriptInsight.Tests
 
             Assert.Equal(shouldFinish, result.Context.HasFinishedLine);
         }
+        
+        [Theory]
+        [InlineData("testing life")]
+        [InlineData("testing this thing i call life")]
+        public void DanglingSpacesPatternMatchesCorrectly(string input)
+        {
+            var skPattern = SkriptPattern.ParsePattern("testing [this [fancy] thing] [i call] life");
+
+            var result = skPattern.Parse(input);
+
+            Assert.True(result.IsSuccess);
+            Assert.True(result.Context.HasFinishedLine);
+        }
     }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using SkriptInsight.Model.Parser.Patterns;
 using Range = OmniSharp.Extensions.LanguageServer.Protocol.Models.Range;
 
 namespace SkriptInsight.Model.Parser
@@ -25,6 +26,8 @@ namespace SkriptInsight.Model.Parser
         
         public bool HasReachedEnd => CurrentPosition > Text.Length;
 
+        public ContextualElement<AbstractSkriptPatternElement> ElementContext { get; set; }
+        
         public IEnumerator<char> GetEnumerator()
         {
             return new ParseContextEnumerator(this);
@@ -46,6 +49,11 @@ namespace SkriptInsight.Model.Parser
         public string PeekNext(int count)
         {
             return CurrentPosition + count > Text.Length ? "" : Text.Substring(CurrentPosition, count);
+        }
+
+        public string PeekPrevious(int count)
+        {
+            return CurrentPosition - count < 0 || CurrentPosition > Text.Length ? "" : Text.Substring(CurrentPosition - count, count);
         }
 
         public string ReadNext(int count)

@@ -13,8 +13,14 @@ namespace SkriptInsight.Model.Parser.Patterns.Impl
 
         public override ParseResult Parse(ParseContext ctx)
         {
-            return ctx.ReadNext(Value.Length).EqualsIgnoreCase(Value)
-                ? ParseResult.Success(ctx)
+            var shouldSkipWhitespaces =
+                string.IsNullOrWhiteSpace(ctx.PeekPrevious(1)) &&
+                string.IsNullOrWhiteSpace(Value);
+
+            if (shouldSkipWhitespaces)
+                return ParseResult.OptionalSuccess(ctx);
+                
+            return ctx.ReadNext(Value.Length).EqualsIgnoreCase(Value) ? ParseResult.Success(ctx)
                 : ParseResult.Failure(ctx);
         }
 
@@ -27,6 +33,5 @@ namespace SkriptInsight.Model.Parser.Patterns.Impl
         {
             return new LiteralPatternElement(str);
         }
-        
     }
 }

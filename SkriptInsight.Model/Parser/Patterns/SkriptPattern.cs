@@ -17,6 +17,8 @@ namespace SkriptInsight.Model.Parser.Patterns
             typeof(RegexMatchPatternElement)
         };
 
+        public bool FastFail { get; set; }
+        
         public static SkriptPattern ParsePattern(ParseContext ctx)
         {
             var pattern = new SkriptPattern();
@@ -56,15 +58,26 @@ namespace SkriptInsight.Model.Parser.Patterns
 
         public override ParseResult Parse(ParseContext ctx)
         {
-            var results = Children.Select(c => c.Parse(ctx)).ToList();
-            if (results.All(c => c.IsSuccess))
+            var shouldFastFail = false;
+            var results = Children.WithContext().Select(c =>
             {
-                var finalResult = ParseResult.Success(ctx);
-                finalResult.ParseMark = results.Select(c => c.ParseMark).Aggregate(0, (left, right) => left ^ right);
-                return finalResult;
-            }
-
-            return ParseResult.Failure(ctx);
+                var oldPos = ctx.CurrentPosition;
+                var ourPattern = this;
+                ctx.ElementContext = c;
+                if (shouldFastFail && FastFail) return ParseResult.Failure(ctx);
+                
+                var parse = c.Current.Parse(ctx);
+                if (!parse.IsSuccess) ctx.CurrentPosition = oldPos;
+                shouldFastFail |= !parse.IsSuccess; 
+                
+                return parse;
+            }).ToList();
+            
+            if (!results.All(c => c.IsSuccess)) return ParseResult.Failure(ctx);
+            
+            var finalResult = ParseResult.Success(ctx);
+            finalResult.ParseMark = results.Select(c => c.ParseMark).Aggregate(0, (left, right) => left ^ right);
+            return finalResult;
         }
 
         public override string RenderPattern()
