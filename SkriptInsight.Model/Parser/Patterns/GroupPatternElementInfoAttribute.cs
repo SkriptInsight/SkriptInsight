@@ -8,7 +8,7 @@ namespace SkriptInsight.Model.Parser.Patterns
         public char OpeningBracket { get; }
 
         public char ClosingBracket { get; }
-        
+
         public bool MatchBracketByPair { get; }
 
         public GroupPatternElementInfoAttribute(char openingBracket, char closingBracket)
@@ -17,13 +17,12 @@ namespace SkriptInsight.Model.Parser.Patterns
             ClosingBracket = closingBracket;
             MatchBracketByPair = false;
         }
-        
+
         public GroupPatternElementInfoAttribute(char bracket)
         {
             OpeningBracket = bracket;
             ClosingBracket = bracket;
             MatchBracketByPair = true;
         }
-
     }
 }

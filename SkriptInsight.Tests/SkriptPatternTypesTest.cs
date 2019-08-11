@@ -49,12 +49,11 @@ namespace SkriptInsight.Tests
             var pattern = SkriptPattern.ParsePattern("(1|one)[ ](2|two)");
 
             var result = pattern.Parse(input);
-            
+
             Assert.True(result.IsSuccess);
             Assert.Equal(2, result.Matches.Count);
             Assert.Equal("1", result.Matches.ElementAtOrDefault(0)?.RawContent);
             Assert.Equal("2", result.Matches.ElementAtOrDefault(1)?.RawContent);
-
         }
 
         [Theory]
@@ -68,7 +67,7 @@ namespace SkriptInsight.Tests
             var stringPattern = SkriptPattern.ParsePattern(ParseContext.FromCode("print[ln] %string%"));
 
             var result = stringPattern.Parse(input);
-            
+
             Assert.Equal(success, result.IsSuccess);
             if (success)
                 Assert.Single(result.Context.Matches);
@@ -80,14 +79,14 @@ namespace SkriptInsight.Tests
         [InlineData("print \"Hello World\"", false)]
         [InlineData("println \"Hello World\"", false)]
         [InlineData("print \"Hello World\" \"Hi\"")]
-        [InlineData("println \"Hello World\" \"Howdy!\"")] 
+        [InlineData("println \"Hello World\" \"Howdy!\"")]
         public void MixedDoubleStringTypeParsesCorrectly(string input, bool success = true)
         {
             KnownTypesManager.Instance.LoadKnownTypes();
             var stringPattern = SkriptPattern.ParsePattern(ParseContext.FromCode("print[ln] %string% %string%"));
 
             var result = stringPattern.Parse(input);
-            
+
             Assert.Equal(success, result.IsSuccess);
             if (success)
                 Assert.Equal(2, result.Context.Matches.Count);

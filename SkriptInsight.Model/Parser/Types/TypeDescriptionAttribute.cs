@@ -12,5 +12,4 @@ namespace SkriptInsight.Model.Parser.Types
             TypeName = typeName;
         }
     }
-    
 }

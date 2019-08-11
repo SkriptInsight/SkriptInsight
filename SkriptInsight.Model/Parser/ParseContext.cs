@@ -24,11 +24,11 @@ namespace SkriptInsight.Model.Parser
         public int CurrentPosition { get; set; }
 
         public bool HasFinishedLine => CurrentPosition >= Text.Length;
-        
+
         public bool HasReachedEnd => CurrentPosition > Text.Length;
 
         public ContextualElement<AbstractSkriptPatternElement> ElementContext { get; set; }
-        
+
         public IEnumerator<char> GetEnumerator()
         {
             return new ParseContextEnumerator(this);
@@ -54,7 +54,9 @@ namespace SkriptInsight.Model.Parser
 
         public string PeekPrevious(int count)
         {
-            return CurrentPosition - count < 0 || CurrentPosition > Text.Length ? "" : Text.Substring(CurrentPosition - count, count);
+            return CurrentPosition - count < 0 || CurrentPosition > Text.Length
+                ? ""
+                : Text.Substring(CurrentPosition - count, count);
         }
 
         public string ReadNext(int count)
@@ -160,11 +162,13 @@ namespace SkriptInsight.Model.Parser
 
         #region Match
 
-        [JsonIgnore]
-        public List<ParseMatch> Matches { get; } = new List<ParseMatch>();
+        [JsonIgnore] public List<ParseMatch> Matches { get; } = new List<ParseMatch>();
 
-        [System.Text.Json.Serialization.JsonIgnore] public Stack<int> CurrentMatchStack { get; } = new Stack<int>();
-        [System.Text.Json.Serialization.JsonIgnore] public Stack<int> TemporaryRangeStack { get; } = new Stack<int>();
+        [System.Text.Json.Serialization.JsonIgnore]
+        public Stack<int> CurrentMatchStack { get; } = new Stack<int>();
+
+        [System.Text.Json.Serialization.JsonIgnore]
+        public Stack<int> TemporaryRangeStack { get; } = new Stack<int>();
 
         public void StartRangeMeasure(string description = "")
         {

@@ -13,11 +13,11 @@ namespace SkriptInsight.Model.Parser.Patterns
         public bool IsSuccess => ResultType == ParseResultType.Success;
 
         public int ParseMark { get; set; }
-        
-        public bool IsOptionallyMatched { get; set; } 
+
+        public bool IsOptionallyMatched { get; set; }
 
         public List<ParseMatch> Matches { get; set; } = new List<ParseMatch>();
-        
+
         public static ParseResult Success(ParseContext ctx)
         {
             return new ParseResult
@@ -28,14 +28,14 @@ namespace SkriptInsight.Model.Parser.Patterns
                 Matches = ctx.Matches
             };
         }
-        
+
         public static ParseResult OptionalSuccess(ParseContext ctx)
         {
             var result = Success(ctx);
             result.IsOptionallyMatched = true;
             return result;
         }
-        
+
         public static ParseResult Failure(ParseContext ctx)
         {
             return new ParseResult

@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using SkriptInsight.Model.Extensions;
 using SkriptInsight.Model.Parser.Patterns.Impl;
 
 namespace SkriptInsight.Model.Parser.Patterns
@@ -18,6 +18,8 @@ namespace SkriptInsight.Model.Parser.Patterns
         };
 
         public bool FastFail { get; set; }
+
+        public List<AbstractSkriptPatternElement> Children { get; set; } = new List<AbstractSkriptPatternElement>();
 
         public static SkriptPattern ParsePattern(ParseContext ctx)
         {
@@ -54,8 +56,6 @@ namespace SkriptInsight.Model.Parser.Patterns
             return pattern;
         }
 
-        public List<AbstractSkriptPatternElement> Children { get; set; } = new List<AbstractSkriptPatternElement>();
-
         public override ParseResult Parse(ParseContext ctx)
         {
             var shouldFastFail = false;
@@ -79,7 +79,7 @@ namespace SkriptInsight.Model.Parser.Patterns
             if (!results.All(c => c.IsSuccess)) return ParseResult.Failure(ctx);
 
             var finalResult = ParseResult.Success(ctx);
-            
+
             //Calculate Parse Marks for this final result
             finalResult.ParseMark = results.Select(c => c.ParseMark).Aggregate(0, (left, right) => left ^ right);
             return finalResult;

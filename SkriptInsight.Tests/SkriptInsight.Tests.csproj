@@ -13,7 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\SkriptInsight.Model\SkriptInsight.Model.csproj" />
+        <ProjectReference Include="..\SkriptInsight.Model\SkriptInsight.Model.csproj" />
     </ItemGroup>
 
 </Project>

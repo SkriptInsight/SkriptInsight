@@ -17,7 +17,8 @@ namespace SkriptInsight.Model.Managers
             public KnownType(Type type)
             {
                 Type = type;
-                SkriptRepresentations = type.GetCustomAttributes<TypeDescriptionAttribute>().Select(c => c.TypeName).ToArray();
+                SkriptRepresentations = type.GetCustomAttributes<TypeDescriptionAttribute>().Select(c => c.TypeName)
+                    .ToArray();
             }
 
             public string[] SkriptRepresentations { get; }
@@ -36,7 +37,7 @@ namespace SkriptInsight.Model.Managers
             LoadKnownTypes();
         }
 
-        public List<KnownType>? KnownTypes { get; set; } 
+        public List<KnownType>? KnownTypes { get; set; }
 
         public void LoadKnownTypes()
         {

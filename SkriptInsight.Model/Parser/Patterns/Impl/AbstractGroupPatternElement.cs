@@ -8,7 +8,6 @@ namespace SkriptInsight.Model.Parser.Patterns.Impl
 
         public AbstractGroupPatternElement(string contents)
         {
-            
         }
     }
 }

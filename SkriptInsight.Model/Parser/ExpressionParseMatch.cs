@@ -9,7 +9,7 @@ namespace SkriptInsight.Model.Parser
         {
             Expression = expression;
             Range = expression.Range;
-            
+
             var lines = expression.Context.Text.SplitOnNewLines();
             var startPos = Range.Start.ResolveFor(lines);
             var endPos = Range.End.ResolveFor(lines);

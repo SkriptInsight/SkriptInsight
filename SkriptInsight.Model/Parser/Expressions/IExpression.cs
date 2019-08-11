@@ -8,11 +8,11 @@ namespace SkriptInsight.Model.Parser.Expressions
         object Value { get; set; }
 
         ISkriptType Type { get; set; }
-        
+
         Range Range { get; set; }
 
         ParseContext Context { get; set; }
-        
+
         string AsString();
     }
 }

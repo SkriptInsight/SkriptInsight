@@ -15,7 +15,7 @@ namespace SkriptInsight.Tests
             var ctx = ParseContext.FromCode($"%{{{str}}}%");
             ctx.ReadNext(1); //Enter inside bracket
 
-            Assert.Equal($"{{{str}}}", ctx.ReadUntilPosition(ctx.FindNextBracket('%', new [] {('{', '}')})));
+            Assert.Equal($"{{{str}}}", ctx.ReadUntilPosition(ctx.FindNextBracket('%', new[] {('{', '}')})));
         }
 
         [Theory]

@@ -20,8 +20,9 @@ namespace SkriptInsight.Model.Parser.Patterns.Impl
 
             if (shouldSkipWhitespaces)
                 return ParseResult.OptionalSuccess(ctx);
-                
-            return ctx.ReadNext(Value.Length).EqualsIgnoreCase(Value) ? ParseResult.Success(ctx)
+
+            return ctx.ReadNext(Value.Length).EqualsIgnoreCase(Value)
+                ? ParseResult.Success(ctx)
                 : ParseResult.Failure(ctx);
         }
 

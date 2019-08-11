@@ -24,6 +24,5 @@ namespace SkriptInsight.Model.Extensions
 
             return charsUntilLine;
         }
-
     }
 }

@@ -68,7 +68,8 @@ namespace SkriptInsight.Tests
         [InlineData("\"test1\" abc \"test2\"", false)]
         [InlineData("\"test1\" and \"test2\"", true, new[] {"test1", "test2"})]
         [InlineData("\"test1\", \"test2\", \"test3\", \"test4\"", true, new[] {"test1", "test2", "test3", "test4"})]
-        public void MultiStringsPatternMatchesCorrectly(string input, bool shouldFinish = true, string[] inputtedValues = null)
+        public void MultiStringsPatternMatchesCorrectly(string input, bool shouldFinish = true,
+            string[] inputtedValues = null)
         {
             var pattern = SkriptPattern.ParsePattern("%strings%");
 
@@ -99,7 +100,7 @@ namespace SkriptInsight.Tests
 
             Assert.Equal(shouldFinish, result.Context.HasFinishedLine);
         }
-        
+
         [Theory]
         [InlineData("testing life")]
         [InlineData("testing this thing i call life")]

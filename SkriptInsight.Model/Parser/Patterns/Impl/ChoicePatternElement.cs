@@ -58,7 +58,7 @@ namespace SkriptInsight.Model.Parser.Patterns.Impl
         public List<ChoiceGroupElement> Elements { get; } = new List<ChoiceGroupElement>();
 
         public bool SaveChoice { get; set; } = true;
-        
+
         public override ParseResult Parse(ParseContext ctx)
         {
             var oldPos = ctx.CurrentPosition;

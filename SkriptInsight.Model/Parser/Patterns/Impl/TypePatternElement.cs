@@ -36,19 +36,19 @@ namespace SkriptInsight.Model.Parser.Patterns.Impl
             if (Type.EndsWith("s"))
             {
                 type = KnownTypesManager.Instance.GetTypeByName(Type.Substring(0, Type.Length - 1));
-                
+
                 if (type != null) // We have a multiple value request. Hand over to GenericMultiValueType
                     skriptTypeDescriptor = new GenericMultiValueType(type);
             }
             else
                 skriptTypeDescriptor = type?.CreateNewInstance();
 
-            var result = skriptTypeDescriptor?.TryParseValue(ctx/*, Constraint*/);
+            var result = skriptTypeDescriptor?.TryParseValue(ctx /*, Constraint*/);
 
             if (result != null)
             {
                 result.Context = ctx;
-                var match = new ExpressionParseMatch(result);/*
+                var match = new ExpressionParseMatch(result); /*
                 JsonConvert.PopulateObject(result.Match.ToJson(), match, new JsonSerializerSettings
                 {
                     TypeNameHandling = TypeNameHandling.All

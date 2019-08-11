@@ -33,9 +33,9 @@ namespace SkriptInsight.Host.Lsp
         public bool DisableTracking { get; set; }
 
         public string? UserAgent { get; set; } = null;
-        
+
         public CancellationTokenSource CancellationToken { get; }
-        
+
         public GoogleAnalyticsApi(string trackingId, string clientId) : this()
         {
             _googleTrackingId = trackingId;
@@ -126,10 +126,10 @@ namespace SkriptInsight.Host.Lsp
         private void Track(Dictionary<string, string> values)
         {
             if (DisableTracking) return;
-         
+
             if (UserAgent != null)
                 values.Add("ua", UserAgent);
-            
+
             var request = (HttpWebRequest) WebRequest.Create(Endpoint);
             request.Method = "POST";
             request.KeepAlive = false;

@@ -31,7 +31,7 @@ namespace SkriptInsight.Model.Parser.Expressions
         public ISkriptType Type { get; set; }
 
         public Range Range { get; set; }
-        
+
         public ParseContext Context { get; set; }
 
         public string AsString()
