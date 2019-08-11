@@ -1,38 +1,22 @@
-using SkriptInsight.Model.Parser.Patterns;
+using SkriptInsight.Model.Parser.Expressions;
 
 namespace SkriptInsight.Model.Parser.Types.Impl
 {
     [TypeDescription("string")]
-    public class SkriptString : SkriptType<string>
+    public class SkriptString : SkriptGenericType<string>
     {
-        protected override Expression<string> ParseExpression(ParseContext ctx,
-            SyntaxValueAcceptanceConstraint constraint)
+        protected override string TryParse(ParseContext ctx)
         {
-            ctx.StartMatch();
-            if (ctx.ReadNext(1) == "\"")
-            {
-                ctx.StartRangeMeasure("String content");
-
-                var closingPos = ctx.FindNextBracket('"', true);
-                if (closingPos > -1)
-                {
-                    var value = ctx.ReadUntilPosition(closingPos);
-                    if (ctx.ReadNext(1) == "\"")
-                    {
-                        var contentRange = ctx.EndRangeMeasure("String content");
-                        return new Expression<string>(value, ctx.EndMatch(), contentRange);
-                    }
-                }
-            }
-
-            ctx.UndoRangeMeasure();
-            ctx.UndoMatch();
-            return null;
+            if (ctx.ReadNext(1) != "\"") return null;
+            var closingPos = ctx.FindNextBracket('"', true);
+            if (closingPos <= -1) return null;
+            var value = ctx.ReadUntilPosition(closingPos);
+            return ctx.ReadNext(1) == "\"" ? value : null;
         }
 
-        protected override string RenderExpression(Expression<string> value)
+        public override string AsString(string obj)
         {
-            return $"\"{value.GenericValue}\"";
+            return obj;
         }
     }
 }

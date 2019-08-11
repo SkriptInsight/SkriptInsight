@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using SkriptInsight.Model.Extensions;
 using SkriptInsight.Model.Parser.Patterns;
 using Range = OmniSharp.Extensions.LanguageServer.Protocol.Models.Range;
 

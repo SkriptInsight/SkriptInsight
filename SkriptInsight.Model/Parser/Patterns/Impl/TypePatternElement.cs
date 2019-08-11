@@ -31,28 +31,29 @@ namespace SkriptInsight.Model.Parser.Patterns.Impl
         public override ParseResult Parse(ParseContext ctx)
         {
             var type = KnownTypesManager.Instance.GetTypeByName(Type);
-            ISkriptTypeBase? skriptTypeInstance = null;
+            ISkriptType? skriptTypeDescriptor = null;
 
             if (Type.EndsWith("s"))
             {
                 type = KnownTypesManager.Instance.GetTypeByName(Type.Substring(0, Type.Length - 1));
                 
                 if (type != null) // We have a multiple value request. Hand over to GenericMultiValueType
-                    skriptTypeInstance = new GenericMultiValueType(type);
+                    skriptTypeDescriptor = new GenericMultiValueType(type);
             }
             else
-                skriptTypeInstance = type?.CreateNewInstance();
+                skriptTypeDescriptor = type?.CreateNewInstance();
 
-            var result = skriptTypeInstance?.Parse(ctx, Constraint);
+            var result = skriptTypeDescriptor?.TryParseValue(ctx/*, Constraint*/);
 
             if (result != null)
             {
-                var match = new ExpressionParseMatch(result);
+                result.Context = ctx;
+                var match = new ExpressionParseMatch(result);/*
                 JsonConvert.PopulateObject(result.Match.ToJson(), match, new JsonSerializerSettings
                 {
                     TypeNameHandling = TypeNameHandling.All
-                });
-                match.Context = match.Context;
+                });*/
+
                 ctx.Matches.Add(match);
             }
 

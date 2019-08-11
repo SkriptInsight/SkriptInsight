@@ -4,7 +4,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using JetBrains.Annotations;
+using SkriptInsight.Model.Extensions;
 using SkriptInsight.Model.Parser.Types;
+using SkriptInsight.Model.SyntaxInfo;
 
 namespace SkriptInsight.Model.Managers
 {
@@ -22,7 +24,7 @@ namespace SkriptInsight.Model.Managers
 
             public Type Type { get; }
 
-            public ISkriptTypeBase CreateNewInstance() => (ISkriptTypeBase) Activator.CreateInstance(Type);
+            public ISkriptType CreateNewInstance() => (ISkriptType) Activator.CreateInstance(Type);
         }
 
         private static KnownTypesManager _instance;
@@ -41,7 +43,7 @@ namespace SkriptInsight.Model.Managers
             if (KnownTypes == null)
                 KnownTypes = AppDomain.CurrentDomain.GetAssemblies()
                     .SelectMany(c => c.GetTypes())
-                    .Where(c => c.IsSubclassOfRawGeneric(typeof(SkriptType<>)))
+                    .Where(c => c.IsSubclassOfRawGeneric(typeof(SkriptGenericType<>)))
                     .Select(p => new KnownType(p)).ToList();
         }
 

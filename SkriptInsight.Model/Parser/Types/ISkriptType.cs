@@ -1,23 +1,16 @@
 using JetBrains.Annotations;
-using SkriptInsight.Model.Parser.Patterns;
+using SkriptInsight.Model.Parser.Expressions;
 
 namespace SkriptInsight.Model.Parser.Types
 {
-    [UsedImplicitly]
-    public abstract class SkriptType<T> : ISkriptTypeBase
+    /// <summary>
+    /// Represents a Skript type
+    /// </summary>
+    public interface ISkriptType
     {
-        protected abstract Expression<T> ParseExpression(ParseContext ctx, SyntaxValueAcceptanceConstraint constraint);
-        
-        protected abstract string RenderExpression(Expression<T> value);
-        
-        public IExpression Parse(ParseContext ctx, SyntaxValueAcceptanceConstraint constraint)
-        {
-            return ParseExpression(ctx, SyntaxValueAcceptanceConstraint.None);
-        }
+        [CanBeNull]
+        IExpression TryParseValue([NotNull] ParseContext ctx);
 
-        public string Render(IExpression value)
-        {
-            return RenderExpression(value as Expression<T>);
-        }
+        string AsString([NotNull] object obj);
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using SkriptInsight.Model.Extensions;
 
 namespace SkriptInsight.Model.Parser.Patterns.Impl
 {

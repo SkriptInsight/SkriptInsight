@@ -11,4 +11,8 @@
       <PackageReference Include="OmniSharp.Extensions.LanguageProtocol" Version="0.13.2-alpha0002" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Parser\Expressions\Impl" />
+    </ItemGroup>
+
 </Project>

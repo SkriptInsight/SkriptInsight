@@ -1,16 +1,11 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using OmniSharp.Extensions.LanguageServer.Protocol.Models;
-using SkriptInsight.Model.Managers;
 using SkriptInsight.Model.Parser;
+using SkriptInsight.Model.Parser.Expressions;
 using SkriptInsight.Model.Parser.Patterns;
 using SkriptInsight.Model.Parser.Patterns.Impl;
-using SkriptInsight.Model.Parser.Types;
 using Xunit;
-using static SkriptInsight.Model.Parser.Patterns.SyntaxValueAcceptanceConstraint;
-using Range = OmniSharp.Extensions.LanguageServer.Protocol.Models.Range;
 
 namespace SkriptInsight.Tests
 {
