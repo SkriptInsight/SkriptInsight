@@ -35,7 +35,7 @@ namespace SkriptInsight.Model.Parser.Patterns.Impl
             public AbstractSkriptPatternElement Element { get; }
 
             public int ParseMark { get; }
-
+            
             public override string ToString() => $"{(ParseMark > 0 ? $"{ParseMark}¦" : "")}{Element.RenderPattern()}";
 
             public static implicit operator ChoiceGroupElement(AbstractSkriptPatternElement e)

@@ -91,5 +91,27 @@ namespace SkriptInsight.Tests
             if (success)
                 Assert.Equal(2, result.Context.Matches.Count);
         }
+        
+        
+        [Theory]
+        [InlineData("string", "\"test\"")]
+        [InlineData("string", "\"te\"\"st\"")]
+        [InlineData("strings", "\"test\"")]
+        [InlineData("strings", "\"one\" and \"two\"")]
+        [InlineData("strings", "\"one\", \"two\" and \"three\"")]
+        public void TypesCanBeRepresentedAsStrings(string type, string value)
+        {
+            var pattern = SkriptPattern.ParsePattern($"%{type}%");
+            var result = pattern.Parse(value);
+            
+            Assert.True(result.IsSuccess);
+            Assert.Single(result.Matches);
+            
+            var match = result.Matches.First();
+            Assert.IsType<ExpressionParseMatch>(match);
+            var exprMatch = match as ExpressionParseMatch;
+
+            Assert.Equal(value, exprMatch?.Expression.AsString() ?? "--NULL--");
+        }
     }
 }

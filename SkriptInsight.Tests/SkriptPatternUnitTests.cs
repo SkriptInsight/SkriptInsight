@@ -82,14 +82,14 @@ namespace SkriptInsight.Tests
 
             var exprParseMatch = parseMatch as ExpressionParseMatch;
             Debug.Assert(exprParseMatch != null, nameof(exprParseMatch) + " != null");
-            Assert.IsType<Expression<List<IExpression>>>(exprParseMatch.Expression);
+            Assert.IsType<MultiValueExpression>(exprParseMatch.Expression);
 
-            var expr = exprParseMatch.Expression as Expression<List<IExpression>>;
+            var expr = exprParseMatch.Expression as MultiValueExpression;
 
             Debug.Assert(expr != null, nameof(expr) + " != null");
-            expr.GenericValue.ForEach(e => Assert.IsType<Expression<string>>(e));
+            expr.Values.ForEach(e => Assert.IsType<Expression<string>>(e.Expression));
 
-            var expressions = expr.GenericValue.Cast<Expression<string>>().ToArray();
+            var expressions = expr.Values.Select(c => c.Expression).Cast<Expression<string>>().ToArray();
             if (inputtedValues != null)
             {
                 for (var i = 0; i < inputtedValues.Length; i++)

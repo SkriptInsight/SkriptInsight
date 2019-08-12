@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using MoreLinq;
 using SkriptInsight.Model.Managers;
 using SkriptInsight.Model.Parser.Expressions;
 using SkriptInsight.Model.Parser.Patterns;
@@ -24,6 +25,7 @@ namespace SkriptInsight.Model.Parser.Types.Impl
         {
             var typeInstance = Type.CreateNewInstance();
             var ourContext = ctx.Clone();
+            var resultExpression = new MultiValueExpression();
 
             ctx.StartRangeMeasure();
             ctx.StartMatch();
@@ -32,22 +34,34 @@ namespace SkriptInsight.Model.Parser.Types.Impl
             var isValid = true;
             while (isValid)
             {
+                ourContext.Matches.Clear();
+
                 var result = NextValuePattern.Parse(ourContext);
                 isValid = result.IsSuccess;
 
                 if (!isValid) continue;
+
+                var expr = (ourContext.Matches.FirstOrDefault() as ExpressionParseMatch)?.Expression;
+                if (expr != null)
+                {
+                    resultExpression.Values.Add(
+                        new MultiValueExpression.ValueDescription(expr,
+                            ourContext.Matches.Skip(1).FirstOrDefault()?.RawContent));
+                }
+
                 count++;
             }
 
             if (count > 0) ctx.ReadUntilPosition(ourContext.CurrentPosition);
 
             if (count > 0)
-                return new Expression<List<IExpression>>(
-                    ourContext.Matches
-                        .Select(c => typeInstance.TryParseValue(ParseContext.FromCode(c.RawContent)))
-                        .Where(c => c != null)
-                        .ToList(),
-                    ctx.EndRangeMeasure());
+            {
+                resultExpression.Range = ctx.EndRangeMeasure();
+                resultExpression.Context = ctx;
+                resultExpression.Type = typeInstance;
+                    
+                return resultExpression;
+            }
 
             ctx.UndoRangeMeasure();
             ctx.UndoMatch();
@@ -84,7 +98,6 @@ namespace SkriptInsight.Model.Parser.Types.Impl
                                 },
                                 new ChoicePatternElement
                                 {
-                                    SaveChoice = false,
                                     Elements =
                                     {
                                         new LiteralPatternElement(","),

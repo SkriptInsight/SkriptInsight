@@ -47,13 +47,9 @@ namespace SkriptInsight.Model.Parser.Patterns.Impl
 
             if (result != null)
             {
+                result.Type = skriptTypeDescriptor;
                 result.Context = ctx;
-                var match = new ExpressionParseMatch(result); /*
-                JsonConvert.PopulateObject(result.Match.ToJson(), match, new JsonSerializerSettings
-                {
-                    TypeNameHandling = TypeNameHandling.All
-                });*/
-
+                var match = new ExpressionParseMatch(result);
                 ctx.Matches.Add(match);
             }
 
