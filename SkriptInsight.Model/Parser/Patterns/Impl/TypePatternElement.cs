@@ -43,7 +43,7 @@ namespace SkriptInsight.Model.Parser.Patterns.Impl
             else
                 skriptTypeDescriptor = type?.CreateNewInstance();
 
-            var result = skriptTypeDescriptor?.TryParseValue(ctx /*, Constraint*/);
+            var result = skriptTypeDescriptor?.TryParseValue(ctx);
 
             if (result != null)
             {

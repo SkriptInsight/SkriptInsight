@@ -70,8 +70,7 @@ namespace SkriptInsight.Model.Parser.Types.Impl
 
         public string AsString(object obj)
         {
-            var typeInstance = Type.CreateNewInstance();
-            return typeInstance.AsString(obj);
+            return string.Empty;
         }
 
         private static SkriptPattern CreateNextValuePatternForType(string typeName)
