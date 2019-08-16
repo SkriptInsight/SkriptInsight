@@ -3,7 +3,7 @@ using SkriptInsight.Model.Parser.Types;
 
 namespace SkriptInsight.Model.Parser.Expressions
 {
-    public class Expression<T> : IExpression where T : class
+    public class Expression<T> : IExpression
     {
         public Expression(T value)
         {
@@ -22,7 +22,7 @@ namespace SkriptInsight.Model.Parser.Expressions
 
         public T GenericValue
         {
-            get => Value as T;
+            get => Value is T v ? v : default;
             set => Value = value;
         }
 

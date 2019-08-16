@@ -3,7 +3,7 @@ using SkriptInsight.Model.Parser.Expressions;
 
 namespace SkriptInsight.Model.Parser.Types
 {
-    public abstract class SkriptGenericType<T> : ISkriptType where T : class
+    public abstract class SkriptGenericType<T> : ISkriptType
     {
         protected abstract T TryParse(ParseContext ctx);
         public abstract string AsString(T obj);
