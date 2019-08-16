@@ -32,6 +32,8 @@ namespace SkriptInsight.Model.Parser.Types.Impl
 
             var count = 0;
             var isValid = true;
+            var lastGoodPos = ourContext.CurrentPosition;
+            
             while (isValid)
             {
                 ourContext.Matches.Clear();
@@ -41,6 +43,9 @@ namespace SkriptInsight.Model.Parser.Types.Impl
 
                 if (!isValid) continue;
 
+                //Check if the parser consumed content and had a valid result. If not, just let go and give up.
+                if (lastGoodPos == ourContext.CurrentPosition) break; 
+                
                 var expr = (ourContext.Matches.FirstOrDefault() as ExpressionParseMatch)?.Expression;
                 if (expr != null)
                 {
