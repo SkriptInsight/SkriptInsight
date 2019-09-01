@@ -1,5 +1,5 @@
-using SkriptInsight.Model.Parser;
-using SkriptInsight.Model.Parser.Patterns;
+using SkriptInsight.Core.Parser;
+using SkriptInsight.Core.Parser.Patterns;
 using Xunit;
 
 namespace SkriptInsight.Tests

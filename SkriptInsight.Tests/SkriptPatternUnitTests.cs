@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using SkriptInsight.Model.Parser;
-using SkriptInsight.Model.Parser.Expressions;
-using SkriptInsight.Model.Parser.Patterns;
-using SkriptInsight.Model.Parser.Patterns.Impl;
+using SkriptInsight.Core.Parser;
+using SkriptInsight.Core.Parser.Expressions;
+using SkriptInsight.Core.Parser.Patterns;
+using SkriptInsight.Core.Parser.Patterns.Impl;
 using Xunit;
 
 namespace SkriptInsight.Tests

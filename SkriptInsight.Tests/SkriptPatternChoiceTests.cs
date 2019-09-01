@@ -1,4 +1,4 @@
-using SkriptInsight.Model.Parser.Patterns.Impl;
+using SkriptInsight.Core.Parser.Patterns.Impl;
 using Xunit;
 
 namespace SkriptInsight.Tests

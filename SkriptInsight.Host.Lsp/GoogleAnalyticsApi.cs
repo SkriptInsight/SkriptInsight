@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using MoreLinq;
 
 // ReSharper disable IdentifierTypo
 
@@ -111,19 +112,18 @@ namespace SkriptInsight.Host.Lsp
             if (value != null) values.Add("ev", value.ToString()); // Event value.
             if (extraValues != null)
             {
-                TypeDescriptor.GetProperties(extraValues).Cast<PropertyDescriptor>().All(v =>
+                TypeDescriptor.GetProperties(extraValues).Cast<PropertyDescriptor>().ForEach(v =>
                 {
                     var val = v.GetValue(extraValues)?.ToString();
                     if (val != null)
                         values.Add(v.Name, val);
-                    return true;
                 });
             }
 
             Track(values);
         }
 
-        private void Track(Dictionary<string, string> values)
+        private void Track(IDictionary<string, string> values)
         {
             if (DisableTracking) return;
 

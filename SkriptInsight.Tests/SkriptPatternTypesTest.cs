@@ -1,11 +1,13 @@
 using System.Linq;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
-using SkriptInsight.Model.Managers;
-using SkriptInsight.Model.Parser;
-using SkriptInsight.Model.Parser.Patterns;
-using SkriptInsight.Model.Parser.Patterns.Impl;
+using SkriptInsight.Core.Managers;
+using SkriptInsight.Core.Parser;
+using SkriptInsight.Core.Parser.Expressions;
+using SkriptInsight.Core.Parser.Expressions.Variables;
+using SkriptInsight.Core.Parser.Patterns;
+using SkriptInsight.Core.Parser.Patterns.Impl;
 using Xunit;
-using static SkriptInsight.Model.Parser.Patterns.SyntaxValueAcceptanceConstraint;
+using static SkriptInsight.Core.Parser.Patterns.SyntaxValueAcceptanceConstraint;
 
 namespace SkriptInsight.Tests
 {
@@ -90,6 +92,33 @@ namespace SkriptInsight.Tests
             Assert.Equal(success, result.IsSuccess);
             if (success)
                 Assert.Equal(2, result.Context.Matches.Count);
+        }
+        
+        [Theory]
+        [InlineData("{_test}")]
+        [InlineData("{_test.%test%.a}")]
+        [InlineData("{_test.2}")]
+        [InlineData("{_test::2}")]
+        [InlineData("{_test::2::3}")]
+        public void MixedVariableTypeParsesCorrectly(string input)
+        {
+            KnownTypesManager.Instance.LoadKnownTypes();
+            var stringPattern = SkriptPattern.ParsePattern(ParseContext.FromCode("print %string%"));
+
+            var result = stringPattern.Parse("print " + input);
+
+            Assert.True(result.IsSuccess);
+            Assert.Single(result.Context.Matches);
+
+            var match = result.Context.Matches.First();
+            Assert.IsType<ExpressionParseMatch>(match);
+            
+            var expr = ((ExpressionParseMatch) match).Expression;
+            Assert.IsType<Expression<SkriptVariable>>(expr);
+            
+            var variable = expr.Value as SkriptVariable;
+            Assert.NotNull(variable);
+            Assert.Equal(input, variable.ToString());
         }
         
         

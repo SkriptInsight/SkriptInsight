@@ -7,11 +7,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\SkriptInsight.Model\SkriptInsight.Model.csproj" />
+        <PackageReference Include="OmniSharp.Extensions.LanguageServer" Version="0.13.2-alpha0007" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="OmniSharp.Extensions.LanguageServer" Version="0.13.2-alpha0002" />
+      <None Update="Skript.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SkriptInsight.Core\SkriptInsight.Core.csproj" />
     </ItemGroup>
 
 </Project>

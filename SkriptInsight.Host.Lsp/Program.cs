@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using OmniSharp.Extensions.JsonRpc;
 using OmniSharp.Extensions.LanguageServer.Server;
 
@@ -44,7 +48,7 @@ namespace SkriptInsight.Host.Lsp
             AnalyticsApi.TrackEvent("SessionStop", "Session Stop", extraValues: new {sc = "stop"});
         }
 
-        private static string GetEditorNameByArgs(string[] args)
+        private static string GetEditorNameByArgs(IEnumerable<string> args)
         {
             if (args.Contains("-vscode"))
                 return "Visual Studio Code";
