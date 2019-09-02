@@ -1,6 +1,6 @@
 ---
 name: Code inspection (Syntax)
-about: Node Code Inspection for SkriptInsight
+about: Syntax Code Inspection for SkriptInsight
 title: ''
 labels: 'enhancement, inspection: syntax'
 assignees: ''
