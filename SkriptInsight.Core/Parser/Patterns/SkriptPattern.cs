@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Parser.Patterns.Impl;
 
@@ -24,6 +25,14 @@ namespace SkriptInsight.Core.Parser.Patterns
         public static SkriptPattern ParsePattern(ParseContext ctx)
         {
             var pattern = new SkriptPattern();
+            var literalBuilder = new StringBuilder();
+
+            void AddLiteralIfExists()
+            {
+                if (string.IsNullOrEmpty(literalBuilder.ToString())) return;
+                pattern.Children.Add(new LiteralPatternElement(literalBuilder.ToString()));
+                literalBuilder.Clear();
+            }
 
             foreach (var c in ctx)
             {
@@ -33,6 +42,7 @@ namespace SkriptInsight.Core.Parser.Patterns
 
                 if (info != null)
                 {
+                    AddLiteralIfExists();
                     var closingBracketPos =
                         ctx.FindNextBracket(info.OpeningBracket, info.ClosingBracket);
 
@@ -49,9 +59,17 @@ namespace SkriptInsight.Core.Parser.Patterns
                 }
                 else
                 {
-                    pattern.Children.Add(new LiteralPatternElement(c.ToString()));
+                    var isWhiteSpace = char.IsWhiteSpace(c);
+                    if (isWhiteSpace)
+                    {
+                        AddLiteralIfExists();
+                        pattern.Children.Add(new LiteralPatternElement(c.ToString()));
+                    }
+                    else
+                        literalBuilder.Append(c);
                 }
             }
+            AddLiteralIfExists();
 
             return pattern;
         }
