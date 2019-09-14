@@ -7,7 +7,12 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using OmniSharp.Extensions.JsonRpc;
+using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using OmniSharp.Extensions.LanguageServer.Server;
+using SkriptInsight.Core.Managers;
+using SkriptInsight.Core.Parser.Patterns;
+using SkriptInsight.Host.Lsp.Handlers;
 
 namespace SkriptInsight.Host.Lsp
 {
@@ -32,14 +37,18 @@ namespace SkriptInsight.Host.Lsp
             }
 
             var server = await LanguageServer.From(options =>
+            {
                 options
                     .WithInput(Console.OpenStandardInput())
                     .WithOutput(Console.OpenStandardOutput())
                     .WithLoggerFactory(new LoggerFactory())
                     .AddDefaultLoggingProvider()
+                    .WithHandler<TextDocumentHandler>()
                     .WithMinimumLogLevel(LogLevel.Error)
-                    .OnRequest<object, int>("insight/inspectionsCount", _ => Task.FromResult(12))
-            );
+                    .WithHandler<TextHoverHandler>()
+                    .OnRequest<object, int>("insight/inspectionsCount", _ => Task.FromResult(0));
+
+            });
 
             await server.WaitForExit;
 

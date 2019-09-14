@@ -33,7 +33,7 @@ namespace SkriptInsight.Host.Lsp
 
         public bool DisableTracking { get; set; }
 
-        public string? UserAgent { get; set; } = null;
+        public string UserAgent { get; set; } = null;
 
         public CancellationTokenSource CancellationToken { get; }
 
@@ -46,7 +46,7 @@ namespace SkriptInsight.Host.Lsp
         public GoogleAnalyticsApi()
         {
             CancellationToken = new CancellationTokenSource();
-            Task.Run(SendHeartbeatEvent);
+            Task.Run(SendHeartbeatEvent, CancellationToken.Token);
         }
 
         private async Task SendHeartbeatEvent()
@@ -60,18 +60,18 @@ namespace SkriptInsight.Host.Lsp
             }
         }
 
-        public void TrackEvent(string action, string label, int? value = null, object? extraValues = null)
+        public void TrackEvent(string action, string label, int? value = null, object extraValues = null)
         {
             TrackEvent("SkriptInsight-LSP", action, label, value, extraValues);
         }
 
-        public void TrackPageView(string action, string label, int? value = null, object? extraValues = null)
+        public void TrackPageView(string action, string label, int? value = null, object extraValues = null)
         {
             TrackPageView("SkriptInsight-LSP", action, label, value, extraValues);
         }
 
         public void TrackEvent(string category, string action, string label, int? value = null,
-            object? extraValues = null)
+            object extraValues = null)
         {
             if (string.IsNullOrEmpty(category)) throw new ArgumentNullException(nameof(category));
             if (string.IsNullOrEmpty(action)) throw new ArgumentNullException(nameof(action));
@@ -98,7 +98,7 @@ namespace SkriptInsight.Host.Lsp
         }
 
         public void TrackPageView(string category, string action, string label, int? value = null,
-            object? extraValues = null)
+            object extraValues = null)
         {
             if (string.IsNullOrEmpty(category)) throw new ArgumentNullException(nameof(category));
             if (string.IsNullOrEmpty(action)) throw new ArgumentNullException(nameof(action));

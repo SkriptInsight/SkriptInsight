@@ -35,7 +35,7 @@ namespace SkriptInsight.Core.Managers
             LoadKnownTypes();
         }
 
-        public List<KnownType>? KnownTypes { get; set; }
+        public List<KnownType> KnownTypes { get; set; }
 
         public void LoadKnownTypes()
         {

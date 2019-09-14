@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using SkriptInsight.Core.Files.Nodes;
 using SkriptInsight.Core.Parser;
 
 namespace SkriptInsight.Core.Extensions
@@ -15,6 +16,7 @@ namespace SkriptInsight.Core.Extensions
                 StringSplitOptions.None
             ).ToList();
         }
+
         public static string[] SplitOnNewLinesArray(this string str)
         {
             return str.Split(
@@ -23,6 +25,17 @@ namespace SkriptInsight.Core.Extensions
             ).ToArray();
         }
 
+        public static NodeIndentation[] GetNodeIndentations(this string text)
+        {
+            return text.TakeWhile(char.IsWhiteSpace).GroupBy(c => c)
+                .Select(c => NodeIndentation.FromCharacter(c.Key, c.Count())).OrderBy(c => c.Type).ToArray();
+        }
+        
+        public static void Resize<T>(this List<T> list, int sz)
+        {
+            if (list.Capacity < sz)
+                list.Capacity = sz + 1;
+        }
 
         public static IEnumerable<ContextualElement<T>>
             WithContext<T>(this IEnumerable<T> source, bool skipFirst = true)
@@ -40,7 +53,7 @@ namespace SkriptInsight.Core.Extensions
                 current = next;
             }
         }
-        
+
         public static T JsonClone<T>(this T original)
         {
             return JsonConvert.DeserializeObject<T>(ToJson(original), new JsonSerializerSettings

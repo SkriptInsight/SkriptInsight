@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using SkriptInsight.Core.Parser.Patterns;
 
 namespace SkriptInsight.Core.Files.Nodes
@@ -12,6 +14,7 @@ namespace SkriptInsight.Core.Files.Nodes
         /// <summary>
         /// Source file
         /// </summary>
+        [JsonIgnore]
         public SkriptFile File { get; set; }
 
         /// <summary>
@@ -20,8 +23,33 @@ namespace SkriptInsight.Core.Files.Nodes
         public NodeIndentation[] Indentations { get; set; } = new NodeIndentation[0];
 
         /// <summary>
+        /// Range of this node
+        /// </summary>
+        public Range Range { get; set; }
+
+        /// <summary>
+        /// Range of the indentation of this node
+        /// </summary>
+        public Range IndentationRange { get; set; }
+        
+        /// <summary>
         /// The Raw Text content of this node.
         /// </summary>
         public string RawText { get; set; }
+        
+        /// <summary>
+        /// Range of the comment of this node
+        /// </summary>
+        public Range CommentRange { get; set; }
+        
+        /// <summary>
+        /// Range of the content of this node (doesn't include comments or indentation)
+        /// </summary>
+        public Range ContentRange { get; set; }
+        
+        /// <summary>
+        /// Content of the comment of this node
+        /// </summary>
+        public string RawComment { get; set; }
     }
 }

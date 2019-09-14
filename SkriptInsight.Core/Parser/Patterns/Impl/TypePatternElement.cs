@@ -32,7 +32,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
         public override ParseResult Parse(ParseContext ctx)
         {
             var type = KnownTypesManager.Instance.GetTypeByName(Type);
-            ISkriptType? skriptTypeDescriptor = null;
+            ISkriptType skriptTypeDescriptor = null;
 
             if (Type.EndsWith("s"))
             {

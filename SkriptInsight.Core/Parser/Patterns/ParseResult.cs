@@ -6,9 +6,9 @@ namespace SkriptInsight.Core.Parser.Patterns
     {
         public ParseResultType ResultType { get; set; }
 
-        public ParseContext? Context { get; set; }
+        public ParseContext Context { get; set; }
 
-        public AbstractSkriptPatternElement? MatchedElement { get; set; }
+        public AbstractSkriptPatternElement MatchedElement { get; set; }
 
         public bool IsSuccess => ResultType == ParseResultType.Success;
 

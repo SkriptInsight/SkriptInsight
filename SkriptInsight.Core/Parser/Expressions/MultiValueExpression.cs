@@ -25,7 +25,7 @@ namespace SkriptInsight.Core.Parser.Expressions
             }
         }
 
-        public object? Value
+        public object Value
         {
             get => Values;
             set => Values = value as List<ValueDescription>;

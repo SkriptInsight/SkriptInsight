@@ -21,8 +21,8 @@ namespace SkriptInsight.Core.Files
             set => throw new NotSupportedException();
         }
 
-        public bool HasReachedEndOfFile => CurrentLine > File.RawContents.Length ||
-                                           CurrentLine == File.RawContents.Length && CurrentPosition >= Text.Length ||
+        public bool HasReachedEndOfFile => CurrentLine > File.RawContents.Count ||
+                                           CurrentLine == File.RawContents.Count && CurrentPosition >= Text.Length ||
                                            File.RawContents.All(string.IsNullOrEmpty);
 
         public override string ReadNext(int count)
