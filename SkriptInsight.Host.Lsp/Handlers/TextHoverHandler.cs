@@ -1,8 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Force.DeepCloner;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
@@ -18,22 +22,27 @@ namespace SkriptInsight.Host.Lsp.Handlers
             var file = WorkspaceManager.Instance.GetOrCreateByUri(request.TextDocument.Uri);
 
             var nodeAtLine = file.Nodes.ElementAtOrDefault((int) request.Position.Line);
-            if (nodeAtLine != null)
+            var targetNode = nodeAtLine.DeepClone();
+            targetNode.File = null;
+            if (targetNode.ParseResult?.Context != null)
+                targetNode.ParseResult.Context = null;
+
+            return Task.FromResult(new Hover
             {
-                return Task.FromResult(new Hover
+                Range = targetNode.ContentRange,
+                Contents = new MarkedStringsOrMarkupContent(new MarkupContent
                 {
-                    Range = nodeAtLine.ContentRange,
-                    Contents = new MarkedStringsOrMarkupContent(new MarkupContent
+                    Kind = MarkupKind.Markdown,
+                    Value = $@"```js{"\n"}{JsonConvert.SerializeObject(targetNode, new JsonSerializerSettings
                     {
-                        Kind = MarkupKind.Markdown,
-                        Value = $@"```js{"\n"}{JsonConvert.SerializeObject(nodeAtLine, new JsonSerializerSettings
-                        {
-                            Formatting = Formatting.Indented,
-                            NullValueHandling = NullValueHandling.Ignore
-                        })}{"\n"}```"
-                    })
-                });
-            }
+                        Converters = new List<JsonConverter> {new StringEnumConverter {NamingStrategy = new CamelCaseNamingStrategy()}},
+                        ContractResolver = new NoFileContractResolver(),
+                        Formatting = Formatting.Indented,
+                        NullValueHandling = NullValueHandling.Ignore,
+                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                    })}{"\n"}```"
+                })
+            });
 
             return null;
         }

@@ -42,12 +42,16 @@ namespace SkriptInsight.Core.Extensions
 
         public static int ResolveFor(this Position pos, List<string> str)
         {
+            var targetLine = pos.Line;
+            if (str.Count < targetLine)
+                targetLine = str.Count - 1;
+            
             var lineBreakSize = Environment.NewLine.Length;
             var charsUntilLine = 0;
             for (var index = 0; index < str.Count; index++)
             {
                 var line = str[index];
-                if (index < pos.Line)
+                if (index < targetLine)
                 {
                     charsUntilLine += line.Length + lineBreakSize;
                 }

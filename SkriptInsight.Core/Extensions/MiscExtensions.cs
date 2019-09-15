@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using Force.DeepCloner;
 using Newtonsoft.Json;
+using SkriptInsight.Core.Files;
 using SkriptInsight.Core.Files.Nodes;
 using SkriptInsight.Core.Parser;
 
@@ -56,10 +59,13 @@ namespace SkriptInsight.Core.Extensions
 
         public static T JsonClone<T>(this T original)
         {
-            return JsonConvert.DeserializeObject<T>(ToJson(original), new JsonSerializerSettings
+            var resultClone = original.DeepClone();
+            if (resultClone is FileParseContext fileParseContext && original is FileParseContext fileOriginalContext)
             {
-                TypeNameHandling = TypeNameHandling.All
-            });
+                fileParseContext.File = fileOriginalContext.File;
+            }
+            Debug.WriteLine($"Cloned object of type {typeof(T).Name}; {original.GetType().Name}");
+            return resultClone;
         }
 
         public static string ToJson<T>(this T original)

@@ -26,6 +26,7 @@ namespace SkriptInsight.Core.SyntaxInfo
 
         public void LoadPatterns()
         {
+            Effects.ForEach(e => e.LoadPatterns());
             var types = Enum.GetValues(typeof(ExpressionType)).Cast<ExpressionType>().ToList();
             foreach (var expr in InnerExpressions)
             {

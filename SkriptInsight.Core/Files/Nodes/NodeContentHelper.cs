@@ -1,12 +1,12 @@
+using System;
 using System.Linq;
 using System.Text.RegularExpressions;
-using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using SkriptInsight.Core.Extensions;
-using SkriptInsight.Core.Files.Nodes.Impl;
+using Range = OmniSharp.Extensions.LanguageServer.Protocol.Models.Range;
 
 namespace SkriptInsight.Core.Files.Nodes
 {
-    public class NodeContentHelper
+    public static class NodeContentHelper
     {
         private static readonly Regex LineRegex =
             new Regex(@"^((?:[^#]|##)*)(\s*#(?!#).*)$", RegexOptions.Compiled);
@@ -15,7 +15,7 @@ namespace SkriptInsight.Core.Files.Nodes
             ref AbstractFileNode node)
         {
             ExtractBasicNodeInformationFrom(content, line, out var indentations, out var indentRange,
-                out var contentRange, out var nodeRange, out var commentRange, out var commentContent);
+                out var contentRange, out var nodeRange, out var commentRange, out var commentContent, out var nodeContent);
 
             node.RawText = content;
             node.LineNumber = line;
@@ -25,15 +25,22 @@ namespace SkriptInsight.Core.Files.Nodes
             node.CommentRange = commentRange;
             node.RawComment = commentContent;
             node.ContentRange = contentRange;
+            node.NodeContent = nodeContent;
+            
+            if (nodeContent.EndsWith(":"))
+            {
+                node.IsSectionNode = true;
+            }
         }
 
         private static void ExtractBasicNodeInformationFrom(string content, int line,
             out NodeIndentation[] indentations, out Range indentRange, out Range contentRange,
-            out Range nodeRange, out Range commentRange, out string commentContent)
+            out Range nodeRange, out Range commentRange, out string commentContent, out string nodeContent)
         {
             var length = content.Length;
             var indentCharsCount = content.TakeWhile(char.IsWhiteSpace).Count();
             indentations = content.GetNodeIndentations();
+            nodeContent = content;
             
             nodeRange = RangeExtensions.From(line, 0, content.Length);
 
@@ -49,12 +56,16 @@ namespace SkriptInsight.Core.Files.Nodes
                 var contentGroup = matchResult.Groups[1];
                 var commentGroup = matchResult.Groups[2];
 
+                var endingSpaces = Math.Clamp(contentGroup.Length - contentGroup.Value.Trim().Length, 0, int.MaxValue);
+
+                nodeContent = contentGroup.Value;
                 commentContent = commentGroup.Value;
-                length = contentGroup.Length;
-                commentRange.Start.Character = commentGroup.Index;
-                commentRange.End.Character = commentGroup.Index + commentGroup.Length;
+                length = contentGroup.Value.Trim().Length;
+                commentRange.Start.Character = commentGroup.Index - endingSpaces;
+                commentRange.End.Character = (commentGroup.Index - endingSpaces) + (commentGroup.Length + endingSpaces);
             }
 
+            nodeContent = nodeContent.Trim();
             contentRange = RangeExtensions.From(line, indentCharsCount, length);
         }
     }

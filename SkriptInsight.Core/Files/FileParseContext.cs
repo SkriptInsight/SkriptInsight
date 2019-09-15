@@ -1,5 +1,7 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
+using System.Text.Json.Serialization;
 using SkriptInsight.Core.Parser;
 
 namespace SkriptInsight.Core.Files
@@ -8,16 +10,19 @@ namespace SkriptInsight.Core.Files
     {
         private int _currentLine;
 
+        public bool MoveToNextLine { get; set; } = true;
+
         public FileParseContext(SkriptFile file)
         {
             File = file;
         }
 
-        public SkriptFile File { get; set; }
+        [JsonIgnore] public SkriptFile File { get; set; }
 
         public override string Text
         {
-            get => File.RawContents.ElementAtOrDefault(CurrentLine) ?? string.Empty;
+            get => File.Nodes?.ElementAtOrDefault(CurrentLine)?.NodeContent ??
+                   File.RawContents.ElementAtOrDefault(CurrentLine) ?? string.Empty;
             set => throw new NotSupportedException();
         }
 
@@ -28,10 +33,11 @@ namespace SkriptInsight.Core.Files
         public override string ReadNext(int count)
         {
             var next = base.ReadNext(count);
-            if (HasFinishedLine)
+            if (HasFinishedLine && MoveToNextLine)
             {
                 //Line has been finished, so move to the next line.
                 CurrentLine += 1;
+                Debug.WriteLine($"Moved to next line whilst reading {count} chars.");
             }
 
             return next;

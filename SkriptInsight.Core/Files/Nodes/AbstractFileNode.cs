@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using SkriptInsight.Core.Parser.Patterns;
@@ -16,7 +17,19 @@ namespace SkriptInsight.Core.Files.Nodes
         /// </summary>
         [JsonIgnore]
         public SkriptFile File { get; set; }
-
+        
+        /// <summary>
+        /// Parent node of this node
+        /// </summary>
+        [JsonIgnore]
+        public AbstractFileNode Parent { get; set; }
+        
+        /// <summary>
+        /// Children nodes of this node
+        /// </summary>
+        [JsonIgnore]
+        public List<AbstractFileNode> Children { get; set; }
+        
         /// <summary>
         /// Indentations of this node
         /// </summary>
@@ -51,5 +64,17 @@ namespace SkriptInsight.Core.Files.Nodes
         /// Content of the comment of this node
         /// </summary>
         public string RawComment { get; set; }
+
+        /// <summary>
+        /// Text content of this node (doesn't include comments or indentation)
+        /// </summary>
+        public string NodeContent { get; set; }
+
+        /// <summary>
+        /// Check whether this node is a section node or not 
+        /// </summary>
+        public bool IsSectionNode { get; set; }
+
+        public ParseResult ParseResult { get; set; }
     }
 }

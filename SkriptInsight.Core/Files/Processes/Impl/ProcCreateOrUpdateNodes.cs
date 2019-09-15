@@ -13,7 +13,7 @@ namespace SkriptInsight.Core.Files.Processes.Impl
     {
         public override void DoWork(SkriptFile file, int lineNumber, string rawContent, FileParseContext context)
         {
-            AbstractFileNode resultNode = new UnknownFileNode();
+            AbstractFileNode resultNode = new BaseFileNode();
             NodeContentHelper.ApplyBasicNodeInfoToNode(rawContent, lineNumber, file, ref resultNode);
 
             file.Nodes[lineNumber] = resultNode;

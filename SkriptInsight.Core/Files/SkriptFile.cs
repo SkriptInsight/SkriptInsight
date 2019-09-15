@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using MoreLinq;
@@ -68,7 +69,8 @@ namespace SkriptInsight.Core.Files
             startLine = Math.Max(0, startLine);
             endLine = endLine < 0 ? RawContents.Count : endLine;
             var maxDegreeOfParallelism = Environment.ProcessorCount;
-            var contexts = Enumerable.Range(0, maxDegreeOfParallelism + 1).Select(_ => new FileParseContext(this))
+            var contexts = Enumerable.Range(0, maxDegreeOfParallelism + 1)
+                .Select(_ => new FileParseContext(this) {MoveToNextLine = false})
                 .ToArray();
 
             var processCount = -1;
@@ -80,7 +82,7 @@ namespace SkriptInsight.Core.Files
                 line =>
                 {
                     Interlocked.Increment(ref processCount);
-                   
+
                     if (RawContents.ElementAtOrDefault(line) != null)
                     {
                         var context = contexts[processCount];
@@ -106,6 +108,7 @@ namespace SkriptInsight.Core.Files
             startLine = Math.Max(0, startLine);
             endLine = endLine < 0 ? RawContents.Count : endLine;
             RunProcess(new ProcCreateOrUpdateNodes(), startLine, endLine);
+            RunProcess(new ProcTryParseEffects(), startLine, endLine);
         }
     }
 }

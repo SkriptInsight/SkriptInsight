@@ -56,9 +56,9 @@ namespace SkriptInsight.Core.Parser
         {
             return CurrentPosition - count < 0 || CurrentPosition > Text.Length
                 ? ""
-                : Text.Substring(CurrentPosition - count, count);
+                : Text.Substring(Math.Clamp(CurrentPosition - count, 0, Text.Length), count);
         }
-
+    
         public virtual string ReadNext(int count)
         {
             var result = PeekNext(count);

@@ -7,17 +7,20 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Newtonsoft.Json" Version="12.0.3-beta1" />
         <PackageReference Include="OmniSharp.Extensions.LanguageServer" Version="0.13.2-alpha0007" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="Skript.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
+      <ProjectReference Include="..\SkriptInsight.Core\SkriptInsight.Core.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\SkriptInsight.Core\SkriptInsight.Core.csproj" />
+      <None Remove="Skript.json" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="KnownAddonInfo\Skript.json" />
     </ItemGroup>
 
 </Project>
