@@ -1,9 +1,12 @@
 using System.Diagnostics;
+using System.Linq;
+using Newtonsoft.Json;
+using SkriptInsight.Core.Parser.Patterns;
 
 namespace SkriptInsight.Core.SyntaxInfo
 {
     [DebuggerDisplay("{" + nameof(Name) + "}")]
-    public class SkriptEvent : ISyntaxElement
+    public class SkriptEvent : AbstractSyntaxElement
     {
         public string Name { get; set; }
 
@@ -29,8 +32,5 @@ namespace SkriptInsight.Core.SyntaxInfo
 
         public bool Cancellable { get; set; }
 
-        public string[] Patterns { get; set; }
-
-        public string AddonName { get; set; }
     }
 }

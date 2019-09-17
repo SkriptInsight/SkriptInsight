@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using SkriptInsight.Core.Parser.Patterns;
+using SkriptInsight.Core.SyntaxInfo;
 
 namespace SkriptInsight.Core.Files.Nodes
 {
@@ -75,6 +76,6 @@ namespace SkriptInsight.Core.Files.Nodes
         /// </summary>
         public bool IsSectionNode { get; set; }
 
-        public ParseResult ParseResult { get; set; }
+        public SyntaxMatch MatchedSyntax { get; set; }
     }
 }

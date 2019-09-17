@@ -16,8 +16,8 @@ namespace SkriptInsight.Tests
             const string content = "this is a##test";
             const string rawContent = @"    " + content + " #comment";
             const int lineNumber = 0;
-            var expectedContentRange = RangeExtensions.From(lineNumber, 4, 20);
-            var expectedCommentRange = RangeExtensions.From(lineNumber, 20, 28);
+            var expectedContentRange = RangeExtensions.From(lineNumber, 4, 19);
+            var expectedCommentRange = RangeExtensions.From(lineNumber, 19, 28);
             var expectedIndentationRange = RangeExtensions.From(lineNumber, 0, 4);
             
             var file = new SkriptFile(new Uri("memory://tests"));

@@ -56,11 +56,11 @@ namespace SkriptInsight.Core.Files.Nodes
                 var contentGroup = matchResult.Groups[1];
                 var commentGroup = matchResult.Groups[2];
 
-                var endingSpaces = Math.Clamp(contentGroup.Length - contentGroup.Value.Trim().Length, 0, int.MaxValue);
+                var endingSpaces = Math.Clamp(contentGroup.Length - contentGroup.Value.TrimEnd().Length, 0, int.MaxValue);
 
                 nodeContent = contentGroup.Value;
                 commentContent = commentGroup.Value;
-                length = contentGroup.Value.Trim().Length;
+                length = contentGroup.Value.TrimEnd().Length;
                 commentRange.Start.Character = commentGroup.Index - endingSpaces;
                 commentRange.End.Character = (commentGroup.Index - endingSpaces) + (commentGroup.Length + endingSpaces);
             }

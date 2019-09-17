@@ -24,8 +24,8 @@ namespace SkriptInsight.Host.Lsp.Handlers
             var nodeAtLine = file.Nodes.ElementAtOrDefault((int) request.Position.Line);
             var targetNode = nodeAtLine.DeepClone();
             targetNode.File = null;
-            if (targetNode.ParseResult?.Context != null)
-                targetNode.ParseResult.Context = null;
+            if (targetNode.MatchedSyntax?.Result?.Context != null)
+                targetNode.MatchedSyntax.Result.Context = null;
 
             return Task.FromResult(new Hover
             {
@@ -43,8 +43,6 @@ namespace SkriptInsight.Host.Lsp.Handlers
                     })}{"\n"}```"
                 })
             });
-
-            return null;
         }
 
         public TextDocumentRegistrationOptions GetRegistrationOptions()

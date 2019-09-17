@@ -14,7 +14,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
         public override ParseResult Parse(ParseContext ctx)
         {
             var shouldSkipWhitespaces =
-                string.IsNullOrWhiteSpace(ctx.PeekPrevious(1)) &&
+                (string.IsNullOrWhiteSpace(ctx.PeekPrevious(1)) || ctx.HasFinishedLine) &&
                 string.IsNullOrWhiteSpace(Value);
 
             if (shouldSkipWhitespaces)

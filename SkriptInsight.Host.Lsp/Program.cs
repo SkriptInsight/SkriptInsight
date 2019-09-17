@@ -67,7 +67,7 @@ namespace SkriptInsight.Host.Lsp
 
         private static void StartAnalytics()
         {
-            AnalyticsApi = new GoogleAnalyticsApi {DisableTracking = true};
+            AnalyticsApi = new GoogleAnalyticsApi {/*DisableTracking = true*/};
         }
     }
 }

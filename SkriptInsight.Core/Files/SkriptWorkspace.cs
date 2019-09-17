@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
+using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using SkriptInsight.Core.SyntaxInfo;
 
 namespace SkriptInsight.Core.Files
@@ -13,6 +14,8 @@ namespace SkriptInsight.Core.Files
     /// </summary>
     public class SkriptWorkspace
     {
+        public ILanguageServer Server { get; set; }
+        
         public SkriptWorkspace()
         {
             LoadAddons();
