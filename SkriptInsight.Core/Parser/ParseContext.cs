@@ -78,9 +78,18 @@ namespace SkriptInsight.Core.Parser
             return result;
         }
 
-        public ParseContext Clone()
+        public virtual ParseContext Clone()
         {
-            return this.JsonClone();
+            return new ParseContext
+            {
+                Text = Text,
+                Matches = Matches.ToList(),
+                CurrentLine = CurrentLine,
+                CurrentPosition = CurrentPosition,
+                ElementContext = ElementContext,
+                CurrentMatchStack = new Stack<int>(CurrentMatchStack.Reverse()),
+                TemporaryRangeStack = new Stack<int>(TemporaryRangeStack.Reverse())
+            };
         }
 
         public int FindNextBracket(char bracket, (char, char)[] matchExclusions = null)
@@ -166,13 +175,13 @@ namespace SkriptInsight.Core.Parser
 
         #region Match
 
-        [JsonIgnore] public List<ParseMatch> Matches { get; } = new List<ParseMatch>();
+        [JsonIgnore] public List<ParseMatch> Matches { get; set; } = new List<ParseMatch>();
 
         [System.Text.Json.Serialization.JsonIgnore]
-        public Stack<int> CurrentMatchStack { get; } = new Stack<int>();
+        public Stack<int> CurrentMatchStack { get; set; } = new Stack<int>();
 
         [System.Text.Json.Serialization.JsonIgnore]
-        public Stack<int> TemporaryRangeStack { get; } = new Stack<int>();
+        public Stack<int> TemporaryRangeStack { get; set; } = new Stack<int>();
 
         public void StartRangeMeasure(string description = "")
         {

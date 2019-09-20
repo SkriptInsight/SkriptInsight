@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.Json.Serialization;
@@ -29,6 +30,22 @@ namespace SkriptInsight.Core.Files
         public bool HasReachedEndOfFile => CurrentLine > File.RawContents.Count ||
                                            CurrentLine == File.RawContents.Count && CurrentPosition >= Text.Length ||
                                            File.RawContents.All(string.IsNullOrEmpty);
+
+        public override ParseContext Clone()
+        {
+            return new FileParseContext(File)
+            {
+                Matches = Matches.ToList(),
+                CurrentLine = CurrentLine,
+                MoveToNextLine = MoveToNextLine,
+                _currentLine = _currentLine,
+                CurrentPosition = CurrentPosition,
+                ElementContext = ElementContext,
+                CurrentMatchStack = new Stack<int>(CurrentMatchStack.Reverse()),
+                TemporaryRangeStack = new Stack<int>(TemporaryRangeStack.Reverse())
+
+            };
+        }
 
         public override string ReadNext(int count)
         {

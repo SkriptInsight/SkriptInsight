@@ -1,5 +1,8 @@
 using System;
+using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -7,10 +10,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using MoreLinq;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Files.Nodes;
 using SkriptInsight.Core.Files.Processes;
 using SkriptInsight.Core.Files.Processes.Impl;
+using SkriptInsight.Core.Managers;
 
 namespace SkriptInsight.Core.Files
 {
@@ -69,30 +74,33 @@ namespace SkriptInsight.Core.Files
             startLine = Math.Max(0, startLine);
             endLine = endLine < 0 ? RawContents.Count : endLine;
             var maxDegreeOfParallelism = Environment.ProcessorCount;
-            var contexts = Enumerable.Range(0, maxDegreeOfParallelism + 1)
-                .Select(_ => new FileParseContext(this) {MoveToNextLine = false})
-                .ToArray();
-
-            var processCount = -1;
+            var contexts = new ConcurrentQueue<FileParseContext>(Enumerable.Range(0, (int) Math.Ceiling(maxDegreeOfParallelism * 1.20))
+                .Select(_ => new FileParseContext(this) {MoveToNextLine = false}).ToList());
 
             PrepareFileNodesSize();
 
+            var sw = Stopwatch.StartNew();
+            
+            WorkspaceManager.Instance.Current.Server.Window.LogInfo($"Starting {process.GetType().Name} on {endLine - startLine + 1} lines.");
             Parallel.For(startLine, endLine + 1,
                 new ParallelOptions {MaxDegreeOfParallelism = maxDegreeOfParallelism},
                 line =>
                 {
-                    Interlocked.Increment(ref processCount);
-
                     if (RawContents.ElementAtOrDefault(line) != null)
                     {
-                        var context = contexts[processCount];
+                        contexts.TryDequeue(out var context);
+                        context.CurrentMatchStack.Clear();
+                        context.TemporaryRangeStack.Clear();
+                        context.Matches.Clear();
+                        
                         context.CurrentLine = line;
 
                         process.DoWork(this, line, RawContents.ElementAt(line), context);
+                        
+                        contexts.Enqueue(context);
                     }
-
-                    Interlocked.Decrement(ref processCount);
                 });
+            WorkspaceManager.Instance.Current.Server.Window.LogInfo($"Took {sw.ElapsedMilliseconds}ms to run {process.GetType().Name} on {endLine - startLine + 1} lines.");
         }
 
         private void PrepareFileNodesSize()

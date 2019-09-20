@@ -16,6 +16,7 @@ namespace SkriptInsight.Core.Files.Processes.Impl
                 {
                     foreach (var effectPattern in effect.PatternNodes)
                     {
+                        context.Matches.Clear();
                         context.CurrentLine = lineNumber;
                         var result = effectPattern.Parse(context);
                         if (result.IsSuccess)

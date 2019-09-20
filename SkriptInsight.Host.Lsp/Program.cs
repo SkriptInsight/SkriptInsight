@@ -47,9 +47,9 @@ namespace SkriptInsight.Host.Lsp
                     .WithMinimumLogLevel(LogLevel.Error)
                     .WithHandler<TextHoverHandler>()
                     .OnRequest<object, int>("insight/inspectionsCount", _ => Task.FromResult(0));
-
             });
-
+            WorkspaceManager.Instance.Current.Server = server;
+            
             await server.WaitForExit;
 
             AnalyticsApi.CancellationToken.Cancel();
@@ -67,7 +67,10 @@ namespace SkriptInsight.Host.Lsp
 
         private static void StartAnalytics()
         {
-            AnalyticsApi = new GoogleAnalyticsApi {/*DisableTracking = true*/};
+            AnalyticsApi = new GoogleAnalyticsApi
+            {
+                /*DisableTracking = true*/
+            };
         }
     }
 }
