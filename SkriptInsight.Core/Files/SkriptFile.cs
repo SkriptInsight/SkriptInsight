@@ -88,14 +88,16 @@ namespace SkriptInsight.Core.Files
                 {
                     if (RawContents.ElementAtOrDefault(line) != null)
                     {
+                        var rawContent = RawContents.ElementAt(line);
                         contexts.TryDequeue(out var context);
                         context.CurrentMatchStack.Clear();
                         context.TemporaryRangeStack.Clear();
                         context.Matches.Clear();
+                        context.IndentationChars = rawContent.TakeWhile(char.IsWhiteSpace).Count();
                         
                         context.CurrentLine = line;
 
-                        process.DoWork(this, line, RawContents.ElementAt(line), context);
+                        process.DoWork(this, line, rawContent, context);
                         
                         contexts.Enqueue(context);
                     }

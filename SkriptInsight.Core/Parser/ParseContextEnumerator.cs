@@ -21,7 +21,7 @@ namespace SkriptInsight.Core.Parser
 
         public void Reset()
         {
-            Context.CurrentPosition = 0;
+            Context.CurrentPosition = Context.IndentationChars;
         }
 
         public char Current { get; private set; }

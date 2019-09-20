@@ -34,7 +34,7 @@ namespace SkriptInsight.Core.Parser.Expressions
 
         public ParseContext Context { get; set; }
 
-        public string AsString()
+        public virtual string AsString()
         {
             return Type?.AsString(Value) ?? "";
         }

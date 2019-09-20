@@ -100,6 +100,7 @@ namespace SkriptInsight.Core.Parser.Patterns
 
             //Calculate Parse Marks for this final result
             finalResult.ParseMark = results.Select(c => c.ParseMark).Aggregate(0, (left, right) => left ^ right);
+            
             return finalResult;
         }
 

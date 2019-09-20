@@ -22,7 +22,7 @@ namespace SkriptInsight.Core.Files
 
         public override string Text
         {
-            get => File.Nodes?.ElementAtOrDefault(CurrentLine)?.NodeContent ??
+            get => File.Nodes?.ElementAtOrDefault(CurrentLine)?.RawText ??
                    File.RawContents.ElementAtOrDefault(CurrentLine) ?? string.Empty;
             set => throw new NotSupportedException();
         }
@@ -67,7 +67,7 @@ namespace SkriptInsight.Core.Files
             {
                 _currentLine = value;
                 //Reset position when changing lines
-                CurrentPosition = 0;
+                CurrentPosition = IndentationChars;
             }
         }
     }

@@ -13,6 +13,8 @@ namespace SkriptInsight.Core.Parser
     [JsonObject]
     public class ParseContext : IEnumerable<char>
     {
+        private int _indentationChars;
+
         public ParseContext()
         {
         }
@@ -28,6 +30,18 @@ namespace SkriptInsight.Core.Parser
         public bool HasReachedEndOfEnumerator => CurrentPosition > Text.Length;
 
         public ContextualElement<AbstractSkriptPatternElement> ElementContext { get; set; }
+
+        public int IndentationChars
+        {
+            get => _indentationChars;
+            set
+            {
+                _indentationChars = value;
+                
+                if (CurrentPosition < value)
+                    CurrentPosition = value;
+            }
+        }
 
         public IEnumerator<char> GetEnumerator()
         {
