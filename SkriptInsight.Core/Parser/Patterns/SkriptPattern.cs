@@ -94,10 +94,10 @@ namespace SkriptInsight.Core.Parser.Patterns
                 return parse;
             }).ToList();
 
+            ctx.ElementContext = null;
             if (!results.All(c => c.IsSuccess)) return ParseResult.Failure(ctx);
 
             var finalResult = ParseResult.Success(ctx);
-
             //Calculate Parse Marks for this final result
             finalResult.ParseMark = results.Select(c => c.ParseMark).Aggregate(0, (left, right) => left ^ right);
             

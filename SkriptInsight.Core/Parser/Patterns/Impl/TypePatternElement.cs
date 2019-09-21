@@ -34,7 +34,8 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
             var type = KnownTypesManager.Instance.GetTypeByName(Type);
             ISkriptType skriptTypeDescriptor = null;
 
-            if (Type.EndsWith("s"))
+            var isMultipleValues = Type.EndsWith("s");
+            if (isMultipleValues)
             {
                 type = KnownTypesManager.Instance.GetTypeByName(Type.Substring(0, Type.Length - 1));
 
@@ -48,21 +49,35 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
 
             IExpression result = null;
 
+
             if (!Constraint.HasFlagFast(SyntaxValueAcceptanceConstraint.LiteralsOnly))
             {
-                //Try parsing a variable first
-                var reference = new SkriptVariableReference();
+                //Try parsing a variable
+                var reference = new SkriptVariableReferenceType();
                 var ctxClone = ctx.Clone();
                 result = reference.TryParseValue(ctxClone);
                 if (result != null) ctx.ReadUntilPosition(ctxClone.CurrentPosition);
             }
 
+            var oldPos = ctx.CurrentPosition;
             if (result == null)
                 result = skriptTypeDescriptor?.TryParseValue(ctx);
+           
+            if (result == null)
+            {
+                // Type descriptor wasn't able to parse the code. Push back and try with parentheses.
+                ctx.CurrentPosition = oldPos;
+                
+                //Try parsing with parentheses first
+                var parenthesesType = new GenericParenthesesType(Type);
+                result = parenthesesType.TryParseValue(ctx);
+            }
+
+
 
             if (result != null)
             {
-                result.Type = skriptTypeDescriptor;
+                if (result.Type == null) result.Type = skriptTypeDescriptor;
                 result.Context = ctx;
                 var match = new ExpressionParseMatch(result);
                 ctx.Matches.Add(match);

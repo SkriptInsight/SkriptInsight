@@ -14,11 +14,14 @@ namespace SkriptInsight.Core.Parser.Types
             var result = TryParse(ctx);
             if (result != null)
             {
-                return (IExpression) Activator.CreateInstance(
+                var expression = (IExpression) Activator.CreateInstance(
                     typeof(Expression<>).MakeGenericType(typeof(T)),
                     result,
                     ctx.EndRangeMeasure()
                 );
+                if (expression.Type == null)
+                    expression.Type = this;
+                return expression;
             }
 
             ctx.UndoRangeMeasure();

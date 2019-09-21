@@ -1,8 +1,3 @@
-using System;
-using System.Linq;
-using System.Text.RegularExpressions;
-using OmniSharp.Extensions.LanguageServer.Protocol.Models;
-using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Files.Nodes;
 using SkriptInsight.Core.Files.Nodes.Impl;
 using Range = OmniSharp.Extensions.LanguageServer.Protocol.Models.Range;

@@ -31,11 +31,11 @@ namespace SkriptInsight.Core.Files
                                            CurrentLine == File.RawContents.Count && CurrentPosition >= Text.Length ||
                                            File.RawContents.All(string.IsNullOrEmpty);
 
-        public override ParseContext Clone()
+        public override ParseContext Clone(bool includeMatches = true)
         {
             return new FileParseContext(File)
             {
-                Matches = Matches.ToList(),
+                Matches = includeMatches ? Matches.ToList() : new List<ParseMatch>(),
                 CurrentLine = CurrentLine,
                 MoveToNextLine = MoveToNextLine,
                 _currentLine = _currentLine,

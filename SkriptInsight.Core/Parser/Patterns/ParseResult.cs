@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
-using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 
 namespace SkriptInsight.Core.Parser.Patterns
 {
-    [DebuggerDisplay("{ResultType.ToString()} - {Context.ToString()}")]
+    [DebuggerDisplay("{ResultType} - {Context}")]
     public class ParseResult
     {
         public ParseResultType ResultType { get; set; }

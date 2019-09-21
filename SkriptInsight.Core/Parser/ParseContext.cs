@@ -92,12 +92,12 @@ namespace SkriptInsight.Core.Parser
             return result;
         }
 
-        public virtual ParseContext Clone()
+        public virtual ParseContext Clone(bool includeMatches = true)
         {
             return new ParseContext
             {
                 Text = Text,
-                Matches = Matches.ToList(),
+                Matches = includeMatches ? Matches.ToList() : new List<ParseMatch>(),
                 CurrentLine = CurrentLine,
                 CurrentPosition = CurrentPosition,
                 ElementContext = ElementContext,

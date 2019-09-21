@@ -20,6 +20,16 @@ namespace SkriptInsight.Core.Extensions
                         yield return expression;
                     }
                     break;
+                case ParenthesesExpression parExpr:
+                    if (parExpr.InnerExpression == null) break;
+                    
+                    foreach (var expression in parExpr.InnerExpression.GetValues<T>()) yield return expression;
+                    
+                    break;
+                default:
+                    if (expr.Value is T)
+                        yield return expr;
+                    break;
             }
         }
     }

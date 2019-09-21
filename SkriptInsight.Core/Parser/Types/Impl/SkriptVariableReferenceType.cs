@@ -3,7 +3,7 @@ using SkriptInsight.Core.Parser.Expressions.Variables;
 
 namespace SkriptInsight.Core.Parser.Types.Impl
 {
-    public class SkriptVariableReference : SkriptGenericType<SkriptVariable>
+    public class SkriptVariableReferenceType : SkriptGenericType<SkriptVariable>
     {
         protected override SkriptVariable TryParse(ParseContext ctx)
         {

@@ -93,6 +93,60 @@ namespace SkriptInsight.Tests
             if (success)
                 Assert.Equal(2, result.Context.Matches.Count);
         }
+
+        [Theory]
+        [InlineData("\"test\" and \"test\"")]
+        [InlineData("(\"test\") and \"test\"")]
+        public void MixedParenthesesTypeParsesCorrectly(string input)
+        {
+            
+            KnownTypesManager.Instance.LoadKnownTypes();
+            var stringPattern = SkriptPattern.ParsePattern("print %strings%");
+
+            var result = stringPattern.Parse("print " + input);
+
+            Assert.True(result.IsSuccess, "result.IsSuccess");
+            Assert.True(result.Context.HasFinishedLine, "result.Context.HasFinishedLine");
+        }
+
+        [Fact]
+        public void MixedParenthesesWithMultipleValuesParsesCorrectly()
+        {
+            const string input = "(\"true\" and \"reee\") and \"false\"";
+            KnownTypesManager.Instance.LoadKnownTypes();
+            var stringPattern = SkriptPattern.ParsePattern("print %strings%");
+
+            var result = stringPattern.Parse("print " + input);
+
+            Assert.True(result.IsSuccess, "result.IsSuccess");
+            Assert.True(result.Context.HasFinishedLine, "result.Context.HasFinishedLine");
+        }
+        
+        [Theory]
+        [InlineData("(\"test\")")]
+        [InlineData("((\"test\"))")]
+        [InlineData("(((\"test\")))")]
+        public void ParenthesesTypeParsesCorrectly(string input)
+        {
+            KnownTypesManager.Instance.LoadKnownTypes();
+            var stringPattern = SkriptPattern.ParsePattern(ParseContext.FromCode("print %string%"));
+
+            var result = stringPattern.Parse("print " + input);
+
+            Assert.True(result.IsSuccess, "result.IsSuccess");
+            Assert.Single(result.Context.Matches);
+
+            var match = result.Context.Matches.First();
+            Assert.IsType<ExpressionParseMatch>(match);
+            
+            var expr = ((ExpressionParseMatch) match).Expression;
+            Assert.IsType<ParenthesesExpression>(expr);
+            
+            var parenthesesExpression = expr as ParenthesesExpression;
+            Assert.NotNull(parenthesesExpression);
+            Assert.Equal(input, parenthesesExpression.AsString());
+            
+        }
         
         [Theory]
         [InlineData("{_test}")]
