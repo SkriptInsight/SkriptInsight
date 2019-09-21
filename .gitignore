@@ -514,3 +514,4 @@ fabric.properties
 # End of https://www.gitignore.io/api/node,rider,csharp
 .idea/**
 /skript-lang/skript-insight/
+/skript-lang/
