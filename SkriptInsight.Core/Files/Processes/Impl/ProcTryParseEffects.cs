@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
@@ -43,6 +44,7 @@ namespace SkriptInsight.Core.Files.Processes.Impl
                 if (workDone) break;
             }
 
+/*
             var diags = new List<Diagnostic>();
             if (node.MatchedSyntax != null)
             {
@@ -70,12 +72,13 @@ namespace SkriptInsight.Core.Files.Processes.Impl
                         Source = "SkriptInsight"
                     }));
             }
+*/
 
-            WorkspaceManager.Instance.Current.Server.Document.PublishDiagnostics(new PublishDiagnosticsParams
+            /*WorkspaceManager.Instance.Current.Server.Document.PublishDiagnostics(new PublishDiagnosticsParams
             {
                 Uri = file.Url,
                 Diagnostics = diags
-            });
+            })*/;
         }
     }
 }

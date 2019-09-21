@@ -102,6 +102,11 @@ namespace SkriptInsight.Core.Files
                         contexts.Enqueue(context);
                     }
                 });
+            
+            if (process is ProcTryParseEffects)
+            {
+                MinecraftColoringManager.Instance.File_OnParseComplete(this, new EventArgs());
+            }
             WorkspaceManager.Instance.Current.Server.Window.LogInfo($"Took {sw.ElapsedMilliseconds}ms to run {process.GetType().Name} on {endLine - startLine + 1} lines.");
         }
 
