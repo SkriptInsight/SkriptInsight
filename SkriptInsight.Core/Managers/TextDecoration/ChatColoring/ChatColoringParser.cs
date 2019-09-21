@@ -140,7 +140,7 @@ namespace SkriptInsight.Core.Managers.TextDecoration.ChatColoring
                 }
             }
 
-            if (buffer.Length > 0)
+//            if (buffer.Length > 0)
                 yield return new ChatColoredSnippet
                 {
                     Text = buffer.ToString(),
