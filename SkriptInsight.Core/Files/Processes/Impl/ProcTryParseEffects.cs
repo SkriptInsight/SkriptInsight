@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
@@ -43,42 +42,6 @@ namespace SkriptInsight.Core.Files.Processes.Impl
 
                 if (workDone) break;
             }
-
-/*
-            var diags = new List<Diagnostic>();
-            if (node.MatchedSyntax != null)
-            {
-                var result = node.MatchedSyntax.Result;
-                
-                diags.AddRange(result.Matches.OfType<ExpressionParseMatch>()
-                    .SelectMany(r => r.Expression.GetValues<string>())
-                    .Select(resultMatch => new Diagnostic
-                    {
-                        Code = "1",
-                        Message = "Found a String",
-                        Range = resultMatch.Range,
-                        Severity = DiagnosticSeverity.Warning,
-                        Source = "SkriptInsight"
-                    }));
-                
-                diags.AddRange(result.Matches.OfType<ExpressionParseMatch>()
-                    .SelectMany(r => r.Expression.GetValues<SkriptVariable>())
-                    .Select(resultMatch => new Diagnostic
-                    {
-                        Code = "2",
-                        Message = "Found a variable. REEEEEE",
-                        Range = resultMatch.Range,
-                        Severity = DiagnosticSeverity.Error,
-                        Source = "SkriptInsight"
-                    }));
-            }
-*/
-
-            /*WorkspaceManager.Instance.Current.Server.Document.PublishDiagnostics(new PublishDiagnosticsParams
-            {
-                Uri = file.Url,
-                Diagnostics = diags
-            })*/;
         }
     }
 }

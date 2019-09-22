@@ -32,5 +32,27 @@ namespace SkriptInsight.Core.Extensions
                     break;
             }
         }
+        
+        public static IEnumerable<IExpression> GetAllExpressions(this IExpression expr)
+        {
+            switch (expr)
+            {
+                case MultiValueExpression multiVal:
+                    foreach (var expression in multiVal.Values.SelectMany(valDesc => valDesc.Expression.GetAllExpressions()))
+                    {
+                        yield return expression;
+                    }
+                    break;
+                case ParenthesesExpression parExpr:
+                    if (parExpr.InnerExpression == null) break;
+                    
+                    foreach (var expression in parExpr.InnerExpression.GetAllExpressions()) yield return expression;
+                    
+                    break;
+                default:
+                    yield return expr;
+                    break;
+            }
+        }
     }
 }
