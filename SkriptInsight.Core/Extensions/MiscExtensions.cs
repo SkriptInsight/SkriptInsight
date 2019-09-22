@@ -142,7 +142,7 @@ namespace SkriptInsight.Core.Extensions
                 if (c == varOpen)
                 {
                     var closingBracket = pattern.GetClosingBracketIndex(index, varOpen, varClose);
-                    if (closingBracket > 0) index = closingBracket - 2;
+                    if (closingBracket > 0) index = closingBracket;
 
                     continue;
                 }

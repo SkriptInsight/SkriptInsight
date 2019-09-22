@@ -103,7 +103,7 @@ namespace SkriptInsight.Core.Managers
 
             var nodes = file.Nodes;
 
-            foreach (var node in nodes)
+            foreach (var node in nodes.Select(c => c.Value))
                 if (node?.MatchedSyntax?.Result?.IsSuccess ?? false)
                 {
                     foreach (var value in node.MatchedSyntax?.Result?.Matches.OfType<ExpressionParseMatch>()

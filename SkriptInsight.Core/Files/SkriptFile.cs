@@ -125,7 +125,7 @@ namespace SkriptInsight.Core.Files
                         contexts.TryDequeue(out var context);
                         context.CurrentMatchStack.Clear();
                         context.TemporaryRangeStack.Clear();
-                        context.Matches.Clear();
+                        context.Matches = new List<ParseMatch>();
                         context.IndentationChars = rawContent.TakeWhile(char.IsWhiteSpace).Count();
 
                         context.CurrentLine = line;
@@ -137,7 +137,7 @@ namespace SkriptInsight.Core.Files
                 });
             
             
-            var diags = new List<Diagnostic>();
+            /*var diags = new List<Diagnostic>();
 
             Nodes.Select(c => c.Value).ForEach(node =>
             {
@@ -174,7 +174,7 @@ namespace SkriptInsight.Core.Files
             {
                 Uri = Url,
                 Diagnostics = diags
-            });
+            });*/
             
             WorkspaceManager.Instance.Current.Server.Window.LogInfo(
                 $"Took {sw.ElapsedMilliseconds}ms to run {process.GetType().Name} on {endLine - startLine + 1} lines [{startLine}->{endLine}].");

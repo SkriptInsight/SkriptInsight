@@ -45,7 +45,7 @@ namespace SkriptInsight.Host.Lsp
                     .AddDefaultLoggingProvider()
                     .WithHandler<TextDocumentHandler>()
                     .WithMinimumLogLevel(LogLevel.Error)
-                    .WithHandler<TextHoverHandler>()
+//                    .WithHandler<TextHoverHandler>()
                     .OnRequest<object, int>("insight/inspectionsCount", _ => Task.FromResult(0));
             });
             WorkspaceManager.Instance.Current.Server = server;
