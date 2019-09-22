@@ -1,12 +1,14 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Force.DeepCloner;
 using Newtonsoft.Json;
+using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using SkriptInsight.Core.Files;
 using SkriptInsight.Core.Files.Nodes;
-using SkriptInsight.Core.Parser;
+using SkriptInsight.Core.Managers;
 
 namespace SkriptInsight.Core.Extensions
 {
@@ -33,7 +35,7 @@ namespace SkriptInsight.Core.Extensions
             return text.TakeWhile(char.IsWhiteSpace).GroupBy(c => c)
                 .Select(c => NodeIndentation.FromCharacter(c.Key, c.Count())).OrderBy(c => c.Type).ToArray();
         }
-        
+
         public static void Resize<T>(this List<T> list, int sz)
         {
             if (list.Capacity < sz)
@@ -64,6 +66,7 @@ namespace SkriptInsight.Core.Extensions
             {
                 fileParseContext.File = fileOriginalContext.File;
             }
+
             Debug.WriteLine($"Cloned object of type {typeof(T).Name}; {original.GetType().Name}");
             return resultClone;
         }
@@ -76,6 +79,34 @@ namespace SkriptInsight.Core.Extensions
                 PreserveReferencesHandling = PreserveReferencesHandling.All,
                 TypeNameHandling = TypeNameHandling.All
             });
+        }
+
+        public static void ShiftRangeRight<T>(this ConcurrentDictionary<int, T> lst, int startRange, int count,
+            int amount, Action<T> update = null)
+        {
+            var endRange = startRange + count;
+            for (var i = endRange - amount; i >= startRange; i--)
+            {
+                if (i > (endRange + amount)) continue;
+                var value = lst.ElementAtOrDefault(i).Value;
+                
+                if (value != null) update?.Invoke(value);
+                lst[i + amount] = value;
+            }
+        }
+
+        public static void ShiftRangeLeft<T>(this ConcurrentDictionary<int, T> lst, int startRange, int count,
+            int amount, Action<T> update = null)
+        {
+            var endRange = startRange + count;
+
+            WorkspaceManager.Instance.Current.Server.Window.LogInfo($"Start nodes count [{lst.Count}]");
+            for (int i = startRange; i <= endRange; i++)
+            {
+                var value = lst.ElementAtOrDefault(i).Value;
+                if (value != null) update?.Invoke(value);
+                lst[i - amount] = value;
+            }
         }
 
         public static bool EqualsIgnoreCase(this string first, string second)

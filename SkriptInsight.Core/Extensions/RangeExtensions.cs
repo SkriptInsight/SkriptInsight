@@ -40,6 +40,18 @@ namespace SkriptInsight.Core.Extensions
             return range.OffsetStart(character, line).OffsetEnd(character, line);
         }
 
+        public static void ShiftLineNumber(this Position pos, int amount)
+        {
+            pos.Line += amount;
+        }
+        
+
+        public static void ShiftLineNumber(this Range range, int amount)
+        {
+            range.Start.ShiftLineNumber(amount);
+            range.End.ShiftLineNumber(amount);
+        }
+        
         public static int ResolveFor(this Position pos, List<string> str)
         {
             var targetLine = pos.Line;

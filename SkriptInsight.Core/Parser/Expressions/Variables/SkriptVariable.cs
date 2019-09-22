@@ -24,6 +24,8 @@ namespace SkriptInsight.Core.Parser.Expressions.Variables
             {
                 var variable = new SkriptVariable();
                 var nextBracket = ctx.FindNextBracket('{', '}', matchExclusions: new[] {('{', '}')});
+                if (nextBracket < 0) return null;
+                
                 var content = ctx.ReadUntilPosition(nextBracket);
                 var builder = new StringBuilder();
                 var onVariableSplit = false;

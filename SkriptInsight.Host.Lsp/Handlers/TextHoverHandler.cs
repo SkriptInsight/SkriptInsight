@@ -21,7 +21,7 @@ namespace SkriptInsight.Host.Lsp.Handlers
         {
             var file = WorkspaceManager.Instance.GetOrCreateByUri(request.TextDocument.Uri);
 
-            var nodeAtLine = file.Nodes.ElementAtOrDefault((int) request.Position.Line);
+            var nodeAtLine = file.Nodes?[(int) request.Position.Line];
             var targetNode = nodeAtLine.DeepClone();
             targetNode.File = null;
             if (targetNode.MatchedSyntax?.Result?.Context != null)

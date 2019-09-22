@@ -55,7 +55,15 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                 //Try parsing a variable
                 var reference = new SkriptVariableReferenceType();
                 var ctxClone = ctx.Clone();
-                result = reference.TryParseValue(ctxClone);
+                try
+                {
+                    result = reference.TryParseValue(ctxClone);
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
+
                 if (result != null) ctx.ReadUntilPosition(ctxClone.CurrentPosition);
             }
 

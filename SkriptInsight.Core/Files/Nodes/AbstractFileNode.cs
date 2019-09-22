@@ -1,8 +1,11 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using SkriptInsight.Core.Extensions;
+using SkriptInsight.Core.Parser;
 using SkriptInsight.Core.Parser.Patterns;
 using SkriptInsight.Core.SyntaxInfo;
+using MoreEnumerable = MoreLinq.MoreEnumerable;
 
 namespace SkriptInsight.Core.Files.Nodes
 {
@@ -18,19 +21,19 @@ namespace SkriptInsight.Core.Files.Nodes
         /// </summary>
         [JsonIgnore]
         public SkriptFile File { get; set; }
-        
+
         /// <summary>
         /// Parent node of this node
         /// </summary>
         [JsonIgnore]
         public AbstractFileNode Parent { get; set; }
-        
+
         /// <summary>
         /// Children nodes of this node
         /// </summary>
         [JsonIgnore]
         public List<AbstractFileNode> Children { get; set; }
-        
+
         /// <summary>
         /// Indentations of this node
         /// </summary>
@@ -45,22 +48,22 @@ namespace SkriptInsight.Core.Files.Nodes
         /// Range of the indentation of this node
         /// </summary>
         public Range IndentationRange { get; set; }
-        
+
         /// <summary>
         /// The Raw Text content of this node.
         /// </summary>
         public string RawText { get; set; }
-        
+
         /// <summary>
         /// Range of the comment of this node
         /// </summary>
         public Range CommentRange { get; set; }
-        
+
         /// <summary>
         /// Range of the content of this node (doesn't include comments or indentation)
         /// </summary>
         public Range ContentRange { get; set; }
-        
+
         /// <summary>
         /// Content of the comment of this node
         /// </summary>
@@ -77,5 +80,22 @@ namespace SkriptInsight.Core.Files.Nodes
         public bool IsSectionNode { get; set; }
 
         public SyntaxMatch MatchedSyntax { get; set; }
+
+        public void ShiftLineNumber(int amount)
+        {
+            LineNumber += amount;
+            Range?.ShiftLineNumber(amount);
+            CommentRange?.ShiftLineNumber(amount);
+            ContentRange?.ShiftLineNumber(amount);
+            IndentationRange?.ShiftLineNumber(amount);
+            MatchedSyntax?.Result?.Matches?.ForEach(m =>
+            {
+                var expression = (m as ExpressionParseMatch)?.Expression;
+                if (expression != null)
+                    MoreEnumerable.ForEach(expression.GetAllExpressions(), expr => expr.Range.ShiftLineNumber(amount));
+                else
+                    m.Range.ShiftLineNumber(amount);
+            });
+        }
     }
 }

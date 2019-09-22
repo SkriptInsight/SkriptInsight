@@ -22,7 +22,7 @@ namespace SkriptInsight.Core.Files
 
         public override string Text
         {
-            get => File.Nodes?.ElementAtOrDefault(CurrentLine)?.RawText ??
+            get => File.Nodes[CurrentLine]?.RawText ??
                    File.RawContents.ElementAtOrDefault(CurrentLine) ?? string.Empty;
             set => throw new NotSupportedException();
         }
