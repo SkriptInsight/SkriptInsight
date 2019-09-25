@@ -95,8 +95,8 @@ namespace SkriptInsight.Core.Files
             Nodes.SkipWhile(kv => kv.Value != null).ToList().ForEach(c => Nodes.Remove(c.Key, out _));
         }
 
-        public ConcurrentDictionary<int, AbstractFileNode> Nodes { get; internal set; } =
-            new ConcurrentDictionary<int, AbstractFileNode>();
+        public NodesConcurrentDictionary Nodes { get; internal set; } =
+            new NodesConcurrentDictionary();
 
         public FileParseContext ParseContext { get; }
 
