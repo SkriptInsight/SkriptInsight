@@ -22,7 +22,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl
         public IExpression TryParseValue(ParseContext ctx)
         {
             var typeInstance = Type.CreateNewInstance();
-            var ourContext = ctx.Clone();
+            var ourContext = ctx.Clone(false);
             var resultExpression = new MultiValueExpression();
 
             ctx.StartRangeMeasure();
@@ -34,7 +34,6 @@ namespace SkriptInsight.Core.Parser.Types.Impl
             
             while (isValid)
             {
-                ourContext.Matches.Clear();
 
                 var result = NextValuePattern.Parse(ourContext);
                 isValid = result.IsSuccess;
