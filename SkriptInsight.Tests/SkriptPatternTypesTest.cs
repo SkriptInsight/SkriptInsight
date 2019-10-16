@@ -182,6 +182,7 @@ namespace SkriptInsight.Tests
         [InlineData("strings", "\"test\"")]
         [InlineData("strings", "\"one\" and \"two\"")]
         [InlineData("strings", "\"one\", \"two\" and \"three\"")]
+        
         [InlineData("boolean", "true")]
         [InlineData("boolean", "false")]
         [InlineData("boolean", "on")]
@@ -191,6 +192,12 @@ namespace SkriptInsight.Tests
         [InlineData("booleans", "true, false")]
         [InlineData("booleans", "false and true")]
         [InlineData("booleans", "false, true and no")]
+        
+        [InlineData("number", "1")]
+        [InlineData("number", "-2")]
+        [InlineData("number", "-2.3")]
+        [InlineData("numbers", "-2.3, 1, -2, 5")]
+        [InlineData("numbers", "-2.1234567")]
         public void TypesCanBeRepresentedAsStrings(string type, string value)
         {
             var pattern = SkriptPattern.ParsePattern($"%{type}%");
