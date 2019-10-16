@@ -34,7 +34,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl
             
             while (isValid)
             {
-
+                ourContext.Matches.Clear();
                 var result = NextValuePattern.Parse(ourContext);
                 isValid = result.IsSuccess;
 

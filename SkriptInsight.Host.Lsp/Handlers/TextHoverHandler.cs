@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Force.DeepCloner;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
@@ -22,27 +19,26 @@ namespace SkriptInsight.Host.Lsp.Handlers
             var file = WorkspaceManager.Instance.GetOrCreateByUri(request.TextDocument.Uri);
 
             var nodeAtLine = file.Nodes?[(int) request.Position.Line];
-            var targetNode = nodeAtLine.DeepClone();
-            targetNode.File = null;
-            if (targetNode.MatchedSyntax?.Result?.Context != null)
-                targetNode.MatchedSyntax.Result.Context = null;
 
-            return Task.FromResult(new Hover
-            {
-                Range = targetNode.ContentRange,
-                Contents = new MarkedStringsOrMarkupContent(new MarkupContent
+            if (nodeAtLine != null)
+                return Task.FromResult(new Hover
                 {
-                    Kind = MarkupKind.Markdown,
-                    Value = $@"```js{"\n"}{JsonConvert.SerializeObject(targetNode, new JsonSerializerSettings
+                    Range = nodeAtLine.ContentRange,
+                    Contents = new MarkedStringsOrMarkupContent(new MarkupContent
                     {
-                        Converters = new List<JsonConverter> {new StringEnumConverter {NamingStrategy = new CamelCaseNamingStrategy()}},
-                        ContractResolver = new NoFileContractResolver(),
-                        Formatting = Formatting.Indented,
-                        NullValueHandling = NullValueHandling.Ignore,
-                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                    })}{"\n"}```"
-                })
-            });
+                        Kind = MarkupKind.Markdown,
+                        Value = $@"```js{"\n"}{JsonConvert.SerializeObject(nodeAtLine, new JsonSerializerSettings
+                        {
+                            Converters = new List<JsonConverter> {new StringEnumConverter {NamingStrategy = new CamelCaseNamingStrategy()}},
+                            ContractResolver = new NoFileContractResolver(),
+                            Formatting = Formatting.Indented,
+                            NullValueHandling = NullValueHandling.Ignore,
+                            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                        })}{"\n"}```"
+                    })
+                });
+
+            return null;
         }
 
         public TextDocumentRegistrationOptions GetRegistrationOptions()
