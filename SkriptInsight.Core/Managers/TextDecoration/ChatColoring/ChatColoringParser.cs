@@ -5,6 +5,7 @@ using System.Text;
 using MoreLinq;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using SkriptInsight.Core.Extensions;
+using SkriptInsight.Core.Types;
 using Range = OmniSharp.Extensions.LanguageServer.Protocol.Models.Range;
 
 namespace SkriptInsight.Core.Managers.TextDecoration.ChatColoring

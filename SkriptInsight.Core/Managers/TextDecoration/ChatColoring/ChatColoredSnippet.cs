@@ -1,4 +1,5 @@
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using SkriptInsight.Core.Types;
 
 namespace SkriptInsight.Core.Managers.TextDecoration.ChatColoring
 {

@@ -11,6 +11,7 @@ using SkriptInsight.Core.Managers.TextDecoration.ChatColoring;
 using SkriptInsight.Core.Parser;
 using SkriptInsight.Core.Parser.Expressions;
 using SkriptInsight.Core.Parser.Expressions.Variables;
+using SkriptInsight.Core.Types;
 using Range = OmniSharp.Extensions.LanguageServer.Protocol.Models.Range;
 
 namespace SkriptInsight.Core.Managers
