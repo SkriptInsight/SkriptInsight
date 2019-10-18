@@ -2,15 +2,17 @@ using System;
 using System.Linq;
 using JetBrains.Annotations;
 using SkriptInsight.Core.Extensions;
+using SkriptInsight.Core.Managers.TextDecoration.ChatColoring;
+using SkriptInsight.Core.Types.Attributes;
 
-namespace SkriptInsight.Core.Managers.TextDecoration.ChatColoring
+namespace SkriptInsight.Core.Types
 {
     [PublicAPI]
     [Flags]
     public enum ChatColor
     {
         [ChatColorAlias("light aqua", "turquoise", "turquois", "light blue")] [ChatColorInfo('b', "#55FFFF")]
-        Aqua = 1 << 0,
+        Aqua = 1,
 
         [ChatColorAlias("black")] [ChatColorInfo('0', "#000000")]
         Black = 1 << 1,
