@@ -41,11 +41,11 @@ namespace SkriptInsight.Host.Lsp
                 options
                     .WithInput(Console.OpenStandardInput())
                     .WithOutput(Console.OpenStandardOutput())
-                    .WithLoggerFactory(new LoggerFactory())
+//                    .WithLoggerFactory(new LoggerFactory())
                     .AddDefaultLoggingProvider()
                     .WithHandler<TextDocumentHandler>()
-                    .WithMinimumLogLevel(LogLevel.Error)
-//                    .WithHandler<TextHoverHandler>()
+//                    .WithMinimumLogLevel(LogLevel.Error)
+                    .WithHandler<TextHoverHandler>()
                     .OnRequest<object, int>("insight/inspectionsCount", _ => Task.FromResult(0));
             });
             WorkspaceManager.Instance.Current.Server = server;
