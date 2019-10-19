@@ -11,7 +11,7 @@ namespace SkriptInsight.Core.Types
     [Flags]
     public enum ChatColor
     {
-        [ChatColorAlias("light aqua", "turquoise", "turquois", "light blue")] [ChatColorInfo('b', "#55FFFF")]
+        [ChatColorAlias("light cyan", "light aqua", "turquoise", "turquois", "light blue")] [ChatColorInfo('b', "#55FFFF")]
         Aqua = 1,
 
         [ChatColorAlias("black")] [ChatColorInfo('0', "#000000")]
@@ -20,11 +20,11 @@ namespace SkriptInsight.Core.Types
         [ChatColorAlias("light blue", "indigo")] [ChatColorInfo('9', "#5555FF")]
         Blue = 1 << 2,
 
-        [ChatColorAlias("aqua", "dark cyan", "dark aqua", "dark turquoise", "dark turquois")]
+        [ChatColorAlias("cyan", "aqua", "dark cyan", "dark aqua", "dark turquoise", "dark turquois")]
         [ChatColorInfo('3', "#00AAAA")]
         DarkAqua = 1 << 3,
 
-        [ChatColorAlias("dark blue")] [ChatColorInfo('1', "#0000AA")]
+        [ChatColorAlias("dark blue", "blue")] [ChatColorInfo('1', "#0000AA")]
         DarkBlue = 1 << 4,
 
         [ChatColorAlias("dark grey", "dark gray")] [ChatColorInfo('8', "#555555")]
@@ -41,15 +41,15 @@ namespace SkriptInsight.Core.Types
         DarkRed = 1 << 8,
 
 
-        [ChatColorAlias("gold")] [ChatColorInfo('6', "#FFAA00")]
+        [ChatColorAlias("gold", "orange", "dark yellow")] [ChatColorInfo('6', "#FFAA00")]
         Gold = 1 << 9,
 
 
-        [ChatColorAlias("grey", "gray")] [ChatColorInfo('7', "#AAAAAA")]
+        [ChatColorAlias("grey", "gray", "light grey", "light gray")] [ChatColorInfo('7', "#AAAAAA")]
         Gray = 1 << 10,
 
 
-        [ChatColorAlias("green")] [ChatColorInfo('a', "#55FF55")]
+        [ChatColorAlias("green", "light green", "lime", "lime green")] [ChatColorInfo('a', "#55FF55")]
         Green = 1 << 11,
 
 

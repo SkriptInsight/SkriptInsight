@@ -7,10 +7,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="DeepCloner" Version="0.10.2" />
         <PackageReference Include="JetBrains.Annotations" Version="2019.1.3" />
         <PackageReference Include="morelinq" Version="3.2.0" />
-        <PackageReference Include="OmniSharp.Extensions.LanguageProtocol" Version="0.13.2-alpha0007" />
+        <PackageReference Include="OmniSharp.Extensions.LanguageProtocol" Version="0.14.0-alpha0024" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Types" />
     </ItemGroup>
 
 </Project>

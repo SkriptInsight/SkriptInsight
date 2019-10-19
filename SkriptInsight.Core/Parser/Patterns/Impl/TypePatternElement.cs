@@ -5,6 +5,7 @@ using SkriptInsight.Core.Parser.Expressions;
 using SkriptInsight.Core.Parser.Expressions.Variables;
 using SkriptInsight.Core.Parser.Types;
 using SkriptInsight.Core.Parser.Types.Impl;
+using SkriptInsight.Core.Parser.Types.Impl.Generic;
 
 namespace SkriptInsight.Core.Parser.Patterns.Impl
 {

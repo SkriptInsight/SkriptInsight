@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using SkriptInsight.Core.Extensions;
@@ -92,6 +93,7 @@ namespace SkriptInsight.Core.Parser
             return result;
         }
 
+        [Pure]
         public virtual ParseContext Clone(bool includeMatches = true)
         {
             return new ParseContext

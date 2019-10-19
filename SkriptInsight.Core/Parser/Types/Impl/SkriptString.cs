@@ -10,7 +10,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl
             if (closingPos <= -1) return null;
             var value = ctx.ReadUntilPosition(closingPos);
             return ctx.ReadNext(1) == "\"" ? value.Replace("\"\"", "\"") : null;
-        }
+        }    
 
         public override string AsString(string obj)
         {

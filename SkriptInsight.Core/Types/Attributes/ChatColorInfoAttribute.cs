@@ -1,6 +1,6 @@
 using System;
 
-namespace SkriptInsight.Core.Managers.TextDecoration.ChatColoring
+namespace SkriptInsight.Core.Types.Attributes
 {
     [AttributeUsage(AttributeTargets.Field)]
     internal sealed class ChatColorInfoAttribute : Attribute

@@ -1,14 +1,11 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Force.DeepCloner;
 using Newtonsoft.Json;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
-using SkriptInsight.Core.Files;
 using SkriptInsight.Core.Files.Nodes;
 using SkriptInsight.Core.Managers;
 
@@ -59,18 +56,6 @@ namespace SkriptInsight.Core.Extensions
                 previous = current;
                 current = next;
             }
-        }
-
-        public static T JsonClone<T>(this T original)
-        {
-            var resultClone = original.DeepClone();
-            if (resultClone is FileParseContext fileParseContext && original is FileParseContext fileOriginalContext)
-            {
-                fileParseContext.File = fileOriginalContext.File;
-            }
-
-            Debug.WriteLine($"Cloned object of type {typeof(T).Name}; {original.GetType().Name}");
-            return resultClone;
         }
         
         public static Action<T> Debounce<T>(this Action<T> func, int milliseconds = 300)

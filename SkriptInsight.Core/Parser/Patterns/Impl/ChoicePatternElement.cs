@@ -55,7 +55,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                 .ToList();
         }
 
-        public List<ChoiceGroupElement> Elements { get; } = new List<ChoiceGroupElement>();
+        public List<ChoiceGroupElement> Elements { get; set; } = new List<ChoiceGroupElement>();
 
         public bool SaveChoice { get; set; } = true;
 
