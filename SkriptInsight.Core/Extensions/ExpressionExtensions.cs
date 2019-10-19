@@ -1,10 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
-using SkriptInsight.Core.Parser;
 using SkriptInsight.Core.Parser.Expressions;
 using SkriptInsight.Core.Types;
 
@@ -12,6 +8,15 @@ namespace SkriptInsight.Core.Extensions
 {
     public static class ExpressionExtensions
     {
+        public static IEnumerable<SkriptEnumValue<T>> GetEnumValues<T>(this IExpression expr) where T: Enum
+        {
+            return expr.GetValues<T>().Cast<Expression<SkriptEnumValue<T>>>().Select(val => val.GenericValue);
+        }
+        public static IEnumerable<T> GetSimpleEnumValues<T>(this IExpression expr) where T: Enum
+        {
+            return expr.GetValues<T>().Cast<Expression<SkriptEnumValue<T>>>().Select(val => val.GenericValue.Value);
+        }
+        
         public static IEnumerable<IExpression> GetValues<T>(this IExpression expr)
         {
             if (typeof(T).IsSubclassOf(typeof(Enum)))

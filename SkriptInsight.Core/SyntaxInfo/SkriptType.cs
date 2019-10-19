@@ -30,7 +30,7 @@ namespace SkriptInsight.Core.SyntaxInfo
         public void LoadPatterns()
         {
             PatternsRegexes = Patterns?
-                .Select(c => new Regex(c, RegexOptions.Compiled | RegexOptions.IgnoreCase))
+                .Select(c => new Regex('^' + c + '$', RegexOptions.Compiled | RegexOptions.IgnoreCase))
                 .ToArray();
         }
     }

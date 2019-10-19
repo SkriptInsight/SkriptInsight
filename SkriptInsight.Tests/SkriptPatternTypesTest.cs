@@ -210,13 +210,20 @@ namespace SkriptInsight.Tests
         
         [InlineData("difficulty", "medium")]
         [InlineData("difficulties", "medium or normal")]
+        
+        [InlineData("enchantment", "unbreaking")]
+        [InlineData("enchantments", "unbreaking and infinity")]
+        
+        [InlineData("enchantment type", "efficiency 5")]
+        [InlineData("enchantment type", "efficiency")]
         public void TypesCanBeRepresentedAsStrings(string type, string value)
         {
             var pattern = SkriptPattern.ParsePattern($"%{type}%");
             var result = pattern.Parse(value);
 
-            Assert.True(result.IsSuccess);
+            Assert.True(result.IsSuccess, "result.IsSuccess");
             Assert.Single(result.Matches);
+            Assert.True(result.Context.HasFinishedLine, "result.Context.HasFinishedLine");
 
             var match = result.Matches.First();
             Assert.IsType<ExpressionParseMatch>(match);
