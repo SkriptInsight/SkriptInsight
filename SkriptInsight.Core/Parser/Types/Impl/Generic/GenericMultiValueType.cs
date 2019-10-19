@@ -4,7 +4,7 @@ using SkriptInsight.Core.Parser.Expressions;
 using SkriptInsight.Core.Parser.Patterns;
 using SkriptInsight.Core.Parser.Patterns.Impl;
 
-namespace SkriptInsight.Core.Parser.Types.Impl
+namespace SkriptInsight.Core.Parser.Types.Impl.Generic
 {
     public class GenericMultiValueType : ISkriptType
     {
@@ -35,6 +35,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl
             while (isValid)
             {
                 ourContext.Matches.Clear();
+
                 var result = NextValuePattern.Parse(ourContext);
                 isValid = result.IsSuccess;
 

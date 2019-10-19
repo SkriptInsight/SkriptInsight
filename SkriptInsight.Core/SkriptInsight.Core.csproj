@@ -12,4 +12,8 @@
         <PackageReference Include="OmniSharp.Extensions.LanguageProtocol" Version="0.14.0-alpha0024" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Types" />
+    </ItemGroup>
+
 </Project>
