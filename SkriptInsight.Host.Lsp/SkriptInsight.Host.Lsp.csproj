@@ -19,8 +19,4 @@
       <None Remove="Skript.json" />
     </ItemGroup>
 
-    <ItemGroup>
-      <EmbeddedResource Include="KnownAddonInfo\Skript.json" />
-    </ItemGroup>
-
 </Project>

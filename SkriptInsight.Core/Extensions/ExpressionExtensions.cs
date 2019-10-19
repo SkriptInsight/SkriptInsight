@@ -1,7 +1,12 @@
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
+using SkriptInsight.Core.Parser;
 using SkriptInsight.Core.Parser.Expressions;
+using SkriptInsight.Core.Types;
 
 namespace SkriptInsight.Core.Extensions
 {
@@ -9,6 +14,15 @@ namespace SkriptInsight.Core.Extensions
     {
         public static IEnumerable<IExpression> GetValues<T>(this IExpression expr)
         {
+            if (typeof(T).IsSubclassOf(typeof(Enum)))
+            {
+                foreach (var expression in expr.GetValues<SkriptEnumValue<T>>())
+                {
+                    yield return expression;
+                }
+
+                yield break;
+            }
             switch (expr)
             {
                 case Parser.Expressions.Expression<T> genExpr:

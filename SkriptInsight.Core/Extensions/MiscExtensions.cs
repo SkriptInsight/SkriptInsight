@@ -57,7 +57,7 @@ namespace SkriptInsight.Core.Extensions
             }
         }
 
-        public static T GetAttributeOfType<T>(this Enum enumVal) where T : Attribute
+        public static T GetAttributeOfType<T>(this object enumVal) where T : Attribute
         {
             var type = enumVal.GetType();
             var memInfo = type.GetMember(enumVal.ToString());
@@ -125,7 +125,7 @@ namespace SkriptInsight.Core.Extensions
         }
         
 
-        public static string[] GetAliases(this Enum value)
+        public static string[] GetAliases(this object value)
         {
             return value.GetAttributeOfType<PatternAliasAttribute>()?.Aliases ?? new string[0];
         }

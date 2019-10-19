@@ -13,6 +13,12 @@ namespace SkriptInsight.Tests
 {
     public class SkriptPatternTypesTest
     {
+        public SkriptPatternTypesTest()
+        {
+            //Just to preload the workspace variable
+            var workspace = WorkspaceManager.CurrentWorkspace;
+        }
+        
         [Theory]
         [InlineData("type", None)]
         [InlineData("*type", LiteralsOnly)]
@@ -180,6 +186,7 @@ namespace SkriptInsight.Tests
         [InlineData("strings", "\"test\"")]
         [InlineData("strings", "\"one\" and \"two\"")]
         [InlineData("strings", "\"one\", \"two\" and \"three\"")]
+        [InlineData("strings", "\"one\", \"two\", \"three\" and \"four\"")]
         [InlineData("boolean", "true")]
         [InlineData("boolean", "false")]
         [InlineData("boolean", "on")]
@@ -200,6 +207,9 @@ namespace SkriptInsight.Tests
         
         [InlineData("click type", "creative action")]
         [InlineData("click types", "middle mouse button or left mouse button")]
+        
+        [InlineData("difficulty", "medium")]
+        [InlineData("difficulties", "medium or normal")]
         public void TypesCanBeRepresentedAsStrings(string type, string value)
         {
             var pattern = SkriptPattern.ParsePattern($"%{type}%");
