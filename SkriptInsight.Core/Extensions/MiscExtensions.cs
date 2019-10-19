@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using SkriptInsight.Core.Files.Nodes;
 using SkriptInsight.Core.Managers;
+using SkriptInsight.Core.Types.Attributes;
 
 namespace SkriptInsight.Core.Extensions
 {
@@ -122,5 +123,12 @@ namespace SkriptInsight.Core.Extensions
 
             return false;
         }
+        
+
+        public static string[] GetAliases(this Enum value)
+        {
+            return value.GetAttributeOfType<PatternAliasAttribute>()?.Aliases ?? new string[0];
+        }
+        
     }
 }

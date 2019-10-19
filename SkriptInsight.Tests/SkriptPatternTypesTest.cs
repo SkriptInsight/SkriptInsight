@@ -99,7 +99,6 @@ namespace SkriptInsight.Tests
         [InlineData("(\"test\") and \"test\"")]
         public void MixedParenthesesTypeParsesCorrectly(string input)
         {
-            
             KnownTypesManager.Instance.LoadKnownTypes();
             var stringPattern = SkriptPattern.ParsePattern("print %strings%");
 
@@ -121,7 +120,7 @@ namespace SkriptInsight.Tests
             Assert.True(result.IsSuccess, "result.IsSuccess");
             Assert.True(result.Context.HasFinishedLine, "result.Context.HasFinishedLine");
         }
-        
+
         [Theory]
         [InlineData("(\"test\")")]
         [InlineData("((\"test\"))")]
@@ -138,16 +137,15 @@ namespace SkriptInsight.Tests
 
             var match = result.Context.Matches.First();
             Assert.IsType<ExpressionParseMatch>(match);
-            
+
             var expr = ((ExpressionParseMatch) match).Expression;
             Assert.IsType<ParenthesesExpression>(expr);
-            
+
             var parenthesesExpression = expr as ParenthesesExpression;
             Assert.NotNull(parenthesesExpression);
             Assert.Equal(input, parenthesesExpression.AsString());
-            
         }
-        
+
         [Theory]
         [InlineData("{_test}")]
         [InlineData("{_test.%test%.a}")]
@@ -166,23 +164,22 @@ namespace SkriptInsight.Tests
 
             var match = result.Context.Matches.First();
             Assert.IsType<ExpressionParseMatch>(match);
-            
+
             var expr = ((ExpressionParseMatch) match).Expression;
             Assert.IsType<Expression<SkriptVariable>>(expr);
-            
+
             var variable = expr.Value as SkriptVariable;
             Assert.NotNull(variable);
             Assert.Equal(input, variable.ToString());
         }
-        
-        
+
+
         [Theory]
         [InlineData("string", "\"test\"")]
         [InlineData("string", "\"te\"\"st\"")]
         [InlineData("strings", "\"test\"")]
         [InlineData("strings", "\"one\" and \"two\"")]
         [InlineData("strings", "\"one\", \"two\" and \"three\"")]
-        
         [InlineData("boolean", "true")]
         [InlineData("boolean", "false")]
         [InlineData("boolean", "on")]
@@ -192,7 +189,6 @@ namespace SkriptInsight.Tests
         [InlineData("booleans", "true, false")]
         [InlineData("booleans", "false and true")]
         [InlineData("booleans", "false, true and no")]
-        
         [InlineData("number", "1")]
         [InlineData("number", "-2")]
         [InlineData("number", "-2.3")]
@@ -201,14 +197,17 @@ namespace SkriptInsight.Tests
         
         [InlineData("color", "red")]
         [InlineData("colors", "blue and red")]
+        
+        [InlineData("click type", "creative action")]
+        [InlineData("click types", "middle mouse button or left mouse button")]
         public void TypesCanBeRepresentedAsStrings(string type, string value)
         {
             var pattern = SkriptPattern.ParsePattern($"%{type}%");
             var result = pattern.Parse(value);
-            
+
             Assert.True(result.IsSuccess);
             Assert.Single(result.Matches);
-            
+
             var match = result.Matches.First();
             Assert.IsType<ExpressionParseMatch>(match);
             var exprMatch = match as ExpressionParseMatch;
@@ -234,11 +233,36 @@ namespace SkriptInsight.Tests
             {
                 var ctx = ParseContext.FromCode(color);
                 var result = pattern.Parse(ctx);
-                
+
                 Assert.True(result.IsSuccess, $"result.IsSuccess -> {color}");
                 Assert.False(result.IsOptionallyMatched);
             }
         }
-        
+
+        [Fact]
+        public void AllClickTypesCanBeParsedCorrectly()
+        {
+            var clicks = new[]
+            {
+                "left mouse button", "left mouse", "LMB", "left mouse button with shift", "left mouse with shift",
+                "Shift+RMB", "right mouse button", "right mouse", "RMB", "right mouse button with shift",
+                "right mouse with shift", "Shift+RMB", "window border using right mouse button",
+                "window border using right mouse", "border using LMB", "window border using left mouse button",
+                "window border using right mouse", "border using RMB", "middle mouse button", "middle mouse", "MMB",
+                "number key", "0-9", "double click using mouse", "double click", "drop key", "drop item", "Q",
+                "drop key with control", "drop stack", "Ctrl+Q", "creative action", "unknown", "unsupported", "custom"
+            };
+            
+            var pattern = SkriptPattern.ParsePattern("%click type%");
+
+            foreach (var click in clicks)
+            {
+                var ctx = ParseContext.FromCode(click);
+                var result = pattern.Parse(ctx);
+
+                Assert.True(result.IsSuccess, $"result.IsSuccess -> {click}");
+                Assert.False(result.IsOptionallyMatched);
+            }
+        }
     }
 }
