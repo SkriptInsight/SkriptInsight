@@ -12,7 +12,7 @@ namespace SkriptInsight.Tests
     public class SkriptRealPatternMatchTest
     {
         [Fact]
-        public void MatchesCorrectly()
+        public void RandomWeirdPatternMatchesCorrectly()
         {
             var color = SkriptPattern.ParsePattern("colored %string% with %color%");
 
