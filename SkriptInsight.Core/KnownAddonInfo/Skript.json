@@ -407,7 +407,7 @@
         {
             "id": -985752863,
             "description": [
-                "A player. Depending on whether a player is online or offline several actions can be performed with them, though you won't get any errors when using effects that only work if the player is online (e.g. changing his inventory) on an offline player.",
+                "A player. Depending on whether a player is online or offline several actions can be performed with them, though you won't get any errors when using effects that only work if the player is online (e.g. changing their inventory) on an offline player.",
                 "You have two possibilities to use players as command arguments: <player> and <offline player>. The first requires that the player is online and also accepts only part of the name, while the latter doesn't require that the player is online, but the player's name has to be entered exactly."
             ],
             "usage": [
@@ -544,7 +544,7 @@
                 "The spawn reason in a spawn event."
             ],
             "examples": [
-                "natural, jockey, chunk generation, mob spawner, egg, spawn egg, lightning, built snowman, built iron golem, built wither, village defense, village invasion, breed, slime split, reinforcements, nether portal, dispense egg, infection, cured, ocelot baby, silverfish reveal, mount, trap, ender pearl, perching, drowned, shear, spawn reasons.explosion, customized, default"
+                "natural, jockey, chunk generation, mob spawner, egg, spawn egg, lightning, built snowman, built iron golem, built wither, village defense, village invasion, breed, slime split, reinforcements, nether portal, dispense egg, infection, cured, ocelot baby, silverfish reveal, mount, trap, ender pearl, perching, drowned, shear, spawn reasons.explosion, spawn reasons.raid, spawn reasons.patrol, customized, default"
             ],
             "since": "2.3",
             "typeName": "spawnreason",
@@ -889,7 +889,6 @@
                 "salmon¦s",
                 "tropical fish¦es",
                 "trident¦s",
-                "fox¦es",
                 "pillager¦s",
                 "ravager¦s",
                 "wandering trader¦s",
@@ -1072,6 +1071,14 @@
     "conditions": [
         {
             "patterns": [
+                "%strings% (isn't|is not|aren't|are not) alphanumeric",
+                "%strings% (is|are) alphanumeric"
+            ],
+            "addonName": "Skript",
+            "className": "CondAlphanumeric"
+        },
+        {
+            "patterns": [
                 "[the] event (is not|isn't) cancel[l]ed",
                 "[the] event is cancel[l]ed"
             ],
@@ -1143,10 +1150,13 @@
         },
         {
             "patterns": [
-                "%inventories% do[es](n't| not) have %itemtypes% [in [(the[ir]|his|her|its)] inventory]",
-                "%inventories% ha(s|ve) %itemtypes% [in [(the[ir]|his|her|its)] inventory]",
+                "%inventories% (doesn't|does not|do not|don't) have %itemtypes% [in [(the[ir]|his|her|its)] inventory]",
+                "%inventories% (has|have) %itemtypes% [in [(the[ir]|his|her|its)] inventory]",
+                "%inventories/strings/objects% (doesn't|does not|do not|don't) contain %itemtypes/strings/objects%",
                 "%inventories/strings/objects% contain[s] %itemtypes/strings/objects%",
-                "%inventories/strings/objects% do[es](n't| not) contain %itemtypes/strings/objects%"
+                "(all|1¦any|2¦none) of %strings% contain[s] %strings%",
+                "[the] list [of] %objects% (doesn't|does not|do not|don't) contain %objects%",
+                "[the] list [of] %objects% contain[s] %objects%"
             ],
             "addonName": "Skript",
             "className": "CondContains"
@@ -2565,7 +2575,7 @@
                 "latter event-world"
             ],
             "description": [
-                "Called whenever an item stack is spawned in a world, e.g. as drop of a block or mob, a player throwing items out of his inventory, or a dispenser dispensing an item (not shooting it)."
+                "Called whenever an item stack is spawned in a world, e.g. as drop of a block or mob, a player throwing items out of their inventory, or a dispenser dispensing an item (not shooting it)."
             ],
             "examples": [
                 "on item spawn of iron sword:",
@@ -2611,7 +2621,7 @@
                 "latter event-world"
             ],
             "description": [
-                "Called when a player drops an item from his inventory."
+                "Called when a player drops an item from their inventory."
             ],
             "examples": [
                 "on drop:"
@@ -2960,6 +2970,41 @@
                 "ItemMergeEvent"
             ],
             "cancellable": true
+        },
+        {
+            "name": "On Level Change",
+            "id": 961296587,
+            "patterns": [
+                "[player] level (change|1¦up|-1¦down)"
+            ],
+            "currentEventValues": [
+                "event-player",
+                "event-world"
+            ],
+            "pastEventValues": [
+                "past event-player",
+                "former event-player",
+                "past event-world",
+                "former event-world"
+            ],
+            "futureEventValues": [
+                "future event-player",
+                "latter event-player",
+                "future event-world",
+                "latter event-world"
+            ],
+            "description": [
+                "Called when a player's level changes, e.g. by gathering experience or by enchanting something."
+            ],
+            "examples": [
+                "on level change:"
+            ],
+            "since": "1.0, 2.4 (level up/down)",
+            "addonName": "Skript",
+            "classNames": [
+                "PlayerLevelChangeEvent"
+            ],
+            "cancellable": false
         },
         {
             "name": "On Move On",
@@ -4586,7 +4631,7 @@
                 "latter event-world"
             ],
             "description": [
-                "Called when a player breaks his tool because its damage reached the maximum value.",
+                "Called when a player breaks their tool because its damage reached the maximum value.",
                 "This event cannot be cancelled."
             ],
             "examples": [
@@ -4622,7 +4667,7 @@
                 "latter event-world"
             ],
             "description": [
-                "Called whenever a player changes his held item by selecting a different slot (e.g. the keys 1-9 or the mouse wheel), not by dropping or replacing the item in the current slot."
+                "Called whenever a player changes their held item by selecting a different slot (e.g. the keys 1-9 or the mouse wheel), not by dropping or replacing the item in the current slot."
             ],
             "examples": [
                 "on player's held item change:"
@@ -4745,41 +4790,6 @@
             "cancellable": true
         },
         {
-            "name": "On Level Change",
-            "id": 961296587,
-            "patterns": [
-                "[player] level [change]"
-            ],
-            "currentEventValues": [
-                "event-player",
-                "event-world"
-            ],
-            "pastEventValues": [
-                "past event-player",
-                "former event-player",
-                "past event-world",
-                "former event-world"
-            ],
-            "futureEventValues": [
-                "future event-player",
-                "latter event-player",
-                "future event-world",
-                "latter event-world"
-            ],
-            "description": [
-                "Called when a player's level changes, e.g. by gathering experience or by enchanting something."
-            ],
-            "examples": [
-                "on level change:"
-            ],
-            "since": "1.0",
-            "addonName": "Skript",
-            "classNames": [
-                "PlayerLevelChangeEvent"
-            ],
-            "cancellable": false
-        },
-        {
             "name": "On Portal",
             "id": -982480788,
             "patterns": [
@@ -4832,25 +4842,15 @@
             ],
             "currentEventValues": [
                 "event-player",
-                "event-world",
-                "event-player",
                 "event-world"
             ],
             "pastEventValues": [
                 "past event-player",
                 "former event-player",
                 "past event-world",
-                "former event-world",
-                "past event-player",
-                "former event-player",
-                "past event-world",
                 "former event-world"
             ],
             "futureEventValues": [
-                "future event-player",
-                "latter event-player",
-                "future event-world",
-                "latter event-world",
                 "future event-player",
                 "latter event-player",
                 "future event-world",
@@ -4863,13 +4863,12 @@
                 "on quit:",
                 "on disconnect:"
             ],
-            "since": "1.0 (simple disconnection), 2.0 (kicked players)",
+            "since": "1.0 (simple disconnection)",
             "addonName": "Skript",
             "classNames": [
-                "PlayerQuitEvent",
-                "PlayerKickEvent"
+                "PlayerQuitEvent"
             ],
-            "cancellable": true
+            "cancellable": false
         },
         {
             "name": "On Respawn",
@@ -6244,6 +6243,14 @@
         },
         {
             "patterns": [
+                "(cancel|clear|delete) [the] (1¦item|2¦[e]xp[erience]) drops",
+                "(cancel|clear|delete) [the] drops [of (1¦items|2¦[e]xp[erience][s])]"
+            ],
+            "addonName": "Skript",
+            "className": "EffCancelDrops"
+        },
+        {
+            "patterns": [
                 "cancel [the] event",
                 "uncancel [the] event"
             ],
@@ -6267,11 +6274,11 @@
         },
         {
             "patterns": [
-                "(dye|colo[u]r|paint) %slots/itemstack% %color%",
-                "(dye|colo[u]r|paint) %slots/itemstack% \\(%number%, %number%, %number%\\)"
+                "(dye|colo[u]r|paint) %itemtypes% %color%",
+                "(dye|colo[u]r|paint) %itemtypes% \\(%number%, %number%, %number%\\)"
             ],
             "addonName": "Skript",
-            "className": "EffColorArmor"
+            "className": "EffColorItems"
         },
         {
             "patterns": [
@@ -6394,6 +6401,14 @@
             ],
             "addonName": "Skript",
             "className": "EffIgnite"
+        },
+        {
+            "patterns": [
+                "keep [the] (inventory|items) [(1¦and [e]xp[erience][s] [point[s]])]",
+                "keep [the] [e]xp[erience][s] [point[s]] [(1¦and (inventory|items))]"
+            ],
+            "addonName": "Skript",
+            "className": "EffKeepInventory"
         },
         {
             "patterns": [
@@ -6615,8 +6630,8 @@
         },
         {
             "patterns": [
-                "spawn %entitytypes% [%directions% %locations%]",
-                "spawn %number% of %entitytypes% [%directions% %locations%]"
+                "(spawn|summon) %entitytypes% [%directions% %locations%]",
+                "(spawn|summon) %number% of %entitytypes% [%directions% %locations%]"
             ],
             "addonName": "Skript",
             "className": "EffSpawn"
@@ -7002,6 +7017,16 @@
         },
         {
             "patterns": [
+                "[the] blocks of [the] portal",
+                "[the] portal['s] blocks"
+            ],
+            "addonName": "Skript",
+            "className": "ExprPortal",
+            "returnType": "Block",
+            "expressionType": "SIMPLE"
+        },
+        {
+            "patterns": [
                 "[the] [last] [parse] error"
             ],
             "addonName": "Skript",
@@ -7175,7 +7200,7 @@
             ],
             "addonName": "Skript",
             "className": "ExprDrops",
-            "returnType": "ItemStack",
+            "returnType": "ItemType",
             "expressionType": "SIMPLE"
         },
         {
@@ -7353,6 +7378,15 @@
             ],
             "addonName": "Skript",
             "className": "ExprShuffledList",
+            "returnType": "Object",
+            "expressionType": "COMBINED"
+        },
+        {
+            "patterns": [
+                "reversed %objects%"
+            ],
+            "addonName": "Skript",
+            "className": "ExprReversedList",
             "returnType": "Object",
             "expressionType": "COMBINED"
         },
@@ -7825,6 +7859,16 @@
         },
         {
             "patterns": [
+                "%blocks%'[s] (entity|creature) type[s]",
+                "[the] (entity|creature) type[s] of %blocks%"
+            ],
+            "addonName": "Skript",
+            "className": "ExprSpawnerType",
+            "returnType": "EntityData",
+            "expressionType": "PROPERTY"
+        },
+        {
+            "patterns": [
                 "%worlds%'[s] spawn[s] [(point|location)[s]]",
                 "[the] spawn[s] [(point|location)[s]] [of %worlds%]"
             ],
@@ -7845,8 +7889,8 @@
         },
         {
             "patterns": [
-                "%offlineplayers%'[s] skull",
-                "[the] skull of %offlineplayers%"
+                "%offlineplayers%'[s] (head|skull)",
+                "[the] (head|skull) of %offlineplayers%"
             ],
             "addonName": "Skript",
             "className": "ExprSkull",
@@ -8036,8 +8080,8 @@
         },
         {
             "patterns": [
-                "%itemstacks/slots/livingentities/players/inventories%'[s] (1¦)(display|nick|chat)[ ]name[s]",
-                "[the] (1¦)(display|nick|chat)[ ]name[s] of %itemstacks/slots/livingentities/players/inventories%"
+                "%itemstacks/slots/entities/players/inventories%'[s] (1¦)(display|nick|chat)[ ]name[s]",
+                "[the] (1¦)(display|nick|chat)[ ]name[s] of %itemstacks/slots/entities/players/inventories%"
             ],
             "addonName": "Skript",
             "className": "ExprName",
@@ -8046,8 +8090,8 @@
         },
         {
             "patterns": [
-                "%itemstacks/slots/livingentities/players/inventories%'[s] (0¦)name[s]",
-                "[the] (0¦)name[s] of %itemstacks/slots/livingentities/players/inventories%"
+                "%itemstacks/slots/entities/players/inventories%'[s] (0¦)name[s]",
+                "[the] (0¦)name[s] of %itemstacks/slots/entities/players/inventories%"
             ],
             "addonName": "Skript",
             "className": "ExprName",
