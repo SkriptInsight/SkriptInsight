@@ -25,6 +25,7 @@ namespace SkriptInsight.Core.Files
     public class SkriptFile
     {
         private static DocumentSelector _selector;
+        private FileProcess _parseProcess;
 
         public static DocumentSelector Selector => _selector ??= DocumentSelector.ForLanguage("skriptlang");
 
@@ -164,8 +165,17 @@ namespace SkriptInsight.Core.Files
                 $"Took {sw.ElapsedMilliseconds}ms to run {process.GetType().Name} on {endLine - startLine + 1} lines [{startLine}->{endLine}].");
         }
 
-        public FileProcess ParseProcess { get; set; } = new ProcTryParseEffects();
-        
+        public FileProcess ParseProcess
+        {
+            get => _parseProcess ??= ProvideParseProcess();
+            set => _parseProcess = value;
+        }
+
+        protected virtual FileProcess ProvideParseProcess()
+        {
+            return new ProcTryParseEffects();
+        }
+
         public void PrepareNodes(int startLine = -1, int endLine = -1)
         {
             startLine = Math.Max(0, startLine);
