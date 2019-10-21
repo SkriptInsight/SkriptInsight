@@ -134,33 +134,33 @@ namespace SkriptInsight.Core.Files
                         contexts.Enqueue(context);
                     }
                 });
-            
-            
-            var diags = new List<Diagnostic>();
 
-            Nodes.Select(c => c.Value).ForEach(node =>
+            if (GetType() == typeof(SkriptFile))
             {
-                if (node != null && node.MatchedSyntax == null)
+                var diags = new List<Diagnostic>();
+                Nodes.Select(c => c.Value).ForEach(node =>
                 {
-                    diags.Add(
-                        new Diagnostic
-                        {
-                            Code = "1",
-                            Message = "This node doesn't match any syntax!",
-                            Range = node.ContentRange,
-                            Severity = DiagnosticSeverity.Warning,
-                            Source = "SkriptInsight"
-                        });
-                }
+                    if (node != null && node.MatchedSyntax == null)
+                    {
+                        diags.Add(
+                            new Diagnostic
+                            {
+                                Code = "1",
+                                Message = "This node doesn't match any syntax!",
+                                Range = node.ContentRange,
+                                Severity = DiagnosticSeverity.Warning,
+                                Source = "SkriptInsight"
+                            });
+                    }
 
-            });
-            
-            WorkspaceManager.Instance.Current.Server.Document.PublishDiagnostics(new PublishDiagnosticsParams
-            {
-                Uri = Url,
-                Diagnostics = diags
-            });
-            
+                });
+                WorkspaceManager.Instance.Current.Server.Document.PublishDiagnostics(new PublishDiagnosticsParams
+                {
+                    Uri = Url,
+                    Diagnostics = diags
+                });
+            }
+
             WorkspaceManager.Instance.Current.Server.Window.LogInfo(
                 $"Took {sw.ElapsedMilliseconds}ms to run {process.GetType().Name} on {endLine - startLine + 1} lines [{startLine}->{endLine}].");
         }
