@@ -72,7 +72,7 @@ namespace SkriptInsight.Host.Lsp
             {
                 Assets = new Assets
                 {
-                    LargeImageKey = "logo",
+                    LargeImageKey = "logo-si-alpha2",
                     LargeImageText = "Using SkriptInsight",
                     SmallImageKey = EditorName.ToLower().Replace(" ", "_"),
                     SmallImageText = $"on {EditorName}"
