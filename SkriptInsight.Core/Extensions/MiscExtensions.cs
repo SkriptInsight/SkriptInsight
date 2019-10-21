@@ -6,6 +6,8 @@ using Newtonsoft.Json;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using SkriptInsight.Core.Files.Nodes;
 using SkriptInsight.Core.Managers;
+using SkriptInsight.Core.Parser.Patterns;
+using SkriptInsight.Core.Parser.Patterns.Impl;
 using SkriptInsight.Core.Types.Attributes;
 
 namespace SkriptInsight.Core.Extensions

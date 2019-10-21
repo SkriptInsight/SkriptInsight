@@ -63,6 +63,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
         {
             var oldPos = ctx.CurrentPosition;
 
+            var matchedParseMark = 0;
             var matchedChoice = Elements.FirstOrDefault(e =>
             {
                 ctx.CurrentPosition = oldPos;
@@ -74,12 +75,13 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                 else
                     ctx.UndoMatch();
 
+                matchedParseMark = result?.ParseMark ?? 0; 
                 return result?.IsSuccess ?? false;
             });
             if (matchedChoice == null) return ParseResult.Failure(ctx);
 
             var success = ParseResult.Success(ctx);
-            success.ParseMark ^= matchedChoice.ParseMark;
+            success.ParseMark ^= matchedChoice.ParseMark ^ matchedParseMark;
             return success;
         }
 

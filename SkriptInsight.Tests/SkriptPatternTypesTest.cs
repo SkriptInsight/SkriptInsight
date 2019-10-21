@@ -216,6 +216,11 @@ namespace SkriptInsight.Tests
         
         [InlineData("enchantment type", "efficiency 5")]
         [InlineData("enchantment type", "efficiency")]
+        
+        [InlineData("entitytype", "arrow")]
+        [InlineData("entitytype", "an arrow")]
+        [InlineData("entitytype", "blaze")]
+        [InlineData("entity types", "blaze and an arrow")]
         public void TypesCanBeRepresentedAsStrings(string type, string value)
         {
             var pattern = SkriptPattern.ParsePattern($"%{type}%");

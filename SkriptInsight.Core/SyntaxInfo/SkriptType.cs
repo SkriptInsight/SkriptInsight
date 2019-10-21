@@ -25,7 +25,7 @@ namespace SkriptInsight.Core.SyntaxInfo
 
         public string[] PossibleValues { get; set; }
 
-        public SkriptPattern[] PossibleValuesPatterns { get; set; }
+        public Noun[] PossibleValuesAsNouns { get; set; }
 
         public string[] Patterns { get; set; }
 
@@ -33,7 +33,7 @@ namespace SkriptInsight.Core.SyntaxInfo
 
         public void LoadPatterns()
         {
-            PossibleValuesPatterns = PossibleValues?.Select(SkriptNounParser.ConvertNounToPattern).ToArray();
+            PossibleValuesAsNouns = PossibleValues?.Select(SkriptNounParser.ParseNoun).ToArray();
             PatternsRegexes = Patterns?
                 .Select(c => new Regex('^' + c + '$', RegexOptions.Compiled | RegexOptions.IgnoreCase))
                 .ToArray();
