@@ -11,7 +11,7 @@ namespace SkriptInsight.Core.Files.Nullability
 
         protected override FileProcess ProvideParseProcess()
         {
-            return null;
+            return new MetadataParseProcess();
         }
     }
 }
