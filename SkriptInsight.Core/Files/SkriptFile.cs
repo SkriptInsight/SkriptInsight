@@ -141,31 +141,17 @@ namespace SkriptInsight.Core.Files
 
             Nodes.Select(c => c.Value).ForEach(node =>
             {
-                if (node?.MatchedSyntax != null)
+                if (node != null && node.MatchedSyntax == null)
                 {
-                    var result = node.MatchedSyntax.Result;
-                
-                    diags.AddRange(result.Matches.OfType<ExpressionParseMatch>()
-                        .SelectMany(r => r.Expression.GetValues<string>())
-                        .Select(resultMatch => new Diagnostic
+                    diags.Add(
+                        new Diagnostic
                         {
                             Code = "1",
-                            Message = "Found a String",
-                            Range = resultMatch.Range,
+                            Message = "This node doesn't match any syntax!",
+                            Range = node.ContentRange,
                             Severity = DiagnosticSeverity.Warning,
                             Source = "SkriptInsight"
-                        }));
-                
-                    diags.AddRange(result.Matches.OfType<ExpressionParseMatch>()
-                        .SelectMany(r => r.Expression.GetValues<SkriptVariable>())
-                        .Select(resultMatch => new Diagnostic
-                        {
-                            Code = "2",
-                            Message = "Found a variable. REEEEEE",
-                            Range = resultMatch.Range,
-                            Severity = DiagnosticSeverity.Error,
-                            Source = "SkriptInsight"
-                        }));
+                        });
                 }
 
             });

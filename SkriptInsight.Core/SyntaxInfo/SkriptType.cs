@@ -1,5 +1,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
+using SkriptInsight.Core.Parser;
+using SkriptInsight.Core.Parser.Patterns;
 
 namespace SkriptInsight.Core.SyntaxInfo
 {
@@ -23,12 +25,15 @@ namespace SkriptInsight.Core.SyntaxInfo
 
         public string[] PossibleValues { get; set; }
 
+        public SkriptPattern[] PossibleValuesPatterns { get; set; }
+
         public string[] Patterns { get; set; }
 
         public Regex[] PatternsRegexes { get; set; }
 
         public void LoadPatterns()
         {
+            PossibleValuesPatterns = PossibleValues?.Select(SkriptNounParser.ConvertNounToPattern).ToArray();
             PatternsRegexes = Patterns?
                 .Select(c => new Regex('^' + c + '$', RegexOptions.Compiled | RegexOptions.IgnoreCase))
                 .ToArray();

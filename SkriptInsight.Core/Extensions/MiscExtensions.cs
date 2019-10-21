@@ -124,10 +124,14 @@ namespace SkriptInsight.Core.Extensions
             return false;
         }
         
-
         public static string[] GetAliases(this object value)
         {
             return value.GetAttributeOfType<PatternAliasAttribute>()?.Aliases ?? new string[0];
+        }
+        
+        public static bool IsEmpty(this string value)
+        {
+            return string.IsNullOrEmpty(value);
         }
         
     }
