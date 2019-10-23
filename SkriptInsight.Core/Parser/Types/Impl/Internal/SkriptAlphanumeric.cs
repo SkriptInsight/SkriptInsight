@@ -1,20 +1,18 @@
-using System;
 using System.Text;
 using SkriptInsight.Core.Extensions;
-using SkriptInsight.Core.Parser.Expressions;
 
 namespace SkriptInsight.Core.Parser.Types.Impl.Internal
 {
     [InternalType]
-    [TypeDescription("si_spaces")]
-    public class SkriptMultipleSpaces : SkriptGenericType<string>
+    [TypeDescription("si_alphanumeric")]
+    public class SkriptAlphanumeric : SkriptGenericType<string>
     {
         protected override string TryParse(ParseContext ctx)
         {
             var sb = new StringBuilder();
             foreach (var c in ctx)
             {
-                if (!char.IsWhiteSpace(c)) break;
+                if (!char.IsLetterOrDigit(c)) break;
                 sb.Append(c);
             }
             return sb.ToString().IsEmpty() ? null : sb.ToString();
