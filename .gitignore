@@ -515,3 +515,4 @@ fabric.properties
 .idea/**
 /skript-lang/skript-insight/
 /skript-lang/
+/SkriptInsight.Benchmark/

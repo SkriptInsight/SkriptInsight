@@ -22,11 +22,11 @@ namespace SkriptInsight.Tests
             Assert.Equal(plural, pResult);
         }
         [Theory]
-        [InlineData("tree¦s @a", "(2¦[(1¦a )]tree|4¦trees)")]
-        [InlineData("arrow¦s @an", "(2¦[(1¦an )]arrow|4¦arrows)")]
-        [InlineData("zombie pig¦man¦men", "(2¦[(1¦a )]zombie pigman|4¦zombie pigmen)")]
-        [InlineData("bottle¦ of enchanting¦s of enchanting", "(2¦[(1¦a )]bottle of enchanting|4¦bottles of enchanting)")]
-        [InlineData("living entit¦y¦ies", "(2¦[(1¦a )]living entity|4¦living entities)")]
+        [InlineData("tree¦s @a", "(4¦trees|2¦[(1¦a )]tree)")]
+        [InlineData("arrow¦s @an", "(4¦arrows|2¦[(1¦an )]arrow)")]
+        [InlineData("zombie pig¦man¦men", "(4¦zombie pigmen|2¦[(1¦a )]zombie pigman)")]
+        [InlineData("bottle¦ of enchanting¦s of enchanting", "(4¦bottles of enchanting|2¦[(1¦a )]bottle of enchanting)")]
+        [InlineData("living entit¦y¦ies", "(4¦living entities|2¦[(1¦a )]living entity)")]
         [InlineData("spectral arrow", "(2¦[(1¦a )]spectral arrow)")]
         [InlineData("spectral arrow @a", "(2¦[(1¦a )]spectral arrow)")]
         public void NounParserCanConvertCorrectly(string noun, string expectedPattern)

@@ -22,7 +22,8 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
                     new TypePatternElement
                     {
                         Constraint = SyntaxValueAcceptanceConstraint.None,
-                        Type = typeName
+                        Type = typeName,
+                        SkipParenthesis = true
                     }
                 }
             };

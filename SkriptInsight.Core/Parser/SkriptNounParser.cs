@@ -65,7 +65,7 @@ namespace SkriptInsight.Core.Parser
         public static Noun ParseNoun(string noun)
         {
             var (gender, singular, plural) = ExtractInformationFromNoun(noun);
-            
+
             return new Noun
             {
                 Gender = gender,
@@ -74,7 +74,7 @@ namespace SkriptInsight.Core.Parser
                 Pattern = ConvertNounToPattern(noun)
             };
         }
-        
+
         public static SkriptPattern ConvertNounToPattern(string noun)
         {
             var pattern = new SkriptPattern();
@@ -92,7 +92,7 @@ namespace SkriptInsight.Core.Parser
                         Elements =
                         {
                             new ChoicePatternElement.ChoiceGroupElement(new LiteralPatternElement(gender + ' '),
-                                (int) EntityType.EntityTypeUsedValues.Gender)
+                                (int) EntityData.EntityTypeUsedValues.Gender)
                         }
                     }
                 });
@@ -101,17 +101,19 @@ namespace SkriptInsight.Core.Parser
             //Create final element
             var toAdd = new ChoicePatternElement
             {
-                Elements = new List<ChoicePatternElement.ChoiceGroupElement>
-                {
-                    new ChoicePatternElement.ChoiceGroupElement(singularPattern, (int) EntityType.EntityTypeUsedValues.Singular),
-                }
+                Elements = new List<ChoicePatternElement.ChoiceGroupElement>()
             };
-            
+
             if (!plural.IsEmpty())
             {
                 toAdd.Elements.Add(new ChoicePatternElement.ChoiceGroupElement(new LiteralPatternElement(plural),
-                    (int) EntityType.EntityTypeUsedValues.Plural));
+                    (int) EntityData.EntityTypeUsedValues.Plural));
             }
+
+            toAdd.Elements.Add(
+                new ChoicePatternElement.ChoiceGroupElement(singularPattern,
+                    (int) EntityData.EntityTypeUsedValues.Singular)
+            );
 
             pattern.Children.Add(toAdd);
 
