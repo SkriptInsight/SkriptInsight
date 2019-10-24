@@ -16,6 +16,8 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
 
         public string Type { get; set; }
 
+        public bool SkipParenthesis { get; set; }
+
         public TypePatternElement(string contents) : base(contents)
         {
             var list = contents.TakeWhile(c => ParseConstraint(c) != SyntaxValueAcceptanceConstraint.None)
@@ -72,7 +74,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
             if (result == null)
                 result = skriptTypeDescriptor?.TryParseValue(ctx);
            
-            if (result == null)
+            if (result == null && !SkipParenthesis)
             {
                 // Type descriptor wasn't able to parse the code. Push back and try with parentheses.
                 ctx.CurrentPosition = oldPos;

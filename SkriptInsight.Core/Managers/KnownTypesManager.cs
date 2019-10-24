@@ -20,7 +20,8 @@ namespace SkriptInsight.Core.Managers
 
         public List<KnownType> KnownTypes { get; set; }
 
-        private ConcurrentDictionary<string, KnownType> TypesLookupCache { get; } = new ConcurrentDictionary<string, KnownType>();
+        private ConcurrentDictionary<string, KnownType> TypesLookupCache { get; } =
+            new ConcurrentDictionary<string, KnownType>();
 
         public void LoadKnownTypes()
         {
@@ -37,6 +38,7 @@ namespace SkriptInsight.Core.Managers
             if (TypesLookupCache.ContainsKey(name))
                 return TypesLookupCache[name];
 
+
             var patterns = WorkspaceManager.CurrentWorkspace.AddonDocumentations
                 .SelectMany(c => c.Types).Where(t => t.TypeName.Equals(name))
                 .DefaultIfEmpty(
@@ -46,10 +48,11 @@ namespace SkriptInsight.Core.Managers
                         .FirstOrDefault(c => c.PatternsRegexes.Any(r => r.IsMatch(name)))
                 ).FirstOrDefault()?.PatternsRegexes;
 
-            var result = KnownTypes.FirstOrDefault(t =>
-                patterns != null
-                    ? t.SkriptRepresentations.Any(r => patterns.Any(p => p.IsMatch(r)))
-                    : t.SkriptRepresentations.Contains(name));
+            var result = KnownTypes.FirstOrDefault(c => c.SkriptRepresentations.Contains(name)) ??
+                         KnownTypes.FirstOrDefault(t =>
+                             patterns != null
+                                 ? t.SkriptRepresentations.Any(r => patterns.Any(p => p.IsMatch(r)))
+                                 : t.SkriptRepresentations.Contains(name));
 
             if (result != null)
                 TypesLookupCache[name] = result;
