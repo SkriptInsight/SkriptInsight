@@ -12,7 +12,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
         {
             Type = type;
             var typeName = type.SkriptRepresentations.FirstOrDefault();
-            NextValuePattern = CreateNextValuePatternForType(typeName);
+            NextValuePattern = CreateNextValuePatternForType(typeName, constraint);
         }
 
         public KnownTypesManager.KnownType Type { get; }
@@ -76,7 +76,8 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
             return string.Empty;
         }
 
-        private static SkriptPattern CreateNextValuePatternForType(string typeName)
+        private static SkriptPattern CreateNextValuePatternForType(string typeName,
+            SyntaxValueAcceptanceConstraint constraint)
         {
             //%type%[[ ](,|or|and)[ ]]
             return new SkriptPattern
@@ -85,7 +86,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
                 {
                     new TypePatternElement
                     {
-                        Constraint = SyntaxValueAcceptanceConstraint.None,
+                        Constraint = constraint,
                         Type = typeName
                     },
                     new OptionalPatternElement
