@@ -38,7 +38,7 @@ namespace SkriptInsight.Core.Parser
             set
             {
                 _indentationChars = value;
-                
+
                 if (CurrentPosition < value)
                     CurrentPosition = value;
             }
@@ -73,7 +73,7 @@ namespace SkriptInsight.Core.Parser
                 ? ""
                 : Text.Substring(Math.Clamp(CurrentPosition - count, 0, Text.Length), count);
         }
-    
+
         public virtual string ReadNext(int count)
         {
             var result = PeekNext(count);
@@ -88,8 +88,14 @@ namespace SkriptInsight.Core.Parser
 
         public string ReadUntilEnd()
         {
-            var result = Text.Substring(CurrentPosition);
+            var result = PeekUntilEnd();
             CurrentPosition = Text.Length;
+            return result;
+        }
+
+        public string PeekUntilEnd()
+        {
+            var result = Text.Substring(CurrentPosition);
             return result;
         }
 
@@ -106,6 +112,89 @@ namespace SkriptInsight.Core.Parser
                 CurrentMatchStack = new Stack<int>(CurrentMatchStack.Reverse()),
                 TemporaryRangeStack = new Stack<int>(TemporaryRangeStack.Reverse())
             };
+        }
+
+
+        public int FindNextCharNotInsideNormalBracket(char ch, bool returnLengthOnFail = false,
+            bool returnOnUnopenedBrackets = true)
+        {
+            var openCloseStack = new KeyedStack<char, int>();
+            var posStack = new Stack<int>();
+            (char Opening, char Closing, bool DoubleEscape)[] brackets =
+            {
+                ('(', ')', false),
+                ('[', ']', false),
+                ('"', '"', true)
+            };
+
+
+            for (var i = CurrentPosition; i < Text.Length; i++)
+            {
+                var forceBreak = false;
+                var firstPos = i;
+                foreach (var (opening, closing, doubleEscape) in brackets)
+                {
+                    var currentChar = Text.ElementAtOrDefault(i);
+                    if (!doubleEscape)
+                    {
+                        if (currentChar == opening)
+                            posStack.Push(i);
+                        else if (currentChar == closing)
+                        {
+                            if (posStack.Count > 0)
+                            {
+                                posStack.Pop();
+                            }
+                            else if (returnOnUnopenedBrackets)
+                            {
+                                // Return now because the callee requested
+                                forceBreak = true;
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var isEqualChar = opening == closing;
+                        var hasBeenDoubleEscaped = Text.ElementAtOrDefault(i + 1) == currentChar;
+                        if (hasBeenDoubleEscaped)
+                        {
+                            i++;
+                            break;
+                        }
+
+                        if (isEqualChar)
+                        {
+                            if (currentChar != opening) continue;
+
+                            if (openCloseStack[opening].Count % 2 != 0)
+                            {
+                                openCloseStack[opening].Pop();
+                                posStack.Pop();
+                            }
+                            else
+                            {
+                                openCloseStack[opening].Push(i);
+                                posStack.Push(i);
+                            }
+                        }
+                        else
+                        {
+                            if (currentChar == opening)
+                                posStack.Push(i);
+                            else if (currentChar == closing) posStack.Pop();
+                        }
+                    }
+                }
+
+                if (!forceBreak && i != firstPos)
+                    continue;
+
+                if (posStack.Count == 0 && (forceBreak || Text.ElementAtOrDefault(i) == ch))
+                    return i;
+            }
+
+            return returnLengthOnFail ? Text.Length : -1;
         }
 
         public int FindNextBracket(char bracket, (char, char)[] matchExclusions = null)
@@ -139,7 +228,8 @@ namespace SkriptInsight.Core.Parser
                             ch == c.Item1 || c.Item1 == c.Item2 && openedBracketStack.Count % 2 == 0) ?? false)
                         exclusionStack.Push(i);
                     else if (matchExclusions?.Any(c =>
-                                 ch == c.Item2 || c.Item1 == c.Item2 && openedBracketStack.Count % 2 != 0 && exclusionStack.Count > 0) ??
+                                 ch == c.Item2 || c.Item1 == c.Item2 && openedBracketStack.Count % 2 != 0 &&
+                                 exclusionStack.Count > 0) ??
                              false) exclusionStack.Pop();
 
 

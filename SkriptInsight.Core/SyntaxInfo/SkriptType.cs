@@ -1,12 +1,30 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using SkriptInsight.Core.Parser;
+using SkriptInsight.Core.Parser.Expressions;
 using SkriptInsight.Core.Parser.Patterns;
+using SkriptInsight.Core.Parser.Types.Impl.Internal;
 
 namespace SkriptInsight.Core.SyntaxInfo
 {
     public class SkriptType
     {
+        public static readonly SkriptType Void = new SkriptType
+        {
+            AddonName = "Skript",
+            Id = 0,
+            Since = "Skript 1.0",
+            ClassName = "Void",
+            TypeName = "void",
+            Description = new[]
+                {"Default void type. Used by SkriptInsight to denote the lack of a return type on functions"}
+        };
+        public static readonly Expression<SkriptType> VoidExpr = new Expression<SkriptType>(Void)
+        {
+            Type = new SkriptVoid()
+        };
+
+
         public int Id { get; set; }
 
         public string[] Description { get; set; }
