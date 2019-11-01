@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Linq;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using SkriptInsight.Core.Managers;
@@ -265,6 +266,29 @@ namespace SkriptInsight.Tests
                 Assert.True(result.IsSuccess, $"result.IsSuccess -> {color}");
                 Assert.False(result.IsOptionallyMatched);
             }
+        }
+
+        [Theory]
+        [InlineData("test")]
+        [InlineData("aa:aa")]
+        [InlineData("a:a::a:a")]
+        public void InternalFunctionParamNameTypeCanMatchCorrectly(string input)
+        {
+            var pattern = SkriptPattern.ParsePattern("%si_func_param_name%:");
+            var result = pattern.Parse($"{input}: aaa, test2: bbbb");
+            
+            Assert.True(result.IsSuccess);
+            Assert.Single(result.Matches);
+
+            Assert.IsType<ExpressionParseMatch>(result.Matches[0]);
+            var resultMatch = result.Matches[0] as ExpressionParseMatch;
+            Debug.Assert(resultMatch != null, nameof(resultMatch) + " != null");
+
+            Assert.IsType<Expression<string>>(resultMatch.Expression);
+            var strExpr = resultMatch.Expression as Expression<string>;
+            Debug.Assert(strExpr != null, nameof(strExpr) + " != null");
+
+            Assert.Equal(input, strExpr.GenericValue);
         }
 
         [Fact]

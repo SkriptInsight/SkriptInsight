@@ -1,18 +1,21 @@
+using System.Collections.Generic;
 using System.Linq;
 using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.Parser.Expressions;
 using SkriptInsight.Core.Parser.Patterns;
 using SkriptInsight.Core.Parser.Patterns.Impl;
+using static SkriptInsight.Core.Parser.Patterns.Impl.ChoicePatternElement;
 
 namespace SkriptInsight.Core.Parser.Types.Impl.Generic
 {
     public class GenericMultiValueType : ISkriptType
     {
-        public GenericMultiValueType(KnownTypesManager.KnownType type)
+        public GenericMultiValueType(KnownTypesManager.KnownType type,
+            SyntaxValueAcceptanceConstraint constraint = SyntaxValueAcceptanceConstraint.None, bool isListValue = true)
         {
             Type = type;
             var typeName = type.SkriptRepresentations.FirstOrDefault();
-            NextValuePattern = CreateNextValuePatternForType(typeName);
+            NextValuePattern = CreateNextValuePatternForType(typeName, constraint, isListValue);
         }
 
         public KnownTypesManager.KnownType Type { get; }
@@ -31,7 +34,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
             var count = 0;
             var isValid = true;
             var lastGoodPos = ourContext.CurrentPosition;
-            
+
             while (isValid)
             {
                 ourContext.Matches.Clear();
@@ -42,15 +45,13 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
                 if (!isValid) continue;
 
                 //Check if the parser consumed content and had a valid result. If not, just let go and give up.
-                if (lastGoodPos == ourContext.CurrentPosition) break; 
-                
+                if (lastGoodPos == ourContext.CurrentPosition) break;
+
                 var expr = (ourContext.Matches.FirstOrDefault() as ExpressionParseMatch)?.Expression;
                 if (expr != null)
-                {
                     resultExpression.Values.Add(
                         new MultiValueExpression.ValueDescription(expr,
                             ourContext.Matches.Skip(1).FirstOrDefault()?.RawContent));
-                }
 
                 count++;
             }
@@ -62,7 +63,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
                 resultExpression.Range = ctx.EndRangeMeasure();
                 resultExpression.Context = ctx;
                 resultExpression.Type = typeInstance;
-                    
+
                 return resultExpression;
             }
 
@@ -76,7 +77,8 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
             return string.Empty;
         }
 
-        private static SkriptPattern CreateNextValuePatternForType(string typeName)
+        private static SkriptPattern CreateNextValuePatternForType(string typeName,
+            SyntaxValueAcceptanceConstraint constraint, bool isListValue)
         {
             //%type%[[ ](,|or|and)[ ]]
             return new SkriptPattern
@@ -85,7 +87,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
                 {
                     new TypePatternElement
                     {
-                        Constraint = SyntaxValueAcceptanceConstraint.None,
+                        Constraint = constraint,
                         Type = typeName
                     },
                     new OptionalPatternElement
@@ -101,11 +103,17 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
                                 new ChoicePatternElement
                                 {
                                     Elements =
-                                    {
-                                        new LiteralPatternElement(","),
-                                        new LiteralPatternElement("or"),
-                                        new LiteralPatternElement("and")
-                                    }
+                                        new List<ChoiceGroupElement>
+                                        {
+                                            new LiteralPatternElement(",")
+                                        }.Concat(
+                                            isListValue
+                                                ? new ChoiceGroupElement[]
+                                                {
+                                                    new LiteralPatternElement("or"),
+                                                    new LiteralPatternElement("and")
+                                                }
+                                                : Enumerable.Empty<ChoiceGroupElement>()).ToList()
                                 },
                                 new OptionalPatternElement
                                 {

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SkriptInsight.Core.Parser;
 using SkriptInsight.Core.Parser.Expressions;
 using SkriptInsight.Core.Types;
 
@@ -16,7 +17,36 @@ namespace SkriptInsight.Core.Extensions
         {
             return expr.GetValues<T>().Cast<Expression<SkriptEnumValue<T>>>().Select(val => val.GenericValue.Value);
         }
+
+        public static IExpression GetValue<T>(this IExpression expr, int count)
+        {
+            var values = expr.GetValues<T>();
+
+            return values.ElementAtOrDefault(count);
+        }
         
+        public static IExpression GetValue<T>(this IEnumerable<ParseMatch> matches, int count)
+        {
+            var values = matches.OfType<ExpressionParseMatch>().SelectMany(c => c.Expression.GetValues<T>());
+
+            return values.ElementAtOrDefault(count);
+        } 
+        
+        public static Expression<T> GetExplicitValue<T>(this IExpression expr, int count)
+        {
+            return expr.GetValue<T>(count) as Expression<T>;
+        } 
+        
+        public static Expression<T> GetExplicitValue<T>(this IEnumerable<ParseMatch> matches, int count)
+        {
+            return matches.GetValue<T>(count) as Expression<T>;
+        }
+
+        public static IEnumerable<IExpression> GetValues<T>(this IEnumerable<ParseMatch> matches)
+        {
+            return matches.OfType<ExpressionParseMatch>().SelectMany(c => c.Expression.GetValues<T>());
+        }
+
         public static IEnumerable<IExpression> GetValues<T>(this IExpression expr)
         {
             if (typeof(T).IsSubclassOf(typeof(Enum)))
@@ -30,7 +60,7 @@ namespace SkriptInsight.Core.Extensions
             }
             switch (expr)
             {
-                case Parser.Expressions.Expression<T> genExpr:
+                case Expression<T> genExpr:
                     yield return genExpr;
                     break;
                 case MultiValueExpression multiVal:

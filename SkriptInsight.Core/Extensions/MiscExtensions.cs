@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Newtonsoft.Json;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using SkriptInsight.Core.Files.Nodes;
@@ -134,6 +135,11 @@ namespace SkriptInsight.Core.Extensions
         public static bool IsEmpty(this string value)
         {
             return string.IsNullOrEmpty(value);
+        }
+        
+        public static bool IsEmpty(this StringBuilder value)
+        {
+            return value.Length == 0;
         }
         
     }

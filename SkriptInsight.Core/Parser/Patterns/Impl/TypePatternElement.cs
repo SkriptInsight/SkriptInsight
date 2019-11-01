@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.Parser.Expressions;
-using SkriptInsight.Core.Parser.Expressions.Variables;
 using SkriptInsight.Core.Parser.Types;
 using SkriptInsight.Core.Parser.Types.Impl;
 using SkriptInsight.Core.Parser.Types.Impl.Generic;
@@ -17,6 +16,11 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
         public string Type { get; set; }
 
         public bool SkipParenthesis { get; set; }
+
+        /// <summary>
+        /// Can this type, when matching list values, match 'and' or 'or'
+        /// </summary>
+        public bool CanMatchListConjunctions { get; set; } = true;
 
         public TypePatternElement(string contents) : base(contents)
         {
@@ -43,7 +47,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                 type = KnownTypesManager.Instance.GetTypeByName(Type) ?? KnownTypesManager.Instance.GetTypeByName(Type.Substring(0, Type.Length - 1));
 
                 if (type != null) // We have a multiple value request. Hand over to GenericMultiValueType
-                    skriptTypeDescriptor = new GenericMultiValueType(type);
+                    skriptTypeDescriptor = new GenericMultiValueType(type, Constraint, CanMatchListConjunctions);
             }
             else
             {

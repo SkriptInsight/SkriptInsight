@@ -46,6 +46,20 @@ namespace SkriptInsight.Tests
         }
 
         [Theory]
+        [InlineData("test,test", ',', 4)]
+        [InlineData("te(,)st,test", ',', 7)]
+        [InlineData("te(\",\")st,test", ',', 9)]
+        [InlineData("te\",\"st,test", ',', 7)]
+        [InlineData("te(\",\"\"\")st,test", ',', 11)]
+        [InlineData("te(\"\"\",\"\"\")st,test", ',', 13)]
+        public void ParseContextCanFindCharOutsideOfStuff(string str, char ch, int expectedPos)
+        {
+            var ctx = ParseContext.FromCode($"{str}");
+            
+            Assert.Equal(expectedPos, ctx.FindNextCharNotInsideNormalBracket(ch));
+        }
+
+        [Theory]
         [InlineData("(one|1¦1) (2¦two|2)", "1 two", 3)]
         [InlineData("(one|1¦1) (2¦two|2)", "one 2", 0)]
         [InlineData("(1¦show|2¦hide) holo[gra(m|phic display)][s]", "show hologram", 1)]
