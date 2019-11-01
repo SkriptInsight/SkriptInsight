@@ -2,12 +2,16 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using SkriptInsight.Core.Files.Nodes;
 using SkriptInsight.Core.Managers;
+using SkriptInsight.Core.Parser.Patterns;
+using SkriptInsight.Core.Parser.Patterns.Impl;
+using SkriptInsight.Core.Types.Attributes;
 
 namespace SkriptInsight.Core.Extensions
 {
@@ -56,6 +60,14 @@ namespace SkriptInsight.Core.Extensions
                 previous = current;
                 current = next;
             }
+        }
+
+        public static T GetAttributeOfType<T>(this object enumVal) where T : Attribute
+        {
+            var type = enumVal.GetType();
+            var memInfo = type.GetMember(enumVal.ToString());
+            var attributes = memInfo[0].GetCustomAttributes(typeof(T), false);
+            return attributes.Length > 0 ? (T) attributes[0] : null;
         }
         
         public static Action<T> Debounce<T>(this Action<T> func, int milliseconds = 300)
@@ -225,5 +237,21 @@ namespace SkriptInsight.Core.Extensions
 
             return false;
         }
+        
+        public static string[] GetAliases(this object value)
+        {
+            return value.GetAttributeOfType<PatternAliasAttribute>()?.Aliases ?? new string[0];
+        }
+        
+        public static bool IsEmpty(this string value)
+        {
+            return string.IsNullOrEmpty(value);
+        }
+        
+        public static bool IsEmpty(this StringBuilder value)
+        {
+            return value.Length == 0;
+        }
+        
     }
 }

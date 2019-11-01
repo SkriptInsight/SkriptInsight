@@ -1,5 +1,9 @@
 using System;
+using System.Linq;
 using SkriptInsight.Core.Parser.Patterns;
+using SkriptInsight.Core.Parser.Patterns.Impl;
+using static SkriptInsight.Core.Parser.Patterns.Impl.ChoicePatternElement;
+using static SkriptInsight.Core.Parser.Types.Impl.SkriptBoolean.SkriptRepresentation;
 
 namespace SkriptInsight.Core.Parser.Types.Impl
 {
@@ -21,7 +25,20 @@ namespace SkriptInsight.Core.Parser.Types.Impl
 
         static SkriptBoolean()
         {
-            Pattern = SkriptPattern.ParsePattern("(1¦true|2¦false|5¦yes|10¦no|17¦on|34¦off)");
+            Pattern = new SkriptPattern
+            {
+                Children =
+                {
+                    new ChoicePatternElement
+                    {
+                        Elements = Enum.GetValues(typeof(SkriptRepresentation)).Cast<SkriptRepresentation>()
+                            .Where(c => c != None)
+                            .Select(c =>
+                                new ChoiceGroupElement(new LiteralPatternElement(c.ToString()),
+                                    (int) c)).ToList()
+                    }
+                }
+            };
         }
 
         public static SkriptPattern Pattern { get; }
@@ -35,12 +52,13 @@ namespace SkriptInsight.Core.Parser.Types.Impl
                 ctx.CurrentPosition = clone.CurrentPosition;
                 return (SkriptRepresentation) result.ParseMark;
             }
+
             return null;
         }
 
         public override string AsString(SkriptRepresentation? obj)
         {
-            return (obj ?? SkriptRepresentation.False).ToString().ToLowerInvariant();
+            return (obj ?? False).ToString().ToLowerInvariant();
         }
     }
 }

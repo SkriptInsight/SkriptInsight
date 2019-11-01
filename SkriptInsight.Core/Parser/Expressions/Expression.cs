@@ -38,5 +38,10 @@ namespace SkriptInsight.Core.Parser.Expressions
         {
             return Type?.AsString(Value) ?? "";
         }
+
+        public override string ToString()
+        {
+            return Type?.AsString(Value) ?? base.ToString();
+        }
     }
 }

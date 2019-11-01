@@ -6,11 +6,11 @@ namespace SkriptInsight.Core.Managers
 {
     public class WorkspaceManager
     {
-        private static WorkspaceManager _instance;
-
-        public static WorkspaceManager Instance => _instance ??= new WorkspaceManager();
+        public static WorkspaceManager Instance { get; } = new WorkspaceManager();
         
         public SkriptWorkspace Current { get; } = new SkriptWorkspace();
+        
+        public static SkriptWorkspace CurrentWorkspace => Instance.Current;
 
         public SkriptFile GetOrCreateByUri(Uri uri)
         {

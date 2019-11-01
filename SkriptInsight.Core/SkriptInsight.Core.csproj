@@ -13,7 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Types" />
+      <EmbeddedResource Include="KnownAddonInfo\Skript.json" />
     </ItemGroup>
 
 </Project>

@@ -35,6 +35,7 @@ namespace SkriptInsight.Core.SyntaxInfo
                 if (e.PatternNodes.Length <= 0) return;
                 foreach (var node in e.PatternNodes) node.Children.Insert(0, optionalOn);
             });
+            Types.ForEach(e => e.LoadPatterns());
             Effects.ForEach(e => e.LoadPatterns());
             var types = Enum.GetValues(typeof(ExpressionType)).Cast<ExpressionType>().ToList();
             foreach (var expr in InnerExpressions)

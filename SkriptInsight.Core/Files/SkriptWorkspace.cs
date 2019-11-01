@@ -30,11 +30,11 @@ namespace SkriptInsight.Core.Files
 
             foreach (var addon in knownAddons)
             {
-                var assembly = Assembly.GetEntryAssembly();
-                var resourceName = assembly?.GetManifestResourceNames()
+                var assembly = typeof(SkriptWorkspace).Assembly;
+                var resourceName = assembly.GetManifestResourceNames()
                     .Single(str => str.EndsWith($"{addon}.json"));
 
-                using var stream = assembly?.GetManifestResourceStream(resourceName);
+                using var stream = assembly.GetManifestResourceStream(resourceName);
                 if (stream == null) continue;
                 
                 using var reader = new StreamReader(stream);

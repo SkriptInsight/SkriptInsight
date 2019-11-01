@@ -3,9 +3,9 @@ using System;
 namespace SkriptInsight.Core.Types.Attributes
 {
     [AttributeUsage(AttributeTargets.Field)]
-    internal sealed class ChatColorAliasAttribute : Attribute
+    internal sealed class PatternAliasAttribute : Attribute
     {
-        public ChatColorAliasAttribute(params string[] aliases)
+        public PatternAliasAttribute(params string[] aliases)
         {
             Aliases = aliases;
         }

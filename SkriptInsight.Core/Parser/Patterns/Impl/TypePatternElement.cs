@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.Parser.Expressions;
-using SkriptInsight.Core.Parser.Expressions.Variables;
 using SkriptInsight.Core.Parser.Types;
 using SkriptInsight.Core.Parser.Types.Impl;
 using SkriptInsight.Core.Parser.Types.Impl.Generic;
@@ -15,6 +14,13 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
         public SyntaxValueAcceptanceConstraint Constraint { get; set; }
 
         public string Type { get; set; }
+
+        public bool SkipParenthesis { get; set; }
+
+        /// <summary>
+        /// Can this type, when matching list values, match 'and' or 'or'
+        /// </summary>
+        public bool CanMatchListConjunctions { get; set; } = true;
 
         public TypePatternElement(string contents) : base(contents)
         {
@@ -38,10 +44,10 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
             var isMultipleValues = Type.EndsWith("s");
             if (isMultipleValues)
             {
-                type = KnownTypesManager.Instance.GetTypeByName(Type.Substring(0, Type.Length - 1));
+                type = KnownTypesManager.Instance.GetTypeByName(Type) ?? KnownTypesManager.Instance.GetTypeByName(Type.Substring(0, Type.Length - 1));
 
                 if (type != null) // We have a multiple value request. Hand over to GenericMultiValueType
-                    skriptTypeDescriptor = new GenericMultiValueType(type);
+                    skriptTypeDescriptor = new GenericMultiValueType(type, Constraint, CanMatchListConjunctions);
             }
             else
             {
@@ -72,7 +78,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
             if (result == null)
                 result = skriptTypeDescriptor?.TryParseValue(ctx);
            
-            if (result == null)
+            if (result == null && !SkipParenthesis)
             {
                 // Type descriptor wasn't able to parse the code. Push back and try with parentheses.
                 ctx.CurrentPosition = oldPos;

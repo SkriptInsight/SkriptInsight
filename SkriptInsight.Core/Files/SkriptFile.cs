@@ -1,30 +1,24 @@
 using System;
-using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 using MoreLinq;
-using Newtonsoft.Json;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using SkriptInsight.Core.Extensions;
-using SkriptInsight.Core.Files.Nodes;
 using SkriptInsight.Core.Files.Processes;
 using SkriptInsight.Core.Files.Processes.Impl;
 using SkriptInsight.Core.Managers;
-using SkriptInsight.Core.Parser;
-using SkriptInsight.Core.Parser.Expressions.Variables;
 
 namespace SkriptInsight.Core.Files
 {
     public class SkriptFile
     {
         private static DocumentSelector _selector;
+        private FileProcess _parseProcess;
 
         public static DocumentSelector Selector => _selector ??= DocumentSelector.ForLanguage("skriptlang");
 
@@ -109,8 +103,6 @@ namespace SkriptInsight.Core.Files
                 .Range(0, (int) Math.Ceiling(maxDegreeOfParallelism * 1.20))
                 .Select(_ => new FileParseContext(this) {MoveToNextLine = false}).ToList());
 
-            PrepareFileNodesSize();
-
             var sw = Stopwatch.StartNew();
 
             WorkspaceManager.Instance.Current.Server.Window.LogInfo(
@@ -125,7 +117,7 @@ namespace SkriptInsight.Core.Files
                         contexts.TryDequeue(out var context);
                         context.CurrentMatchStack.Clear();
                         context.TemporaryRangeStack.Clear();
-                        context.Matches = new List<ParseMatch>();
+                        context.Matches.Clear();
                         context.IndentationChars = rawContent.TakeWhile(char.IsWhiteSpace).Count();
 
                         context.CurrentLine = line;
@@ -135,47 +127,33 @@ namespace SkriptInsight.Core.Files
                         contexts.Enqueue(context);
                     }
                 });
-            
-            
-            /*var diags = new List<Diagnostic>();
 
-            Nodes.Select(c => c.Value).ForEach(node =>
+            if (GetType() == typeof(SkriptFile))
             {
-                if (node?.MatchedSyntax != null)
+                var diags = new List<Diagnostic>();
+                Nodes.Select(c => c.Value).ForEach(node =>
                 {
-                    var result = node.MatchedSyntax.Result;
-                
-                    diags.AddRange(result.Matches.OfType<ExpressionParseMatch>()
-                        .SelectMany(r => r.Expression.GetValues<string>())
-                        .Select(resultMatch => new Diagnostic
-                        {
-                            Code = "1",
-                            Message = "Found a String",
-                            Range = resultMatch.Range,
-                            Severity = DiagnosticSeverity.Warning,
-                            Source = "SkriptInsight"
-                        }));
-                
-                    diags.AddRange(result.Matches.OfType<ExpressionParseMatch>()
-                        .SelectMany(r => r.Expression.GetValues<SkriptVariable>())
-                        .Select(resultMatch => new Diagnostic
-                        {
-                            Code = "2",
-                            Message = "Found a variable. REEEEEE",
-                            Range = resultMatch.Range,
-                            Severity = DiagnosticSeverity.Error,
-                            Source = "SkriptInsight"
-                        }));
-                }
+                    if (node != null && node.MatchedSyntax == null)
+                    {
+                        diags.Add(
+                            new Diagnostic
+                            {
+                                Code = "1",
+                                Message = "This node doesn't match any syntax!",
+                                Range = node.ContentRange,
+                                Severity = DiagnosticSeverity.Warning,
+                                Source = "SkriptInsight"
+                            });
+                    }
 
-            });
-            
-            WorkspaceManager.Instance.Current.Server.Document.PublishDiagnostics(new PublishDiagnosticsParams
-            {
-                Uri = Url,
-                Diagnostics = diags
-            });*/
-            
+                });
+                WorkspaceManager.Instance.Current.Server.Document.PublishDiagnostics(new PublishDiagnosticsParams
+                {
+                    Uri = Url,
+                    Diagnostics = diags
+                });
+            }
+
             WorkspaceManager.Instance.Current.Server.Window.LogInfo(
                 $"Took {sw.ElapsedMilliseconds}ms to run {process.GetType().Name} on {endLine - startLine + 1} lines [{startLine}->{endLine}].");
             
@@ -186,12 +164,15 @@ namespace SkriptInsight.Core.Files
             WorkspaceManager.Instance.Current.Server.Window.LogInfo($"Took {sw.ElapsedMilliseconds}ms to run {process.GetType().Name} on {endLine - startLine + 1} lines.");
         }
 
-        private void PrepareFileNodesSize()
+        public FileProcess ParseProcess
         {
-//            var fileNodes = Nodes;
-//            if (fileNodes.Count >= RawContents.Count) return;
-//            Array.Resize(ref fileNodes, RawContents.Count);
-//            Nodes = fileNodes;
+            get => _parseProcess ??= ProvideParseProcess();
+            set => _parseProcess = value;
+        }
+
+        protected virtual FileProcess ProvideParseProcess()
+        {
+            return new ProcTryParseEffects();
         }
 
         public void PrepareNodes(int startLine = -1, int endLine = -1)
@@ -199,7 +180,7 @@ namespace SkriptInsight.Core.Files
             startLine = Math.Max(0, startLine);
             endLine = endLine < 0 ? RawContents.Count : endLine;
             RunProcess(new ProcCreateOrUpdateNodes(), startLine, endLine);
-            RunProcess(new ProcTryParseEffects(), startLine, endLine);
+            RunProcess(ParseProcess, startLine, endLine);
         }
     }
 }
