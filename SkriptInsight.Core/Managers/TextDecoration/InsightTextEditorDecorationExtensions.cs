@@ -8,17 +8,17 @@ namespace SkriptInsight.Core.Managers.TextDecoration
 {
     public static class InsightTextEditorDecorationExtensions
     {
-        public static Task<TextEditorDecorationType> CreateTextEditorDecorationType(this ILanguageServer server,
+        public static Task<TextEditorDecorationType> CreateTextEditorDecorationType(this ISkriptInsightHost server,
             DecorationRenderOptions options)
         {
             return server
-                .SendRequest<DecorationRenderOptions, TextEditorDecorationType>("insight/createDecoration", options);
+                .SendRawRequest<DecorationRenderOptions, TextEditorDecorationType>("insight/createDecoration", options);
         }
 
-        public static void SetDecorations(this ILanguageServer server, Uri uri,
+        public static void SetDecorations(this ISkriptInsightHost server, Uri uri,
             TextEditorDecorationType decorationType, IEnumerable<Range> ranges)
         {
-            server.SendNotification("insight/setDecorations", new SetDecorationsParams(uri, decorationType, ranges));
+            server.SendRawNotification("insight/setDecorations", new SetDecorationsParams(uri, decorationType, ranges));
         }
     }
 }

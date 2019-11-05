@@ -32,7 +32,7 @@ namespace SkriptInsight.Core.Managers
         public ConcurrentDictionary<ChatColor, TextEditorDecorationType> ChatColorsDecoration { get; } =
             new ConcurrentDictionary<ChatColor, TextEditorDecorationType>();
 
-        public ILanguageServer LanguageServer => WorkspaceManager.Instance.Current.Server;
+        public ISkriptInsightHost Host => WorkspaceManager.CurrentHost;
 
         public static MinecraftColoringManager Instance => _instance ??= new MinecraftColoringManager();
 
@@ -61,7 +61,7 @@ namespace SkriptInsight.Core.Managers
                     options.TextDecoration = optionsTextDecoration;
             }
 
-            var decorationType = LanguageServer.CreateTextEditorDecorationType(options).Result;
+            var decorationType = Host?.CreateTextEditorDecorationType(options).Result;
 
             ChatColorsDecoration[color] = decorationType;
 
@@ -125,11 +125,11 @@ namespace SkriptInsight.Core.Managers
 
             //Clear existing chat coloring decorations
             foreach (var textEditorDecorationType in ChatColorsDecoration)
-                LanguageServer.SetDecorations(file.Url, textEditorDecorationType.Value, new Range[0]);
+                Host.SetDecorations(file.Url, textEditorDecorationType.Value, new Range[0]);
 
             //Send coloring
             foreach (var valueTuples in decorations.GroupBy(c => c.Item1))
-                LanguageServer.SetDecorations(file.Url, valueTuples.Key, valueTuples.Select(c => c.Item2));
+                Host.SetDecorations(file.Url, valueTuples.Key, valueTuples.Select(c => c.Item2));
         }
 
     }

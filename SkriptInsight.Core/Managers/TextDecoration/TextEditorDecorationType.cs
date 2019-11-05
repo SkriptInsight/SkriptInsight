@@ -1,5 +1,8 @@
+using JetBrains.Annotations;
+
 namespace SkriptInsight.Core.Managers.TextDecoration
 {
+    [UsedImplicitly]
     public class TextEditorDecorationType
     {
         public TextEditorDecorationType(string key)
@@ -7,11 +10,12 @@ namespace SkriptInsight.Core.Managers.TextDecoration
             Key = key;
         }
 
+        [UsedImplicitly]
         public string Key { get; }
 
         public void Dispose()
         {
-            WorkspaceManager.Instance.Current.Server.SendNotification("insight/disposeDecoration", this);
+            WorkspaceManager.CurrentHost.SendRawNotification("insight/disposeDecoration", this);
         }
     }
 }
