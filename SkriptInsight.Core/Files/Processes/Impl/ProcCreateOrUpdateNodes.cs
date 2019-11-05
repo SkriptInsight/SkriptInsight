@@ -1,6 +1,6 @@
+using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Files.Nodes;
 using SkriptInsight.Core.Files.Nodes.Impl;
-using Range = OmniSharp.Extensions.LanguageServer.Protocol.Models.Range;
 
 namespace SkriptInsight.Core.Files.Processes.Impl
 {
@@ -11,6 +11,20 @@ namespace SkriptInsight.Core.Files.Processes.Impl
             AbstractFileNode resultNode = new BaseFileNode();
             NodeContentHelper.ApplyBasicNodeInfoToNode(rawContent, lineNumber, file, ref resultNode);
 
+            
+            
+            if (resultNode.NodeContent.IsEmpty() && !resultNode.RawComment.IsEmpty())
+            {
+                AbstractFileNode commentNode = new CommentNode();
+                NodeContentHelper.ApplyBasicNodeInfoToOtherNode(resultNode, ref commentNode);
+                resultNode = commentNode;
+            } else if (resultNode.NodeContent.IsEmpty() && resultNode.RawComment.IsEmpty())
+            {
+                AbstractFileNode emptyLineNode = new EmptyLineNode();
+                NodeContentHelper.ApplyBasicNodeInfoToOtherNode(resultNode, ref emptyLineNode);
+                resultNode = emptyLineNode;
+            }
+            
             file.Nodes[lineNumber] = resultNode;
         }
     }

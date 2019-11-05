@@ -6,6 +6,8 @@ namespace SkriptInsight.Core.Managers
 {
     public class WorkspaceManager
     {
+        public static ISkriptInsightHost CurrentHost { get; set; }
+        
         public static WorkspaceManager Instance { get; } = new WorkspaceManager();
         
         public SkriptWorkspace Current { get; } = new SkriptWorkspace();

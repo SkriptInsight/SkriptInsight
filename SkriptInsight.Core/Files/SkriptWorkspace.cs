@@ -1,10 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
-using OmniSharp.Extensions.LanguageServer.Protocol.Server;
+using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.SyntaxInfo;
 
 namespace SkriptInsight.Core.Files
@@ -14,8 +13,8 @@ namespace SkriptInsight.Core.Files
     /// </summary>
     public class SkriptWorkspace
     {
-        public ILanguageServer Server { get; set; }
-        
+        public ISkriptInsightHost Host => WorkspaceManager.CurrentHost;
+
         public SkriptWorkspace()
         {
             LoadAddons();

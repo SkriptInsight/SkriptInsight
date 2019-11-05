@@ -1,24 +1,18 @@
 using System;
-using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 using MoreLinq;
-using Newtonsoft.Json;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using SkriptInsight.Core.Extensions;
-using SkriptInsight.Core.Files.Nodes;
+using SkriptInsight.Core.Files.Nodes.Impl;
 using SkriptInsight.Core.Files.Processes;
 using SkriptInsight.Core.Files.Processes.Impl;
 using SkriptInsight.Core.Managers;
-using SkriptInsight.Core.Parser;
-using SkriptInsight.Core.Parser.Expressions.Variables;
 
 namespace SkriptInsight.Core.Files
 {
@@ -112,7 +106,7 @@ namespace SkriptInsight.Core.Files
 
             var sw = Stopwatch.StartNew();
 
-            WorkspaceManager.Instance.Current.Server.Window.LogInfo(
+            WorkspaceManager.CurrentHost.LogInfo(
                 $"Starting {process.GetType().Name} on {endLine - startLine + 1} lines.");
             Parallel.For(startLine, endLine + 1,
                 new ParallelOptions {MaxDegreeOfParallelism = maxDegreeOfParallelism},
@@ -140,7 +134,7 @@ namespace SkriptInsight.Core.Files
                 var diags = new List<Diagnostic>();
                 Nodes.Select(c => c.Value).ForEach(node =>
                 {
-                    if (node != null && node.MatchedSyntax == null)
+                    if (node != null && !(node is CommentNode) && node.MatchedSyntax == null)
                     {
                         diags.Add(
                             new Diagnostic
@@ -152,16 +146,11 @@ namespace SkriptInsight.Core.Files
                                 Source = "SkriptInsight"
                             });
                     }
-
                 });
-                WorkspaceManager.Instance.Current.Server.Document.PublishDiagnostics(new PublishDiagnosticsParams
-                {
-                    Uri = Url,
-                    Diagnostics = diags
-                });
+                WorkspaceManager.CurrentHost.PublishDiagnostics(Url, diags);
             }
 
-            WorkspaceManager.Instance.Current.Server.Window.LogInfo(
+            WorkspaceManager.CurrentHost.LogInfo(
                 $"Took {sw.ElapsedMilliseconds}ms to run {process.GetType().Name} on {endLine - startLine + 1} lines [{startLine}->{endLine}].");
         }
 

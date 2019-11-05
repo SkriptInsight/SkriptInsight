@@ -97,8 +97,8 @@ namespace SkriptInsight.Core.Extensions
         {
             var endRange = startRange + count;
 
-            WorkspaceManager.Instance.Current.Server.Window.LogInfo($"Start nodes count [{lst.Count}]");
-            for (int i = startRange; i <= endRange; i++)
+            WorkspaceManager.CurrentHost.LogInfo($"Start nodes count [{lst.Count}]");
+            for (var i = startRange; i <= endRange; i++)
             {
                 var value = lst.ElementAtOrDefault(i).Value;
                 if (value != null) update?.Invoke(value);
