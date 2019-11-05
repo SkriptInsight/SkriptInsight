@@ -54,7 +54,7 @@ namespace SkriptInsight.Host.Lsp
                     .WithHandler<TextHoverHandler>()
                     .OnRequest<object, int>("insight/inspectionsCount", _ => Task.FromResult(0));
             });
-            WorkspaceManager.Instance.Current.Server = server;
+            WorkspaceManager.CurrentHost = new LspSkriptInsightHost(server);
             Task.Run(() => StartDiscordRichPresence(WorkspaceManager.CurrentWorkspace));
 
             await server.WaitForExit;

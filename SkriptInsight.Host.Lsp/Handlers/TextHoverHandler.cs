@@ -27,7 +27,7 @@ namespace SkriptInsight.Host.Lsp.Handlers
                     Contents = new MarkedStringsOrMarkupContent(new MarkupContent
                     {
                         Kind = MarkupKind.Markdown,
-                        Value = $@"```js{"\n"}{JsonConvert.SerializeObject(nodeAtLine, new JsonSerializerSettings
+                        Value = $@"```js{"\n"}node.type = {nodeAtLine.GetType().Name};{"\n"}{JsonConvert.SerializeObject(nodeAtLine, new JsonSerializerSettings
                         {
                             Converters = new List<JsonConverter> {new StringEnumConverter {NamingStrategy = new CamelCaseNamingStrategy()}},
                             ContractResolver = new NoFileContractResolver(),
