@@ -41,6 +41,15 @@ namespace SkriptInsight.Core.Files
 
                 var doc = JsonConvert.DeserializeObject<SkriptAddonDocumentation>(result);
                 doc.LoadPatterns();
+                
+                //Take all singular types and make them plural
+                doc.Types.AddRange(doc.Types.ToList().Where(t => !t.IsPlural).Select(t =>
+                {
+                    var clone = t.Clone();
+                    clone.IsPlural = true;
+                    return clone;
+                }));
+                
                 AddonDocumentations.Add(doc);
             }
         }

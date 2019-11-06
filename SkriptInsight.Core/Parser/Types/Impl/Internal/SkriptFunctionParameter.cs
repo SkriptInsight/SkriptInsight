@@ -17,22 +17,19 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Internal
         // %*si_func_param_name%[ ]:[ ]%*classinfo%
         private static SkriptPattern ParsePattern { get; }
 
-        // [ = %*type%]
-        private OptionalPatternElement GetDefaultValuePatternForType(SkriptType type)
+        //  = %*type%
+        private SkriptPattern GetDefaultValuePatternForType(SkriptType type)
         {
-            return new OptionalPatternElement
+            return new SkriptPattern
             {
-                Element = new SkriptPattern
+                Children = 
                 {
-                    Children =
+                    new LiteralPatternElement(" "),
+                    new LiteralPatternElement("="),
+                    new LiteralPatternElement(" "),
+                    new TypePatternElement
                     {
-                        new LiteralPatternElement(" "),
-                        new LiteralPatternElement("="),
-                        new LiteralPatternElement(" "),
-                        new TypePatternElement
-                        {
-                            Type = type.TypeName, Constraint = SyntaxValueAcceptanceConstraint.LiteralsOnly
-                        }
+                        Type = type.FinalTypeName, Constraint = SyntaxValueAcceptanceConstraint.LiteralsOnly
                     }
                 }
             };
@@ -76,17 +73,17 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Internal
                 {
                     //Try to match an optional default value
                     clone.Matches.Clear();
-                    
+
 
                     var defValPattern = GetDefaultValuePatternForType(type.GenericValue);
                     var optResult = defValPattern.Parse(clone);
                     IExpression defVal = null;
-                    if (optResult.IsSuccess && !optResult.IsOptionallyMatched)
+                    if (optResult.IsSuccess)
                     {
                         defVal = optResult.Matches.OfType<ExpressionParseMatch>().FirstOrDefault()?.Expression;
                     }
-                    
-                    
+
+
                     ctx.CurrentPosition = clone.CurrentPosition;
                     //Return what we have
                     return new FunctionParameter

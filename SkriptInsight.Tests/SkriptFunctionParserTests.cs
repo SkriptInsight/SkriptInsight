@@ -31,6 +31,30 @@ namespace SkriptInsight.Tests
             Assert.Equal(input, expr.ToString());
         }
 
+        [Fact]
+        public void FunctionSignatureKnowsHowToParseRetardedSignatures()
+        {
+            //function retarded_func(b: strings = "thing","", c: integer) :: string
+            var ctx = ParseContext.FromCode("function retarded_func(b: strings = \"thing\",\"\", c: integer) :: string");
+            
+            var signature = FunctionSignature.TryParse(ctx);
+            
+            Assert.NotNull(signature);
+            Assert.Equal(2, signature.Parameters.Count);
+
+            var firstParam = signature.Parameters[0];
+            Assert.Equal("b", firstParam.Name);
+            Assert.Equal("strings", firstParam.Type.FinalTypeName);
+            Assert.Equal("thing", firstParam.DefaultValue.GetExplicitValue<string>(0).GenericValue);
+            Assert.Equal(string.Empty, firstParam.DefaultValue.GetExplicitValue<string>(1).GenericValue);
+            
+            
+            var secondParam = signature.Parameters[1];
+            Assert.Equal("c", secondParam.Name);
+            Assert.Equal("integer", secondParam.Type.FinalTypeName);
+            
+        }
+
         [Theory]
         [InlineData("test", "", "test: string", "testing2: number")]
         [InlineData("test", "string", "test: string", "testing2: number")]
@@ -47,7 +71,7 @@ namespace SkriptInsight.Tests
             
             Assert.Equal(name, signature.Name);
             
-            if (!returnType.IsEmpty()) Assert.Equal(returnType, signature.ReturnType.TypeName);
+            if (!returnType.IsEmpty()) Assert.Equal(returnType, signature.ReturnType.FinalTypeName);
             
             Assert.Equal(input, signature.Parameters.Select(p => p.ToString()));
             

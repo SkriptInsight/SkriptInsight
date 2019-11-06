@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Humanizer;
 using Newtonsoft.Json;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using SkriptInsight.Core.Files.Nodes;
@@ -104,6 +105,11 @@ namespace SkriptInsight.Core.Extensions
                 if (value != null) update?.Invoke(value);
                 lst[i - amount] = value;
             }
+        }
+
+        public static bool IsPlural(this string str)
+        {
+            return str.Pluralize(false) == str;
         }
 
         public static bool EqualsIgnoreCase(this string first, string second)

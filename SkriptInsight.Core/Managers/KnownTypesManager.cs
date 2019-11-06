@@ -37,10 +37,9 @@ namespace SkriptInsight.Core.Managers
         {
             if (TypesLookupCache.ContainsKey(name))
                 return TypesLookupCache[name];
-
-
+            
             var patterns = WorkspaceManager.CurrentWorkspace.AddonDocumentations
-                .SelectMany(c => c.Types).Where(t => t.TypeName.Equals(name))
+                .SelectMany(c => c.Types).Where(t => t.FinalTypeName.Equals(name))
                 .DefaultIfEmpty(
                     WorkspaceManager
                         .CurrentWorkspace.AddonDocumentations.SelectMany(c => c.Types)

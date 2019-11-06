@@ -89,7 +89,7 @@ namespace SkriptInsight.Core.Parser.Functions
 
         public override string ToString()
         {
-            return $"function {Name}({string.Join(", ", Parameters)}){(ReturnTypeExpr?.GenericValue != SkriptType.Void ? $" :: {ReturnTypeExpr?.GenericValue?.TypeName}" : "")}";
+            return $"function {Name}({string.Join(", ", Parameters)}){(ReturnTypeExpr?.GenericValue != SkriptType.Void ? $" :: {ReturnTypeExpr?.GenericValue?.FinalTypeName}" : "")}";
         }
     }
 }

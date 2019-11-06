@@ -1,4 +1,5 @@
 using System.Linq;
+using Humanizer;
 using SkriptInsight.Core.Parser.Patterns.Impl;
 using SkriptInsight.Core.SyntaxInfo;
 using static SkriptInsight.Core.Managers.WorkspaceManager;
@@ -17,7 +18,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl
             foreach (var type in CurrentWorkspace.AddonDocumentations.SelectMany(c => c.Types))
             {
                 clone.CurrentPosition = startPos;
-                element.Value = type.TypeName;
+                element.Value = type.FinalTypeName;
                 var result = element.Parse(clone);
 
                 if (!result.IsSuccess) continue;
@@ -30,7 +31,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl
 
         public override string AsString(SkriptType obj)
         {
-            return obj.TypeName;
+            return obj.FinalTypeName;
         }
     }
 }

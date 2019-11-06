@@ -25,7 +25,7 @@ namespace SkriptInsight.Core.Parser.Functions
 
         public override string ToString()
         {
-            return $"{Name}: {Type.TypeName}{RenderDefaultValue()}";
+            return $"{Name}: {Type.FinalTypeName}{RenderDefaultValue()}";
         }
 
         private string RenderDefaultValue()
