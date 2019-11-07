@@ -39,7 +39,7 @@ namespace SkriptInsight.Core.SyntaxInfo
 
         public string Since { get; set; }
 
-        [Obsolete("Use FinalTypeName instead.")]
+//        [Obsolete("Use FinalTypeName instead.")]
         public string TypeName { get; set; }
         
         public string AddonName { get; set; }

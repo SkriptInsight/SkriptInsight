@@ -4,6 +4,7 @@ using SkriptInsight.Core.Files.Nodes;
 using SkriptInsight.Core.Files.Nodes.Impl;
 using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.Parser;
+using SkriptInsight.Core.Utils;
 
 namespace SkriptInsight.Core.Files.Processes.Impl
 {
@@ -37,7 +38,8 @@ namespace SkriptInsight.Core.Files.Processes.Impl
                     // We matched one signature
                     if (tryParseResult != null)
                     {
-                        //TODO: Create signature object with LINQ Expressions
+                        var instance = signatureNodeType.NewInstance(tryParseResult);
+
                         break;
                     }
                 }
