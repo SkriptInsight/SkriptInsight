@@ -1,9 +1,11 @@
 using System.Linq;
 using SkriptInsight.Core.Extensions;
+using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.Parser;
 using SkriptInsight.Core.Parser.Expressions;
 using SkriptInsight.Core.Parser.Functions;
 using SkriptInsight.Core.Parser.Types.Impl.Internal;
+using SkriptInsight.Core.Utils;
 using Xunit;
 
 namespace SkriptInsight.Tests
@@ -60,10 +62,11 @@ namespace SkriptInsight.Tests
         [InlineData("test", "string", "test: string", "testing2: number")]
         public void FunctionSignatureParserWorks(string name, string returnType = "", params string[] input)
         {
+            var _ = NodeSignaturesManager.Instance;
             var result = $"function {name}({string.Join(", ", input)}){(returnType != "" ? $" :: {returnType}" : "")}";
 
             var ctx = ParseContext.FromCode(result);
-            var signature = FunctionSignature.TryParse(ctx);
+            var signature = SignatureParserHelper.TryParse<FunctionSignature>(ctx);
             
             Assert.NotNull(signature);
             
