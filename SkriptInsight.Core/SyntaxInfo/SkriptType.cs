@@ -28,6 +28,8 @@ namespace SkriptInsight.Core.SyntaxInfo
             Type = new SkriptVoid()
         };
 
+        private string _typeName;
+        private bool _isPlural;
 
         public int Id { get; set; }
 
@@ -39,9 +41,21 @@ namespace SkriptInsight.Core.SyntaxInfo
 
         public string Since { get; set; }
 
-//        [Obsolete("Use FinalTypeName instead.")]
-        public string TypeName { get; set; }
-        
+        public string TypeName
+        {
+            get => _typeName;
+            set
+            {
+                _typeName = value;
+                UpdateFinalTypeName();
+            }
+        }
+
+        private string CalculateFinalName()
+        {
+            return !IsPlural ? TypeName.Singularize(false) : TypeName.Pluralize(false);
+        }
+
         public string AddonName { get; set; }
 
         public string ClassName { get; set; }
@@ -62,7 +76,21 @@ namespace SkriptInsight.Core.SyntaxInfo
                 .ToArray();
         }
 
-        [JsonIgnore] public bool IsPlural { get; set; }
+        [JsonIgnore]
+        public bool IsPlural
+        {
+            get => _isPlural;
+            set
+            {
+                _isPlural = value; 
+                UpdateFinalTypeName();
+            }
+        }
+
+        private string UpdateFinalTypeName()
+        {
+            return FinalTypeName = CalculateFinalName();
+        }
 
         public SkriptType Clone()
         {
@@ -83,9 +111,8 @@ namespace SkriptInsight.Core.SyntaxInfo
                 IsPlural = IsPlural
             };
         }
-
-
-        public string FinalTypeName => IsPlural ? TypeName.Singularize(false) : TypeName.Pluralize(false);
+        
+        public string FinalTypeName { get; set; }
         
         public override string ToString()
         {

@@ -6,6 +6,18 @@ namespace SkriptInsight.Core.SyntaxInfo
 {
     public abstract class AbstractSyntaxElement
     {
+        public static readonly AbstractSyntaxElement FunctionSignature = new SkriptEvent
+        {
+            AddonName = "Skript",
+            Since = "Skript 2.2",
+            Cancellable = false,
+            Id = -2,
+            RequiredPlugins = new[] {"Skript"},
+            DocumentationId = "SkriptFunctionDeclaration",
+            Name = "FunctionSignature",
+            ClassNames = new[] {"Function"}
+        };
+
         public string[] Patterns { get; set; }
 
         public string AddonName { get; set; }

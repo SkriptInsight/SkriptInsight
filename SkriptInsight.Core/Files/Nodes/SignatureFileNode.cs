@@ -1,7 +1,6 @@
 using JetBrains.Annotations;
 
-namespace SkriptInsight.Core.Files.Nodes
-{
+namespace SkriptInsight.Core.Files.Nodes {
     [MeansImplicitUse(ImplicitUseTargetFlags.WithMembers)]
     public abstract class SignatureFileNode<T> : AbstractFileNode
     {

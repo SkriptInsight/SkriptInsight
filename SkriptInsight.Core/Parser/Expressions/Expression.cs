@@ -43,5 +43,10 @@ namespace SkriptInsight.Core.Parser.Expressions
         {
             return Type?.AsString(Value) ?? base.ToString();
         }
+
+        public static implicit operator Range(Expression<T> expr)
+        {
+            return expr.Range;
+        }
     }
 }

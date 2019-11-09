@@ -13,8 +13,7 @@ namespace SkriptInsight.Core.Utils
         public static object NewInstance(this Type t, params object[] args)
         {
             if (ConstructorDelegateCache.ContainsKey(t)) return ConstructorDelegateCache[t].DynamicInvoke(args);
-
-
+            
             var ctor = t.GetConstructors()
                 .FirstOrDefault(c => c.GetParameters()
                     .Select(p => p.ParameterType)
@@ -29,7 +28,7 @@ namespace SkriptInsight.Core.Utils
 
             // (arg0, arg1, arg2, etc) => new t(arg0, arg1, arg2, etc)
             var compiled = Expression.Lambda(Expression.New(ctor, argsExprs), argsExprs).Compile();
-
+            
             ConstructorDelegateCache[t] = compiled;
 
             return compiled.DynamicInvoke(args);

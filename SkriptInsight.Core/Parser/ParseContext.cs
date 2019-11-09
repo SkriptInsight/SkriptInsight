@@ -324,7 +324,7 @@ namespace SkriptInsight.Core.Parser
             {
                 Context = this,
                 Range = new Range(new Position(CurrentLine, startingPos), new Position(CurrentLine, endingPos)),
-                RawContent = Text.Substring(startingPos, endingPos - startingPos)
+                RawContent = Text.SafeSubstring(startingPos, endingPos - startingPos)
             };
             if (save)
                 Matches.Add(result);

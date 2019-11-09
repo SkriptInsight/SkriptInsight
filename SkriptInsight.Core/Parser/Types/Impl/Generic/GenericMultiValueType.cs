@@ -1,6 +1,7 @@
 #nullable enable
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.Parser.Expressions;
 using SkriptInsight.Core.Parser.Patterns;
@@ -23,7 +24,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
 
         public SkriptPattern NextValuePattern { get; }
 
-        public IExpression TryParseValue(ParseContext ctx)
+        public IExpression? TryParseValue(ParseContext ctx)
         {
             var typeInstance = Type.CreateNewInstance();
             var ourContext = ctx.Clone(false);

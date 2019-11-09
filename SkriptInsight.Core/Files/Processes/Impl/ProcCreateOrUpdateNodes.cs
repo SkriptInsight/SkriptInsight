@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Reflection;
 using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Files.Nodes;
 using SkriptInsight.Core.Files.Nodes.Impl;
@@ -33,12 +34,21 @@ namespace SkriptInsight.Core.Files.Processes.Impl
                 {
                     ctx.Matches.Clear();
                     ctx.CurrentPosition = 0;
+                    
+                    if (resultNode.IsSectionNode != (signatureNodeType.GetCustomAttribute<SectionNodeAttribute>() != null)) continue;
+                    
                     var tryParseResult = signatureDelegate.DynamicInvoke(ctx);
 
                     // We matched one signature
                     if (tryParseResult != null)
                     {
                         var instance = signatureNodeType.NewInstance(tryParseResult);
+
+                        if (instance is AbstractFileNode fileNode)
+                        {
+                            NodeContentHelper.ApplyBasicNodeInfoToOtherNode(resultNode, ref fileNode);
+                            resultNode = fileNode;
+                        }
 
                         break;
                     }

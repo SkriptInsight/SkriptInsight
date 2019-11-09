@@ -16,6 +16,11 @@ namespace SkriptInsight.Core.Extensions
 {
     public static class MiscExtensions
     {
+        public static string SafeSubstring(this string value, int startIndex, int length)
+        {
+            return new string((value ?? string.Empty).Skip(startIndex).Take(length).ToArray());
+        }
+        
         public static List<string> SplitOnNewLines(this string str)
         {
             return str.Split(

@@ -13,6 +13,7 @@ using SkriptInsight.Core.Files.Nodes.Impl;
 using SkriptInsight.Core.Files.Processes;
 using SkriptInsight.Core.Files.Processes.Impl;
 using SkriptInsight.Core.Managers;
+using SkriptInsight.Core.SyntaxInfo;
 
 namespace SkriptInsight.Core.Files
 {
@@ -107,7 +108,7 @@ namespace SkriptInsight.Core.Files
             var sw = Stopwatch.StartNew();
 
             WorkspaceManager.CurrentHost.LogInfo(
-                $"Starting {process.GetType().Name} on {endLine - startLine + 1} lines.");
+                $"Starting {process.GetType().Name} on {endLine - startLine} line(s).");
             Parallel.For(startLine, endLine + 1,
                 new ParallelOptions {MaxDegreeOfParallelism = maxDegreeOfParallelism},
                 line =>
@@ -151,7 +152,7 @@ namespace SkriptInsight.Core.Files
             }
 
             WorkspaceManager.CurrentHost.LogInfo(
-                $"Took {sw.ElapsedMilliseconds}ms to run {process.GetType().Name} on {endLine - startLine + 1} lines [{startLine}->{endLine}].");
+                $"Took {sw.ElapsedMilliseconds}ms to run {process.GetType().Name} on {endLine - startLine} line(s) [{startLine}->{endLine}].");
         }
 
         public FileProcess ParseProcess
