@@ -5,6 +5,8 @@ using SkriptInsight.Core.Files.Nodes;
 using SkriptInsight.Core.Files.Nodes.Impl;
 using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.Parser;
+using SkriptInsight.Core.Parser.Patterns;
+using SkriptInsight.Core.SyntaxInfo;
 using SkriptInsight.Core.Utils;
 
 namespace SkriptInsight.Core.Files.Processes.Impl
@@ -24,6 +26,7 @@ namespace SkriptInsight.Core.Files.Processes.Impl
             } else if (resultNode.NodeContent.IsEmpty() && resultNode.RawComment.IsEmpty())
             {
                 AbstractFileNode emptyLineNode = new EmptyLineNode();
+                emptyLineNode.MatchedSyntax = new SyntaxMatch(AbstractSyntaxElement.EmptyLine, ParseResult.Success(context));
                 NodeContentHelper.ApplyBasicNodeInfoToOtherNode(resultNode, ref emptyLineNode);
                 resultNode = emptyLineNode;
             } else
