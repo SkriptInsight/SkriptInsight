@@ -20,7 +20,7 @@ namespace SkriptInsight.Core.Files.Processes.Impl
             
             if (resultNode.NodeContent.IsEmpty() && !resultNode.RawComment.IsEmpty())
             {
-                AbstractFileNode commentNode = new CommentNode();
+                AbstractFileNode commentNode = new CommentLineNode();
                 NodeContentHelper.ApplyBasicNodeInfoToOtherNode(resultNode, ref commentNode);
                 resultNode = commentNode;
             } else if (resultNode.NodeContent.IsEmpty() && resultNode.RawComment.IsEmpty())

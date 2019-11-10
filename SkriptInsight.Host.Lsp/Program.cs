@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -12,6 +13,7 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using OmniSharp.Extensions.LanguageServer.Server;
 using SkriptInsight.Core.Files;
+using SkriptInsight.Core.Files.Nodes;
 using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.Parser.Patterns;
 using SkriptInsight.Host.Lsp.Handlers;
@@ -26,11 +28,26 @@ namespace SkriptInsight.Host.Lsp
 
         public static string EditorName { get; set; }
 
+        class TreeSkriptNode
+        {
+            public static explicit operator TreeSkriptNode(AbstractFileNode n)
+            {
+                return new TreeSkriptNode
+                {
+                    LineNumber = n.LineNumber,
+                    NodeContent = n.NodeContent
+                };
+            }
+
+            public int LineNumber { get; set; }
+            public string NodeContent { get; set; }
+        }
+        
         private static async Task Main(string[] args)
         {
             StartAnalytics();
             AnalyticsApi.UserAgent = EditorName = GetEditorNameByArgs(args);
-            
+
             AnalyticsApi.TrackEvent("SessionStart", "Session Start", extraValues: new {sc = "start"});
             AnalyticsApi.TrackEvent("ServerStart", "Started LSP Server", extraValues: new {sc = "start"});
 
@@ -49,12 +66,27 @@ namespace SkriptInsight.Host.Lsp
                     .WithOutput(Console.OpenStandardOutput())
                     .AddDefaultLoggingProvider()
                     .WithHandler<TextDocumentHandler>()
-                    .WithHandler<TextHoverHandler>()
-                    .OnRequest<object, int>("insight/inspectionsCount", _ => Task.FromResult(0));
+                    .WithHandler<TextHoverHandler>();
+
+                options.OnRequest<object, int>("insight/inspectionsCount", _ => Task.FromResult(0));
+                options.OnRequest<TreeSkriptNode, TreeSkriptNode[]>("insight/treeGetChildren", n =>
+                {
+                    var file = WorkspaceManager.CurrentWorkspace.Files.FirstOrDefault();
+                    var nodes = new List<TreeSkriptNode>();
+                    if (file != null)
+                    {
+                        if (n.NodeContent == null)
+                        {
+                            nodes.AddRange(file.Nodes.Values.Where(c => c.Parent == null).Select(c => (TreeSkriptNode)c));
+                        }
+                    }
+                    return Task.FromResult(nodes.ToArray());
+                });
             });
             WorkspaceManager.CurrentHost = new LspSkriptInsightHost(server);
             Task.Run(() => StartDiscordRichPresence(WorkspaceManager.CurrentWorkspace));
 
+            ;
             await server.WaitForExit;
 
             DiscordRpcClient?.Dispose();

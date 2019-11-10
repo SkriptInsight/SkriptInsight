@@ -7,13 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 using MoreLinq;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
-using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Files.Nodes.Impl;
 using SkriptInsight.Core.Files.Processes;
 using SkriptInsight.Core.Files.Processes.Impl;
 using SkriptInsight.Core.Managers;
-using SkriptInsight.Core.SyntaxInfo;
 
 namespace SkriptInsight.Core.Files
 {
@@ -22,17 +20,28 @@ namespace SkriptInsight.Core.Files
         private static DocumentSelector _selector;
         private FileProcess _parseProcess;
 
-        public static DocumentSelector Selector => _selector ??= DocumentSelector.ForLanguage("skriptlang");
-
         public SkriptFile(Uri url)
         {
             Url = url;
             ParseContext = new FileParseContext(this);
         }
 
+        public static DocumentSelector Selector => _selector ??= DocumentSelector.ForLanguage("skriptlang");
+
         public Uri Url { get; set; }
 
         public List<string> RawContents { get; set; } = new List<string>();
+
+        public ConcurrentNodeDictionary Nodes { get; internal set; } =
+            new ConcurrentNodeDictionary();
+
+        public FileParseContext ParseContext { get; }
+
+        public FileProcess ParseProcess
+        {
+            get => _parseProcess ??= ProvideParseProcess();
+            set => _parseProcess = value;
+        }
 
         public void HandleChange(TextDocumentContentChangeEvent edit)
         {
@@ -59,14 +68,11 @@ namespace SkriptInsight.Core.Files
 
             var finalStrings = sb.ToString().SplitOnNewLines();
             RawContents.InsertRange(startLine, finalStrings);
-            
+
             if (finalStrings.Count > lineCount)
             {
                 var linesNumber = finalStrings.Count - lineCount;
-                for (var i = startLine; i <= startLine + linesNumber; i++)
-                {
-                    Nodes[i] = null;
-                }
+                for (var i = startLine; i <= startLine + linesNumber; i++) Nodes[i] = null;
 
                 var shiftRangeStart = startLine + 1;
                 Nodes.ShiftRangeRight(shiftRangeStart, Nodes.Count - shiftRangeStart, linesNumber,
@@ -77,24 +83,16 @@ namespace SkriptInsight.Core.Files
                 var amount = Math.Abs(finalStrings.Count - lineCount);
                 var removedLineNumber = startLine + lineCount + (finalStrings.Count - lineCount);
 
-                for (var i = removedLineNumber; i < removedLineNumber + amount; i++)
-                {
-                    Nodes[i] = null;
-                }
-                
+                for (var i = removedLineNumber; i < removedLineNumber + amount; i++) Nodes[i] = null;
+
                 Nodes.ShiftRangeLeft(removedLineNumber + amount, Nodes.Count - removedLineNumber, amount,
                     n => n.ShiftLineNumber(-amount));
             }
-            
+
             PrepareNodes(startLine, startLine + finalStrings.Count + (finalStrings.Count - lineCount));
-            
+
             Nodes.SkipWhile(kv => kv.Value != null).ToList().ForEach(c => Nodes.Remove(c.Key, out _));
         }
-
-        public ConcurrentNodeDictionary Nodes { get; internal set; } =
-            new ConcurrentNodeDictionary();
-
-        public FileParseContext ParseContext { get; }
 
         public void RunProcess(FileProcess process, int startLine = -1, int endLine = -1)
         {
@@ -135,8 +133,7 @@ namespace SkriptInsight.Core.Files
                 var diags = new List<Diagnostic>();
                 Nodes.Select(c => c.Value).ForEach(node =>
                 {
-                    if (node != null && !(node is CommentNode) && node.MatchedSyntax == null)
-                    {
+                    if (node != null && !(node is CommentLineNode) && node.MatchedSyntax == null)
                         diags.Add(
                             new Diagnostic
                             {
@@ -146,19 +143,12 @@ namespace SkriptInsight.Core.Files
                                 Severity = DiagnosticSeverity.Warning,
                                 Source = "SkriptInsight"
                             });
-                    }
                 });
                 WorkspaceManager.CurrentHost.PublishDiagnostics(Url, diags);
             }
 
             WorkspaceManager.CurrentHost.LogInfo(
                 $"Took {sw.ElapsedMilliseconds}ms to run {process.GetType().Name} on {endLine - startLine} line(s) [{startLine}->{endLine}].");
-        }
-
-        public FileProcess ParseProcess
-        {
-            get => _parseProcess ??= ProvideParseProcess();
-            set => _parseProcess = value;
         }
 
         protected virtual FileProcess ProvideParseProcess()
@@ -171,7 +161,23 @@ namespace SkriptInsight.Core.Files
             startLine = Math.Max(0, startLine);
             endLine = endLine < 0 ? RawContents.Count : endLine;
             RunProcess(new ProcCreateOrUpdateNodes(), startLine, endLine);
+            ProcessNodeIndentation(startLine, endLine);
             RunProcess(ParseProcess, startLine, endLine);
+        }
+
+        private void ProcessNodeIndentation(in int startLine, in int endLine)
+        {
+            var nodes = Nodes.GetRange(startLine, endLine).ToList();
+            var indentLevels = nodes.Where(n => n.Indentations.Length < 2)
+                .SelectMany(c => c.Indentations).GroupBy(i => i.Count)
+                .Select(c => c.Key).ToList();
+            
+            foreach (var level in indentLevels)
+            {
+//                RunProcess(new ProcCreateOrUpdateNodeChildren(0));
+                RunProcess(new ProcCreateOrUpdateNodeChildren(level));
+            }
+            
         }
     }
 }

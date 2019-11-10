@@ -1,85 +1,89 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using MoreLinq;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Parser;
-using SkriptInsight.Core.Parser.Patterns;
 using SkriptInsight.Core.SyntaxInfo;
-using MoreEnumerable = MoreLinq.MoreEnumerable;
 
 namespace SkriptInsight.Core.Files.Nodes
 {
     public abstract class AbstractFileNode
     {
         /// <summary>
-        /// The line number of this node. Zero based integer value.
+        ///     The line number of this node. Zero based integer value.
         /// </summary>
         public int LineNumber { get; set; }
 
         /// <summary>
-        /// Source file
+        ///     Source file
         /// </summary>
         [JsonIgnore]
         public SkriptFile File { get; set; }
 
         /// <summary>
-        /// Parent node of this node
+        ///     Parent node of this node
         /// </summary>
         [JsonIgnore]
         public AbstractFileNode Parent { get; set; }
 
         /// <summary>
-        /// Children nodes of this node
+        ///     Children nodes of this node
         /// </summary>
         [JsonIgnore]
-        public List<AbstractFileNode> Children { get; set; }
+        public List<AbstractFileNode> Children { get; } = new List<AbstractFileNode>();
 
         /// <summary>
-        /// Indentations of this node
+        ///     Indentations of this node
         /// </summary>
         public NodeIndentation[] Indentations { get; set; } = new NodeIndentation[0];
 
         /// <summary>
-        /// Range of this node
+        ///     Range of this node
         /// </summary>
         public Range Range { get; set; }
 
         /// <summary>
-        /// Range of the indentation of this node
+        ///     Range of the indentation of this node
         /// </summary>
         public Range IndentationRange { get; set; }
 
         /// <summary>
-        /// The Raw Text content of this node.
+        ///     The Raw Text content of this node.
         /// </summary>
         public string RawText { get; set; }
 
         /// <summary>
-        /// Range of the comment of this node
+        ///     Range of the comment of this node
         /// </summary>
         public Range CommentRange { get; set; }
 
         /// <summary>
-        /// Range of the content of this node (doesn't include comments or indentation)
+        ///     Range of the content of this node (doesn't include comments or indentation)
         /// </summary>
         public Range ContentRange { get; set; }
 
         /// <summary>
-        /// Content of the comment of this node
+        ///     Content of the comment of this node
         /// </summary>
         public string RawComment { get; set; }
 
         /// <summary>
-        /// Text content of this node (doesn't include comments or indentation)
+        ///     Text content of this node (doesn't include comments or indentation)
         /// </summary>
         public string NodeContent { get; set; }
 
         /// <summary>
-        /// Check whether this node is a section node or not 
+        ///     Check whether this node is a section node or not
         /// </summary>
         public bool IsSectionNode { get; set; }
 
         public SyntaxMatch MatchedSyntax { get; set; }
+
+        public override string ToString()
+        {
+            return RawText;
+        }
 
         public void ShiftLineNumber(int amount)
         {
@@ -92,7 +96,7 @@ namespace SkriptInsight.Core.Files.Nodes
             {
                 var expression = (m as ExpressionParseMatch)?.Expression;
                 if (expression != null)
-                    MoreEnumerable.ForEach(expression.GetAllExpressions(), expr => expr.Range.ShiftLineNumber(amount));
+                    expression.GetAllExpressions().ForEach(expr => expr.Range.ShiftLineNumber(amount));
                 else
                     m.Range.ShiftLineNumber(amount);
             });
