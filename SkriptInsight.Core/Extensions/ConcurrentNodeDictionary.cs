@@ -4,7 +4,7 @@ using SkriptInsight.Core.Files.Nodes;
 
 namespace SkriptInsight.Core.Extensions
 {
-    public class NodesConcurrentDictionary : ConcurrentDictionary<int, AbstractFileNode>
+    public class ConcurrentNodeDictionary : ConcurrentDictionary<int, AbstractFileNode>
     {
         public new AbstractFileNode this[int key]
         {
