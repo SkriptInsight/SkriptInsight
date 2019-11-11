@@ -1,5 +1,7 @@
+#nullable enable
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.Parser.Expressions;
 using SkriptInsight.Core.Parser.Patterns;
@@ -22,7 +24,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
 
         public SkriptPattern NextValuePattern { get; }
 
-        public IExpression TryParseValue(ParseContext ctx)
+        public IExpression? TryParseValue(ParseContext ctx)
         {
             var typeInstance = Type.CreateNewInstance();
             var ourContext = ctx.Clone(false);
@@ -51,12 +53,27 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
                 if (expr != null)
                     resultExpression.Values.Add(
                         new MultiValueExpression.ValueDescription(expr,
-                            ourContext.Matches.Skip(1).FirstOrDefault()?.RawContent));
+                            ourContext.Matches.Skip(1).FirstOrDefault()));
 
                 count++;
             }
 
-            if (count > 0) ctx.ReadUntilPosition(ourContext.CurrentPosition);
+            if (count > 0)
+            {
+                
+                //Remove last splitter
+                var lastVal = resultExpression.Values?.Last();
+                if (lastVal != null)
+                {
+                    if (lastVal.RawSplitter != null)
+                    {
+                        ourContext.CurrentPosition = (int) lastVal.RawSplitter.Range.Start.Character;
+                        lastVal.RawSplitter = null;
+                    }
+
+                    ctx.ReadUntilPosition(ourContext.CurrentPosition);
+                }
+            }
 
             if (count > 0)
             {

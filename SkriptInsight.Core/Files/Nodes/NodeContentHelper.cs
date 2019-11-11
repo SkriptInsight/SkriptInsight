@@ -27,6 +27,7 @@ namespace SkriptInsight.Core.Files.Nodes
             node.RawComment = commentContent;
             node.ContentRange = contentRange;
             node.NodeContent = nodeContent;
+            node.File = file;
 
             if (nodeContent.EndsWith(":"))
             {
@@ -37,15 +38,17 @@ namespace SkriptInsight.Core.Files.Nodes
 
         public static void ApplyBasicNodeInfoToOtherNode(AbstractFileNode original, ref AbstractFileNode target)
         {
-            target.RawText = original.RawText;
+            if (original.RawText != null) target.RawText = original.RawText;
             target.LineNumber = original.LineNumber;
-            target.Indentations = original.Indentations;
-            target.IndentationRange = original.IndentationRange;
-            target.Range = original.Range;
-            target.CommentRange = original.CommentRange;
-            target.RawComment = original.RawComment;
-            target.ContentRange = original.ContentRange;
-            target.NodeContent = original.NodeContent;
+            if (original.Indentations != null) target.Indentations = original.Indentations;
+            if (original.IndentationRange != null) target.IndentationRange = original.IndentationRange;
+            if (original.Range != null) target.Range = original.Range;
+            if (original.CommentRange != null) target.CommentRange = original.CommentRange;
+            if (original.RawComment != null) target.RawComment = original.RawComment;
+            if (original.ContentRange != null) target.ContentRange = original.ContentRange;
+            if (original.NodeContent != null) target.NodeContent = original.NodeContent;
+            if (original.MatchedSyntax != null) target.MatchedSyntax = original.MatchedSyntax;
+            if (original.File != null) target.File = original.File;
             target.IsSectionNode = original.IsSectionNode;
         }
 

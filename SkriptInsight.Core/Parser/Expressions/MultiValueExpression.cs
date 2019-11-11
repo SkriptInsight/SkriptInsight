@@ -7,17 +7,19 @@ namespace SkriptInsight.Core.Parser.Expressions
 {
     public class MultiValueExpression : IExpression
     {
-        public struct ValueDescription
+        public class ValueDescription
         {
-            public ValueDescription(IExpression expression, string splitter)
+            public ValueDescription(IExpression expression, ParseMatch splitter)
             {
                 Expression = expression;
-                Splitter = splitter ?? "";
+                RawSplitter = splitter;
             }
 
             public IExpression Expression { get; set; }
 
-            public string Splitter { get; set; }
+            public string Splitter => RawSplitter?.RawContent ?? "";
+            
+            public ParseMatch RawSplitter { get; set; }
 
             public override string ToString()
             {

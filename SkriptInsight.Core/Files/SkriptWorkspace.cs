@@ -35,16 +35,31 @@ namespace SkriptInsight.Core.Files
 
                 using var stream = assembly.GetManifestResourceStream(resourceName);
                 if (stream == null) continue;
-                
+
                 using var reader = new StreamReader(stream);
                 var result = reader.ReadToEnd();
 
                 var doc = JsonConvert.DeserializeObject<SkriptAddonDocumentation>(result);
                 doc.LoadPatterns();
+
+                //Take all singular types and make them plural
+                doc.Types.AddRange(doc.Types.ToList().Where(t => !t.IsPlural).Select(t =>
+                {
+                    var clone = t.Clone();
+                    clone.IsPlural = true;
+                    return clone;
+                }));
+                //Sort the types by their position on the list and plural version first
+                
+                doc.Types = doc.Types
+                    .GroupBy(c => c.Id)
+                    .SelectMany(c => c.OrderByDescending(cc => cc.IsPlural ? 1 : 0))
+                    .ToList();
+
                 AddonDocumentations.Add(doc);
             }
         }
-    
+
         public List<SkriptAddonDocumentation> AddonDocumentations { get; set; } = new List<SkriptAddonDocumentation>();
 
         public List<SkriptFile> Files { get; set; } = new List<SkriptFile>();

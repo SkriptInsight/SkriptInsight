@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Humanizer;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -17,6 +18,11 @@ namespace SkriptInsight.Core.Extensions
 {
     public static class MiscExtensions
     {
+        public static string SafeSubstring(this string value, int startIndex, int length)
+        {
+            return new string((value ?? string.Empty).Skip(startIndex).Take(length).ToArray());
+        }
+        
         public static List<string> SplitOnNewLines(this string str)
         {
             return str.Split(
@@ -215,6 +221,11 @@ namespace SkriptInsight.Core.Extensions
                 if (value != null) update?.Invoke(value);
                 lst[i - amount] = value;
             }
+        }
+
+        public static bool IsPlural(this string str)
+        {
+            return str.Pluralize(false) == str;
         }
 
         public static bool EqualsIgnoreCase(this string first, string second)

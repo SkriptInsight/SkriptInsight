@@ -34,6 +34,11 @@ namespace SkriptInsight.Host.Lsp
 
         public bool SupportsRawRequests => true;
 
+        public void SendRawNotification(string name)
+        {
+            Server.SendNotification(name);
+        }
+
         public void SendRawNotification<T>(string name, T @params)
         {
             Server.SendNotification(name, @params);
