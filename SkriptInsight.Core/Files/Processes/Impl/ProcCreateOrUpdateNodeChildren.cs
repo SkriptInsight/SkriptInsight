@@ -30,12 +30,6 @@ namespace SkriptInsight.Core.Files.Processes.Impl
                     var nextNode = nodes[i];
                     if (nextNode == null) continue;
                     
-                    //Remove this node and children from parent.
-                    if (nextNode.Parent != null)
-                    {
-                        nextNode.Parent.Children.Remove(node);
-                        nextNode.Parent.Children.RemoveAll(nextNode.Children.Contains);
-                    }
                     nextNode.Parent = node;
                     node.Children.Add(nextNode);
                 }

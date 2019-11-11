@@ -162,22 +162,22 @@ namespace SkriptInsight.Core.Files
             endLine = endLine < 0 ? RawContents.Count : endLine;
             RunProcess(new ProcCreateOrUpdateNodes(), startLine, endLine);
             ProcessNodeIndentation(startLine, endLine);
-            RunProcess(ParseProcess, startLine, endLine);
+            WorkspaceManager.CurrentHost.SendRawNotification("insight/treeChanged");
+//            RunProcess(ParseProcess, startLine, endLine);
         }
 
         private void ProcessNodeIndentation(in int startLine, in int endLine)
         {
             var nodes = Nodes.GetRange(startLine, endLine).ToList();
-            var indentLevels = nodes.Where(n => n.Indentations.Length < 2)
+            var indentLevels = new[] {0}.Concat(nodes.Where(n => n.Indentations.Length < 2)
                 .SelectMany(c => c.Indentations).GroupBy(i => i.Count)
-                .Select(c => c.Key).ToList();
-            
+                .Select(c => c.Key)).ToList();
+
             foreach (var level in indentLevels)
             {
 //                RunProcess(new ProcCreateOrUpdateNodeChildren(0));
                 RunProcess(new ProcCreateOrUpdateNodeChildren(level));
             }
-            
         }
     }
 }

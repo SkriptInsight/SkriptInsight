@@ -11,17 +11,39 @@ namespace SkriptInsight.Core.Parser.Types.Impl
     {
         protected override SkriptType TryParse(ParseContext ctx)
         {
-            var element = new LiteralPatternElement("");
+            var litElement = new LiteralPatternElement("");
             var startPos = ctx.CurrentPosition;
             var clone = ctx.Clone();
 
             foreach (var type in CurrentWorkspace.AddonDocumentations.SelectMany(c => c.Types))
             {
                 clone.CurrentPosition = startPos;
-                element.Value = type.FinalTypeName;
-                var result = element.Parse(clone);
+                litElement.Value = type.FinalTypeName;
+                var result = litElement.Parse(clone);
 
-                if (!result.IsSuccess) continue;
+                if (!result.IsSuccess)
+                {
+                    //The name wasn't matched so try with regex
+                    var isRegexSuccess = false;
+                    if (type.LoosePatternsRegexps != null)
+                    {
+                        foreach (var regex in type.LoosePatternsRegexps)
+                        {
+                            if (isRegexSuccess) break;
+                            clone.CurrentPosition = startPos;
+
+                            var match = regex.Match(clone.PeekUntilEnd());
+                            if (!match.Success) continue;
+
+                            clone.ReadNext(match.Length);
+                            isRegexSuccess = true;
+                        }
+                    }
+
+                    if (!isRegexSuccess) continue;
+//                    continue;
+                }
+
                 ctx.CurrentPosition = clone.CurrentPosition;
                 return type;
             }

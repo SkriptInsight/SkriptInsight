@@ -66,12 +66,15 @@ namespace SkriptInsight.Core.SyntaxInfo
 
         public string[] Patterns { get; set; }
 
-        public Regex[] PatternsRegexes { get; set; }
+        public Regex[] LoosePatternsRegexps { get; set; }
+
+        public Regex[] PatternsRegexps { get; set; }
 
         public void LoadPatterns()
         {
             PossibleValuesAsNouns = PossibleValues?.Select(SkriptNounParser.ParseNoun).ToArray();
-            PatternsRegexes = Patterns?
+            UpdateLosePatternRegexps();
+            PatternsRegexps = Patterns?
                 .Select(c => new Regex('^' + c + '$', RegexOptions.Compiled | RegexOptions.IgnoreCase))
                 .ToArray();
         }
@@ -82,14 +85,23 @@ namespace SkriptInsight.Core.SyntaxInfo
             get => _isPlural;
             set
             {
-                _isPlural = value; 
+                _isPlural = value;
                 UpdateFinalTypeName();
             }
         }
 
-        private string UpdateFinalTypeName()
+        private void UpdateFinalTypeName()
         {
-            return FinalTypeName = CalculateFinalName();
+            FinalTypeName = CalculateFinalName();
+            UpdateLosePatternRegexps();
+        }
+
+        private void UpdateLosePatternRegexps()
+        {
+            LoosePatternsRegexps = Patterns?
+                .Select(c => new Regex('^' + c.Replace("s?", IsPlural ? "s" : ""),
+                    RegexOptions.Compiled | RegexOptions.IgnoreCase))
+                .ToArray();
         }
 
         public SkriptType Clone()
@@ -105,15 +117,16 @@ namespace SkriptInsight.Core.SyntaxInfo
                 Since = Since,
                 Usage = Usage,
                 ClassName = ClassName,
-                PatternsRegexes = PatternsRegexes,
+                PatternsRegexps = PatternsRegexps,
+                LoosePatternsRegexps = LoosePatternsRegexps,
                 PossibleValues = PossibleValues,
                 PossibleValuesAsNouns = PossibleValuesAsNouns,
                 IsPlural = IsPlural
             };
         }
-        
+
         public string FinalTypeName { get; set; }
-        
+
         public override string ToString()
         {
             return FinalTypeName;

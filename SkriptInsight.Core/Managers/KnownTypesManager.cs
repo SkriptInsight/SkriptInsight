@@ -43,9 +43,9 @@ namespace SkriptInsight.Core.Managers
                 .DefaultIfEmpty(
                     WorkspaceManager
                         .CurrentWorkspace.AddonDocumentations.SelectMany(c => c.Types)
-                        .Where(c => c.PatternsRegexes != null)
-                        .FirstOrDefault(c => c.PatternsRegexes.Any(r => r.IsMatch(name)))
-                ).FirstOrDefault()?.PatternsRegexes;
+                        .Where(c => c.PatternsRegexps != null)
+                        .FirstOrDefault(c => c.PatternsRegexps.Any(r => r.IsMatch(name)))
+                ).FirstOrDefault()?.PatternsRegexps;
 
             var result = KnownTypes.FirstOrDefault(c => c.SkriptRepresentations.Contains(name)) ??
                          KnownTypes.FirstOrDefault(t =>

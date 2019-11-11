@@ -7,11 +7,13 @@ using System.Reflection;
 using System.Threading.Tasks;
 using DiscordRPC;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using OmniSharp.Extensions.JsonRpc;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using OmniSharp.Extensions.LanguageServer.Server;
+using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Files;
 using SkriptInsight.Core.Files.Nodes;
 using SkriptInsight.Core.Managers;
@@ -34,15 +36,24 @@ namespace SkriptInsight.Host.Lsp
             {
                 return new TreeSkriptNode
                 {
+                    RandomId = Guid.NewGuid().ToString(),
                     LineNumber = n.LineNumber,
-                    NodeContent = n.NodeContent
+                    NodeContent = $"{n.RawText.Trim()} [{n.GetType().Name}]",
+                    IsSectionNode = n.IsSectionNode
                 };
             }
 
+            public string RandomId { get; set; }
+
             public int LineNumber { get; set; }
+
             public string NodeContent { get; set; }
+
+            public bool IsSectionNode { get; set; }
+
+            public Uri Uri { get; set; }
         }
-        
+
         private static async Task Main(string[] args)
         {
             StartAnalytics();
@@ -64,70 +75,71 @@ namespace SkriptInsight.Host.Lsp
                 options
                     .WithInput(Console.OpenStandardInput())
                     .WithOutput(Console.OpenStandardOutput())
-                    .AddDefaultLoggingProvider()
+                    .ConfigureLogging(c => c.AddLanguageServer())
                     .WithHandler<TextDocumentHandler>()
+//                    .AddTextDocumentIdentifier<SkriptTextDocumentMatcher>()
                     .WithHandler<TextHoverHandler>();
 
-                options.OnRequest<object, int>("insight/inspectionsCount", _ => Task.FromResult(0));
-                options.OnRequest<TreeSkriptNode, TreeSkriptNode[]>("insight/treeGetChildren", n =>
+                options.OnRequest<object, int>("insight/inspectionsCount", _ => Task.FromResult(0)); 
+//                options.OnRequest<TreeSkriptNode, TreeSkriptNode[]>("insight/treeGetChildren", n =>
+//                {
+//                    var file = WorkspaceManager.CurrentWorkspace.Files.FirstOrDefault();
+//                    var nodes = new List<TreeSkriptNode>();
+//                    if (file != null)
+//                    {
+//                        nodes.AddRange(n.NodeContent == null
+//                            ? file.Nodes.Values.Where(c => c.Parent == null).Select(c => (TreeSkriptNode) c)
+//                            : file.Nodes[n.LineNumber]?.Children.Where(c => c.Parent == file.Nodes[n.LineNumber])
+//                                .Select(c => (TreeSkriptNode) c));
+//                    }
+//                    return Task.FromResult(nodes.ToArray());
+//                });
+            });
+                WorkspaceManager.CurrentHost = new LspSkriptInsightHost(server);
+                Task.Run(() => StartDiscordRichPresence(WorkspaceManager.CurrentWorkspace));
+
+                ;
+                await server.WaitForExit;
+
+                DiscordRpcClient?.Dispose();
+                AnalyticsApi.CancellationToken.Cancel();
+                AnalyticsApi.TrackEvent("ServerStop", "Stopped LSP Server");
+                AnalyticsApi.TrackEvent("SessionStop", "Session Stop", extraValues: new {sc = "stop"});
+            }
+
+            private static void StartDiscordRichPresence(SkriptWorkspace workspace)
+            {
+                DiscordRpcClient = new DiscordRpcClient("635138726099419136", autoEvents: true);
+                DiscordRpcClient.Initialize();
+
+                DiscordRpcClient.SetPresence(new RichPresence
                 {
-                    var file = WorkspaceManager.CurrentWorkspace.Files.FirstOrDefault();
-                    var nodes = new List<TreeSkriptNode>();
-                    if (file != null)
+                    Assets = new Assets
                     {
-                        if (n.NodeContent == null)
-                        {
-                            nodes.AddRange(file.Nodes.Values.Where(c => c.Parent == null).Select(c => (TreeSkriptNode)c));
-                        }
-                    }
-                    return Task.FromResult(nodes.ToArray());
+                        LargeImageKey = "logo-si-alpha2",
+                        LargeImageText = "Using SkriptInsight",
+                        SmallImageKey = EditorName.ToLower().Replace(" ", "_"),
+                        SmallImageText = $"on {EditorName}"
+                    },
+                    Details = $"Idling on {EditorName}",
+                    State = "Developing SkriptInsight"
                 });
-            });
-            WorkspaceManager.CurrentHost = new LspSkriptInsightHost(server);
-            Task.Run(() => StartDiscordRichPresence(WorkspaceManager.CurrentWorkspace));
+            }
 
-            ;
-            await server.WaitForExit;
-
-            DiscordRpcClient?.Dispose();
-            AnalyticsApi.CancellationToken.Cancel();
-            AnalyticsApi.TrackEvent("ServerStop", "Stopped LSP Server");
-            AnalyticsApi.TrackEvent("SessionStop", "Session Stop", extraValues: new {sc = "stop"});
-        }
-
-        private static void StartDiscordRichPresence(SkriptWorkspace workspace)
-        {
-            DiscordRpcClient = new DiscordRpcClient("635138726099419136", autoEvents: true);
-            DiscordRpcClient.Initialize();
-
-            DiscordRpcClient.SetPresence(new RichPresence
+            private static string GetEditorNameByArgs(IEnumerable<string> args)
             {
-                Assets = new Assets
+                if (args.Contains("-vscode"))
+                    return "VSCode";
+
+                return "Unknown";
+            }
+
+            private static void StartAnalytics()
+            {
+                AnalyticsApi = new GoogleAnalyticsApi
                 {
-                    LargeImageKey = "logo-si-alpha2",
-                    LargeImageText = "Using SkriptInsight",
-                    SmallImageKey = EditorName.ToLower().Replace(" ", "_"),
-                    SmallImageText = $"on {EditorName}"
-                },
-                Details = $"Idling on {EditorName}",
-                State = "Developing SkriptInsight"
-            });
-        }
-
-        private static string GetEditorNameByArgs(IEnumerable<string> args)
-        {
-            if (args.Contains("-vscode"))
-                return "VSCode";
-
-            return "Unknown";
-        }
-
-        private static void StartAnalytics()
-        {
-            AnalyticsApi = new GoogleAnalyticsApi
-            {
-                /*DisableTracking = true*/
-            };
+                    /*DisableTracking = true*/
+                };
+            }
         }
     }
-}

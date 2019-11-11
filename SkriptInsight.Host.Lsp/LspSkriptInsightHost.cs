@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using SkriptInsight.Core;
@@ -29,6 +30,23 @@ namespace SkriptInsight.Host.Lsp
                 Uri = url,
                 Diagnostics = diagnostics
             });
+        }
+
+        public bool SupportsRawRequests => true;
+
+        public void SendRawNotification(string name)
+        {
+            Server.SendNotification(name);
+        }
+
+        public void SendRawNotification<T>(string name, T @params)
+        {
+            Server.SendNotification(name, @params);
+        }
+
+        public Task<TResponse> SendRawRequest<T, TResponse>(string method, T @params)
+        {
+            return Server.SendRequest<T, TResponse>(method, @params);
         }
     }
 }

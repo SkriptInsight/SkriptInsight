@@ -27,6 +27,7 @@ namespace SkriptInsight.Core.Files.Nodes
             node.RawComment = commentContent;
             node.ContentRange = contentRange;
             node.NodeContent = nodeContent;
+            node.File = file;
 
             if (nodeContent.EndsWith(":"))
             {
@@ -47,6 +48,7 @@ namespace SkriptInsight.Core.Files.Nodes
             if (original.ContentRange != null) target.ContentRange = original.ContentRange;
             if (original.NodeContent != null) target.NodeContent = original.NodeContent;
             if (original.MatchedSyntax != null) target.MatchedSyntax = original.MatchedSyntax;
+            if (original.File != null) target.File = original.File;
             target.IsSectionNode = original.IsSectionNode;
         }
 
