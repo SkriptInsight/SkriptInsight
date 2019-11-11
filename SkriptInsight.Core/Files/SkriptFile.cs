@@ -155,7 +155,6 @@ namespace SkriptInsight.Core.Files
 
             WorkspaceManager.CurrentHost.LogInfo(
                 $"Took {sw.ElapsedMilliseconds}ms to run {process.GetType().Name} on {endLine - startLine} line(s) [{startLine}->{endLine}].");
-                $"Took {sw.ElapsedMilliseconds}ms to run {process.GetType().Name} on {endLine - startLine + 1} lines [{startLine}->{endLine}].");
 
             if (process is ProcTryParseEffects)
             {
@@ -164,12 +163,6 @@ namespace SkriptInsight.Core.Files
 
             WorkspaceManager.CurrentHost.LogInfo(
                 $"Took {sw.ElapsedMilliseconds}ms to run {process.GetType().Name} on {endLine - startLine + 1} lines.");
-        }
-
-        public FileProcess ParseProcess
-        {
-            get => _parseProcess ??= ProvideParseProcess();
-            set => _parseProcess = value;
         }
 
         protected virtual FileProcess ProvideParseProcess()
