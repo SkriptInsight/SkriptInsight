@@ -45,7 +45,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                 var isMultipleValues = typeRaw.EndsWith("s");
                 if (isMultipleValues)
                 {
-                    type = WorkspaceManager.Instance.KnownTypesManager.GetTypeByName(typeRaw) ?? WorkspaceManager.Instance.KnownTypesManager.GetTypeByName(typeRaw.Substring(0, Type.Length - 1));
+                    type = WorkspaceManager.Instance.KnownTypesManager.GetTypeByName(typeRaw) ?? WorkspaceManager.Instance.KnownTypesManager.GetTypeByName(typeRaw.Substring(0, typeRaw.Length - 1));
 
                     if (type != null) // We have a multiple value request. Hand over to GenericMultiValueType
                         skriptTypeDescriptor = new GenericMultiValueType(type, Constraint, CanMatchListConjunctions);
