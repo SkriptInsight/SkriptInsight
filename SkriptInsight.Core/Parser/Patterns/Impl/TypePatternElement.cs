@@ -38,67 +38,67 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
 
         public override ParseResult Parse(ParseContext ctx)
         {
-            var type = WorkspaceManager.Instance.KnownTypesManager.GetTypeByName(Type);
-            ISkriptType skriptTypeDescriptor = null;
-
-            var isMultipleValues = Type.EndsWith("s");
-            if (isMultipleValues)
+            foreach (var typeRaw in Type.Split("/"))
             {
-                type = WorkspaceManager.Instance.KnownTypesManager.GetTypeByName(Type) ?? WorkspaceManager.Instance.KnownTypesManager.GetTypeByName(Type.Substring(0, Type.Length - 1));
-
-                if (type != null) // We have a multiple value request. Hand over to GenericMultiValueType
-                    skriptTypeDescriptor = new GenericMultiValueType(type, Constraint, CanMatchListConjunctions);
-            }
-            else
-            {
-                skriptTypeDescriptor = type?.CreateNewInstance();
-            }
-
-            IExpression result = null;
-
-
-            if (!Constraint.HasFlagFast(SyntaxValueAcceptanceConstraint.LiteralsOnly))
-            {
-                //Try parsing a variable
-                var reference = new SkriptVariableReferenceType();
-                var ctxClone = ctx.Clone();
-                try
+                var type = WorkspaceManager.Instance.KnownTypesManager.GetTypeByName(typeRaw);
+                ISkriptType skriptTypeDescriptor = null;
+                var isMultipleValues = typeRaw.EndsWith("s");
+                if (isMultipleValues)
                 {
-                    result = reference.TryParseValue(ctxClone);
+                    type = WorkspaceManager.Instance.KnownTypesManager.GetTypeByName(typeRaw) ?? WorkspaceManager.Instance.KnownTypesManager.GetTypeByName(typeRaw.Substring(0, typeRaw.Length - 1));
+
+                    if (type != null) // We have a multiple value request. Hand over to GenericMultiValueType
+                        skriptTypeDescriptor = new GenericMultiValueType(type, Constraint, CanMatchListConjunctions);
                 }
-                catch (Exception)
+                else
                 {
-                    // ignored
+                    skriptTypeDescriptor = type?.CreateNewInstance();
                 }
 
-                if (result != null) ctx.ReadUntilPosition(ctxClone.CurrentPosition);
-            }
+                IExpression result = null;
 
-            var oldPos = ctx.CurrentPosition;
-            if (result == null)
-                result = skriptTypeDescriptor?.TryParseValue(ctx);
-           
-            if (result == null && !SkipParenthesis)
-            {
-                // Type descriptor wasn't able to parse the code. Push back and try with parentheses.
-                ctx.CurrentPosition = oldPos;
+                if (!Constraint.HasFlagFast(SyntaxValueAcceptanceConstraint.LiteralsOnly))
+                {
+                    //Try parsing a variable
+                    var reference = new SkriptVariableReferenceType();
+                    var ctxClone = ctx.Clone();
+                    try
+                    {
+                        result = reference.TryParseValue(ctxClone);
+                    }
+                    catch (Exception)
+                    {
+                        // ignored
+                    }
+
+                    if (result != null) ctx.ReadUntilPosition(ctxClone.CurrentPosition);
+                }
+
+                var oldPos = ctx.CurrentPosition;
+                if (result == null)
+                    result = skriptTypeDescriptor?.TryParseValue(ctx);
+                if (result == null && !SkipParenthesis)
+                {
+                    // Type descriptor wasn't able to parse the code. Push back and try with parentheses.
+                    ctx.CurrentPosition = oldPos;
                 
-                //Try parsing with parentheses first
-                var parenthesesType = new GenericParenthesesType(Type);
-                result = parenthesesType.TryParseValue(ctx);
+                    //Try parsing with parentheses first
+                    var parenthesesType = new GenericParenthesesType(typeRaw);
+                    result = parenthesesType.TryParseValue(ctx);
+                }
+
+                if (result != null)
+                {
+                    if (result.Type == null) result.Type = skriptTypeDescriptor;
+                    result.Context = ctx;
+                    var match = new ExpressionParseMatch(result);
+                    ctx.Matches.Add(match);
+                }
+
+                return result != null ? ParseResult.Success(ctx) : ParseResult.Failure(ctx);
             }
-
-
-
-            if (result != null)
-            {
-                if (result.Type == null) result.Type = skriptTypeDescriptor;
-                result.Context = ctx;
-                var match = new ExpressionParseMatch(result);
-                ctx.Matches.Add(match);
-            }
-
-            return result != null ? ParseResult.Success(ctx) : ParseResult.Failure(ctx);
+            
+            return ParseResult.Failure(ctx);
         }
 
         #region Constraint
