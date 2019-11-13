@@ -162,7 +162,6 @@ namespace SkriptInsight.Core.Files
             endLine = endLine < 0 ? RawContents.Count : endLine;
             RunProcess(new ProcCreateOrUpdateNodes(), startLine, endLine);
             ProcessNodeIndentation(startLine, endLine);
-            WorkspaceManager.CurrentHost.SendRawNotification("insight/treeChanged");
             RunProcess(ParseProcess, startLine, endLine);
         }
 
@@ -175,7 +174,6 @@ namespace SkriptInsight.Core.Files
 
             foreach (var level in indentLevels)
             {
-//                RunProcess(new ProcCreateOrUpdateNodeChildren(0));
                 RunProcess(new ProcCreateOrUpdateNodeChildren(level));
             }
         }

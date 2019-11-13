@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 using MoreLinq;
 using SkriptInsight.Core.Extensions;
+using SkriptInsight.Core.Parser.Patterns.Impl;
 using SkriptInsight.Core.Parser.Types;
 using SkriptInsight.Core.SyntaxInfo;
 
@@ -44,12 +45,18 @@ namespace SkriptInsight.Core.Managers
 
         public void LoadTypesCache()
         {
-            var skriptTypes = WorkspaceManager.Current.AddonDocumentations
+            var cleanSkriptTypes = WorkspaceManager.Current.AddonDocumentations
                 .SelectMany(c => c.Types).ToList();
 
-            WholeTypeCache = skriptTypes
-                .Select(neededType => InternalGetTypeForName(neededType.FinalTypeName, skriptTypes))
+            var extraSkriptTypes = WorkspaceManager.Current.AddonDocumentations
+                .SelectMany(c => c.Effects).SelectMany(e => e.PatternNodes)
+                .SelectMany(c => c.Children.OfType<TypePatternElement>()).Select(c => c.Type).ToList();
+
+            WholeTypeCache = cleanSkriptTypes
+                .Select(neededType => InternalGetTypeForName(neededType.FinalTypeName, cleanSkriptTypes))
                 .Where(c => c != null)
+                .Concat(extraSkriptTypes.SelectMany(c => c.Split('/'))
+                    .Select(type => InternalGetTypeForName(type, cleanSkriptTypes)).Where(c => c != null))
                 .DistinctBy(c => c.FinalTypeName)
                 .ToDictionary(c => c.FinalTypeName, c => c);
         }
