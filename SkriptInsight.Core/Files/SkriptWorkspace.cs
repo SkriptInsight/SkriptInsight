@@ -13,10 +13,13 @@ namespace SkriptInsight.Core.Files
     /// </summary>
     public class SkriptWorkspace
     {
+        public WorkspaceManager WorkspaceManager { get; }
+        
         public ISkriptInsightHost Host => WorkspaceManager.CurrentHost;
 
-        public SkriptWorkspace()
+        public SkriptWorkspace(WorkspaceManager manager = null)
         {
+            WorkspaceManager = manager ?? WorkspaceManager.Instance;
             LoadAddons();
         }
 

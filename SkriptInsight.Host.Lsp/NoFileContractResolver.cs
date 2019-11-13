@@ -12,7 +12,10 @@ namespace SkriptInsight.Host.Lsp
         {
             var property = base.CreateProperty(member, memberSerialization);
 
-            if (property.PropertyType == typeof(SkriptFile) || property.PropertyType == typeof(FileParseContext) ||
+            if (member.GetCustomAttribute<JsonIgnoreAttribute>() != null ||
+                member.GetCustomAttribute<System.Text.Json.Serialization.JsonIgnoreAttribute>() != null ||
+                property.PropertyType == typeof(SkriptFile) ||
+                property.PropertyType == typeof(FileParseContext) ||
                 property.PropertyType == typeof(ParseContext))
             {
                 property.ShouldSerialize = _ => false;
