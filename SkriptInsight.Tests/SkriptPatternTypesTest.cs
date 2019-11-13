@@ -39,7 +39,7 @@ namespace SkriptInsight.Tests
         [InlineData("\"te\"\"st\"")]
         public void StringTypeParsesCorrectly(string input)
         {
-            KnownTypesManager.Instance.LoadKnownTypes();
+            WorkspaceManager.Instance.KnownTypesManager.LoadKnownTypes();
             var stringPattern = SkriptPattern.ParsePattern(ParseContext.FromCode("%string%"));
 
             var result = stringPattern.Parse(input);
@@ -72,7 +72,7 @@ namespace SkriptInsight.Tests
         [InlineData("println \"Hello World\"")]
         public void MixedStringTypeParsesCorrectly(string input, bool success = true)
         {
-            KnownTypesManager.Instance.LoadKnownTypes();
+            WorkspaceManager.Instance.KnownTypesManager.LoadKnownTypes();
             var stringPattern = SkriptPattern.ParsePattern(ParseContext.FromCode("print[ln] %string%"));
 
             var result = stringPattern.Parse(input);
@@ -91,7 +91,7 @@ namespace SkriptInsight.Tests
         [InlineData("println \"Hello World\" \"Howdy!\"")]
         public void MixedDoubleStringTypeParsesCorrectly(string input, bool success = true)
         {
-            KnownTypesManager.Instance.LoadKnownTypes();
+            WorkspaceManager.Instance.KnownTypesManager.LoadKnownTypes();
             var stringPattern = SkriptPattern.ParsePattern(ParseContext.FromCode("print[ln] %string% %string%"));
 
             var result = stringPattern.Parse(input);
@@ -106,7 +106,7 @@ namespace SkriptInsight.Tests
         [InlineData("(\"test\") and \"test\"")]
         public void MixedParenthesesTypeParsesCorrectly(string input)
         {
-            KnownTypesManager.Instance.LoadKnownTypes();
+            WorkspaceManager.Instance.KnownTypesManager.LoadKnownTypes();
             var stringPattern = SkriptPattern.ParsePattern("print %strings%");
 
             var result = stringPattern.Parse("print " + input);
@@ -119,7 +119,7 @@ namespace SkriptInsight.Tests
         public void MixedParenthesesWithMultipleValuesParsesCorrectly()
         {
             const string input = "(\"true\" and \"reee\") and \"false\"";
-            KnownTypesManager.Instance.LoadKnownTypes();
+            WorkspaceManager.Instance.KnownTypesManager.LoadKnownTypes();
             var stringPattern = SkriptPattern.ParsePattern("print %strings%");
 
             var result = stringPattern.Parse("print " + input);
@@ -134,7 +134,7 @@ namespace SkriptInsight.Tests
         [InlineData("(((\"test\")))")]
         public void ParenthesesTypeParsesCorrectly(string input)
         {
-            KnownTypesManager.Instance.LoadKnownTypes();
+            WorkspaceManager.Instance.KnownTypesManager.LoadKnownTypes();
             var stringPattern = SkriptPattern.ParsePattern(ParseContext.FromCode("print %string%"));
 
             var result = stringPattern.Parse("print " + input);
@@ -161,7 +161,7 @@ namespace SkriptInsight.Tests
         [InlineData("{_test::2::3}")]
         public void MixedVariableTypeParsesCorrectly(string input)
         {
-            KnownTypesManager.Instance.LoadKnownTypes();
+            WorkspaceManager.Instance.KnownTypesManager.LoadKnownTypes();
             var stringPattern = SkriptPattern.ParsePattern(ParseContext.FromCode("print %string%"));
 
             var result = stringPattern.Parse("print " + input);

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Humanizer;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using SkriptInsight.Core.Files.Nodes;
@@ -16,6 +17,22 @@ namespace SkriptInsight.Core.Extensions
 {
     public static class MiscExtensions
     {
+        public static TV GetValueOrCompute<TK, TV>(this IDictionary<TK, TV> dict, TK key, [CanBeNull] Func<TK, TV> computeFunc = null)
+        {
+            var tryGetValue = dict.TryGetValue(key, out var value);
+            if (tryGetValue || computeFunc == null) return tryGetValue ? value : default;
+            
+            var result = computeFunc(key);
+            if (result != null)
+                dict[key] = result;
+            return result;
+        }
+        
+        public static TV GetValue<TK, TV>(this ConcurrentDictionary<TK, TV> dict, TK key)
+        {
+            return dict.TryGetValue(key, out var value) ? value : default;
+        }
+
         public static string SafeSubstring(this string value, int startIndex, int length)
         {
             return new string((value ?? string.Empty).Skip(startIndex).Take(length).ToArray());

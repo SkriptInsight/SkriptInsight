@@ -38,13 +38,13 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
 
         public override ParseResult Parse(ParseContext ctx)
         {
-            var type = KnownTypesManager.Instance.GetTypeByName(Type);
+            var type = WorkspaceManager.Instance.KnownTypesManager.GetTypeByName(Type);
             ISkriptType skriptTypeDescriptor = null;
 
             var isMultipleValues = Type.EndsWith("s");
             if (isMultipleValues)
             {
-                type = KnownTypesManager.Instance.GetTypeByName(Type) ?? KnownTypesManager.Instance.GetTypeByName(Type.Substring(0, Type.Length - 1));
+                type = WorkspaceManager.Instance.KnownTypesManager.GetTypeByName(Type) ?? WorkspaceManager.Instance.KnownTypesManager.GetTypeByName(Type.Substring(0, Type.Length - 1));
 
                 if (type != null) // We have a multiple value request. Hand over to GenericMultiValueType
                     skriptTypeDescriptor = new GenericMultiValueType(type, Constraint, CanMatchListConjunctions);

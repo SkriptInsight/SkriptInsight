@@ -163,7 +163,7 @@ namespace SkriptInsight.Core.Files
             RunProcess(new ProcCreateOrUpdateNodes(), startLine, endLine);
             ProcessNodeIndentation(startLine, endLine);
             WorkspaceManager.CurrentHost.SendRawNotification("insight/treeChanged");
-//            RunProcess(ParseProcess, startLine, endLine);
+            RunProcess(ParseProcess, startLine, endLine);
         }
 
         private void ProcessNodeIndentation(in int startLine, in int endLine)

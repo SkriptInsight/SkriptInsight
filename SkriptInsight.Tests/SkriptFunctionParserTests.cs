@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Net;
 using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.Parser;

@@ -14,7 +14,8 @@ namespace SkriptInsight.Core.Parser.Types.Impl
             var litElement = new LiteralPatternElement("");
             var startPos = ctx.CurrentPosition;
             var clone = ctx.Clone();
-
+            (int finalPos, SkriptType finalType)? regexMatch = null;
+            
             foreach (var type in CurrentWorkspace.AddonDocumentations.SelectMany(c => c.Types))
             {
                 clone.CurrentPosition = startPos;
@@ -35,17 +36,22 @@ namespace SkriptInsight.Core.Parser.Types.Impl
                             var match = regex.Match(clone.PeekUntilEnd());
                             if (!match.Success) continue;
 
-                            clone.ReadNext(match.Length);
+                            regexMatch = (clone.CurrentPosition + match.Length, type);
                             isRegexSuccess = true;
                         }
                     }
 
-                    if (!isRegexSuccess) continue;
-//                    continue;
+                    continue;
                 }
 
                 ctx.CurrentPosition = clone.CurrentPosition;
                 return type;
+            }
+            
+            if (regexMatch != null)
+            {
+                ctx.CurrentPosition = regexMatch.Value.finalPos;
+                return regexMatch.Value.finalType;
             }
 
             return null;

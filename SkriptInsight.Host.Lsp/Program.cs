@@ -7,7 +7,6 @@ using DiscordRPC;
 using OmniSharp.Extensions.JsonRpc;
 using OmniSharp.Extensions.LanguageServer.Server;
 using SkriptInsight.Core.Files;
-using SkriptInsight.Core.Files.Nodes;
 using SkriptInsight.Core.Managers;
 using SkriptInsight.Host.Lsp.Handlers;
 
@@ -86,30 +85,6 @@ namespace SkriptInsight.Host.Lsp
         private static void StartAnalytics()
         {
             AnalyticsApi = new GoogleAnalyticsApi();
-        }
-
-        private class TreeSkriptNode
-        {
-            public string RandomId { get; set; }
-
-            public int LineNumber { get; set; }
-
-            public string NodeContent { get; set; }
-
-            public bool IsSectionNode { get; set; }
-
-            public Uri Uri { get; set; }
-
-            public static explicit operator TreeSkriptNode(AbstractFileNode n)
-            {
-                return new TreeSkriptNode
-                {
-                    RandomId = Guid.NewGuid().ToString(),
-                    LineNumber = n.LineNumber,
-                    NodeContent = $"{n.RawText.Trim()} [{n.GetType().Name}]",
-                    IsSectionNode = n.IsSectionNode
-                };
-            }
         }
     }
 }

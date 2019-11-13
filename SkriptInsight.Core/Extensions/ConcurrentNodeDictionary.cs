@@ -18,7 +18,7 @@ namespace SkriptInsight.Core.Extensions
         
         public new AbstractFileNode this[int key]
         {
-            get => this.ElementAtOrDefault(key).Value;
+            get => this.GetValue(key);
             set => base[key] = value;
         }
     }
