@@ -10,7 +10,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl
             return null;
         }
 
-        public override string RenderAsString(Direction obj)
+        public override string AsString(Direction obj)
         {
             return obj.ToString();
         }

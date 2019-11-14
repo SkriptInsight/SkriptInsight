@@ -63,7 +63,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
             }
         }
 
-        public override string RenderAsString(WrappedObject obj)
+        public override string AsString(WrappedObject obj)
         {
             return obj.ToString();
         }

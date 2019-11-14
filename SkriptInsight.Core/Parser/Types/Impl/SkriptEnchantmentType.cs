@@ -60,7 +60,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl
             return null;
         }
 
-        public override string RenderAsString(EnchantmentType obj)
+        public override string AsString(EnchantmentType obj)
         {
             return obj.ToString();
         }

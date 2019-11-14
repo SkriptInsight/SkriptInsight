@@ -56,7 +56,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl
             return null;
         }
 
-        public override string RenderAsString(SkriptRepresentation? obj)
+        public override string AsString(SkriptRepresentation? obj)
         {
             return (obj ?? False).ToString().ToLowerInvariant();
         }

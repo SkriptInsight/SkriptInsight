@@ -57,7 +57,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl
             return null;
         }
 
-        public override string RenderAsString(SkriptType obj)
+        public override string AsString(SkriptType obj)
         {
             return obj.FinalTypeName;
         }
