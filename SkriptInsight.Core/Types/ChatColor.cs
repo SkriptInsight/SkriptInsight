@@ -35,7 +35,6 @@ namespace SkriptInsight.Core.Types
         [PatternAlias("purple", "dark purple")] [ChatColorInfo('5', "#AA00AA")]
         DarkPurple = 1 << 7,
 
-
         [PatternAlias("red", "dark red")] [ChatColorInfo('4', "#AA0000")]
         DarkRed = 1 << 8,
 
@@ -68,11 +67,11 @@ namespace SkriptInsight.Core.Types
         Yellow = 1 << 15,
 
 
-        [PatternAlias("bold", "b")] [ChatColorInfo('l', "", "", "bold")]
+        [PatternAlias("bold")] [ChatColorInfo('l', "", "", "bold")]
         Bold = 1 << 16,
 
 
-        [PatternAlias("italic", "italics", "i")] [ChatColorInfo('o', "", "", "italic")]
+        [PatternAlias("italic", "italics")] [ChatColorInfo('o', "", "", "italic")]
         Italic = 1 << 17,
 
 
@@ -84,11 +83,11 @@ namespace SkriptInsight.Core.Types
         Reset = 1 << 19,
 
 
-        [PatternAlias("strikethrough", "strike", "s")] [ChatColorInfo('m', "", "", "", "line-through")]
+        [PatternAlias("strikethrough", "strike")] [ChatColorInfo('m', "", "", "", "line-through")]
         StrikeThrough = 1 << 20,
 
 
-        [PatternAlias("italic", "italics", "i")] [ChatColorInfo('n', "", "", "", "underline")]
+        [PatternAlias("italic", "italics")] [ChatColorInfo('n', "", "", "", "underline")]
         Underline = 1 << 21
     }
 

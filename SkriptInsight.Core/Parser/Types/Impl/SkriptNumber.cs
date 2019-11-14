@@ -88,7 +88,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl
             return Math.Abs(result) * (negative ? -1 : 1);
         }
 
-        public override string AsString(double? obj)
+        public override string RenderAsString(double? obj)
         {
             return obj?.ToString(CultureInfo.InvariantCulture) ?? "<none>";
         }

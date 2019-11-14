@@ -64,13 +64,12 @@ namespace SkriptInsight.Core.Managers
         private SkriptType InternalGetTypeForName(string name, IEnumerable<SkriptType> skriptTypes = null)
         {
             if (skriptTypes == null)
-                skriptTypes = WorkspaceManager.Current.AddonDocumentations
-                    .SelectMany(c => c.Types);
+                skriptTypes = WorkspaceManager.Current.KnownTypesFromAddons;
 
             return skriptTypes
                 .Where(type => type.FinalTypeName.Equals(name))
                 .DefaultIfEmpty(
-                    WorkspaceManager.Current.AddonDocumentations.SelectMany(c => c.Types)
+                    WorkspaceManager.Current.KnownTypesFromAddons
                         .Where(c => c.PatternsRegexps != null)
                         .FirstOrDefault(c =>
                             c.PatternsRegexps.Any(r => r.IsMatch(name)))

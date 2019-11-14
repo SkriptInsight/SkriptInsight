@@ -98,7 +98,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Internal
             return null;
         }
 
-        public override string AsString(FunctionParameter obj)
+        public override string RenderAsString(FunctionParameter obj)
         {
             return obj.ToString();
         }

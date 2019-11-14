@@ -22,7 +22,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl
             return null;
         }
  
-        public override string AsString(SkriptVariable obj)
+        public override string RenderAsString(SkriptVariable obj)
         {
             return string.Join("", obj.Contents.Select(c => c.RenderContent()));
         }

@@ -16,7 +16,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl
             var clone = ctx.Clone();
             (int finalPos, SkriptType finalType)? regexMatch = null;
             
-            foreach (var type in CurrentWorkspace.AddonDocumentations.SelectMany(c => c.Types))
+            foreach (var type in CurrentWorkspace.KnownTypesFromAddons)
             {
                 clone.CurrentPosition = startPos;
                 litElement.Value = type.FinalTypeName;
@@ -57,7 +57,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl
             return null;
         }
 
-        public override string AsString(SkriptType obj)
+        public override string RenderAsString(SkriptType obj)
         {
             return obj.FinalTypeName;
         }

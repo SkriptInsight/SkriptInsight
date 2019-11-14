@@ -30,6 +30,7 @@ namespace SkriptInsight.Core.Files.Processes.Impl
                         var result = effectPattern.Parse(context);
                         if (result.IsSuccess)
                         {
+                            result.Context = context.Clone();
                             node.MatchedSyntax = new SyntaxMatch(effect, result);
                             workDone = true;
                         }

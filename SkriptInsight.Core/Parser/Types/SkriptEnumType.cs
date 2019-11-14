@@ -10,7 +10,7 @@ namespace SkriptInsight.Core.Parser.Types
             return SkriptEnumValue<T>.TryParse(ctx);
         }
 
-        public override string AsString(SkriptEnumValue<T> obj)
+        public override string RenderAsString(SkriptEnumValue<T> obj)
         {
             return obj.ToString();
         }

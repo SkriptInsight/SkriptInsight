@@ -12,7 +12,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl
             return ctx.ReadNext(1) == "\"" ? value.Replace("\"\"", "\"") : null;
         }    
 
-        public override string AsString(string obj)
+        public override string RenderAsString(string obj)
         {
             return $"\"{obj.Replace("\"", "\"\"")}\"";
         }

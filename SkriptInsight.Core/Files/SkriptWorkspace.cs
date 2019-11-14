@@ -61,9 +61,13 @@ namespace SkriptInsight.Core.Files
 
                 AddonDocumentations.Add(doc);
             }
+
+            KnownTypesFromAddons = AddonDocumentations.SelectMany(a => a.Types).ToList();
         }
 
         public List<SkriptAddonDocumentation> AddonDocumentations { get; set; } = new List<SkriptAddonDocumentation>();
+        
+        public IReadOnlyList<SkriptType> KnownTypesFromAddons { get; set; }
 
         public List<SkriptFile> Files { get; set; } = new List<SkriptFile>();
     }

@@ -27,7 +27,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Internal
             return sb.ToString().IsEmpty() ? null : sb.ToString();
         }
 
-        public override string AsString(string obj)
+        public override string RenderAsString(string obj)
         {
             return obj;
         }

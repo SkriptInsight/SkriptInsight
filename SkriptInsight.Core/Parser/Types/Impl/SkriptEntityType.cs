@@ -66,7 +66,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl
             return null;
         }
 
-        public override string AsString(EntityType obj)
+        public override string RenderAsString(EntityType obj)
         {
             return obj.ToString();
         }

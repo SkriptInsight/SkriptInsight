@@ -12,28 +12,26 @@ namespace SkriptInsight.Core.Parser.Types.Impl
             var clone = ctx.Clone(false);
             var pos = clone.CurrentPosition;
 
-            foreach (var type in WorkspaceManager.CurrentWorkspace.AddonDocumentations.SelectMany(c => c.Types)
+            foreach (var type in WorkspaceManager.CurrentWorkspace.WorkspaceManager.Current.KnownTypesFromAddons
                 .Where(c => c.PossibleValuesAsNouns != null))
+            foreach (var noun in type.PossibleValuesAsNouns)
             {
-                foreach (var noun in type.PossibleValuesAsNouns)
+                var result = noun.Pattern.Parse(clone);
+                if (result.IsSuccess)
                 {
-                    var result = noun.Pattern.Parse(clone);
-                    if (result.IsSuccess)
-                    {
-                        ctx.ReadUntilPosition(clone.CurrentPosition);
-                        var data = new EntityData(noun, (EntityData.EntityTypeUsedValues)result.ParseMark);
-                        return data;
-                    }
-
-                    clone.CurrentPosition = pos;
-                    clone.Matches.Clear();
+                    ctx.ReadUntilPosition(clone.CurrentPosition);
+                    var data = new EntityData(noun, (EntityData.EntityTypeUsedValues) result.ParseMark);
+                    return data;
                 }
+
+                clone.CurrentPosition = pos;
+                clone.Matches.Clear();
             }
 
             return null;
         }
 
-        public override string AsString(EntityData obj)
+        public override string RenderAsString(EntityData obj)
         {
             return obj.ToString();
         }
