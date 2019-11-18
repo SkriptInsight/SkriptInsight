@@ -66,6 +66,8 @@ namespace SkriptInsight.Core.Parser.Functions
 
         public List<FunctionParameter> Parameters => ParametersExpr.Select(c => c.GenericValue).ToList();
 
+        public ParseResult ParseResult { get; set; }
+        
         private static SkriptPattern FunctionSignaturePattern { get; }
 
         [CanBeNull]
@@ -83,13 +85,14 @@ namespace SkriptInsight.Core.Parser.Functions
                 NameExpr = result.Matches.GetExplicitValue<string>(0),
                 ParametersExpr = result.Matches.GetValues<FunctionParameter>()
                     .OfType<Expression<FunctionParameter>>().ToList(),
-                ReturnTypeExpr = result.Matches.GetExplicitValue<SkriptType>(0) ?? SkriptType.VoidExpr
+                ReturnTypeExpr = result.Matches.GetExplicitValue<SkriptType>(0) ?? SkriptType.VoidExpr,
+                ParseResult = result
             };
         }
 
         public override string ToString()
         {
-            return $"function {Name}({string.Join(", ", Parameters)}){(ReturnTypeExpr?.GenericValue != SkriptType.Void ? $" :: {ReturnTypeExpr?.GenericValue?.TypeName}" : "")}";
+            return $"function {Name}({string.Join(", ", Parameters)}){(ReturnTypeExpr?.GenericValue != SkriptType.Void ? $" :: {ReturnTypeExpr?.GenericValue?.FinalTypeName}" : "")}";
         }
     }
 }

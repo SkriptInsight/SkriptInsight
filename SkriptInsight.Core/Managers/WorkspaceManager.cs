@@ -10,10 +10,20 @@ namespace SkriptInsight.Core.Managers
     {
         private const string MetadataFileExtension = ".skm";
 
+        private WorkspaceManager()
+        {
+            Current = new SkriptWorkspace(this);
+            KnownTypesManager = new KnownTypesManager(this);
+        }
+
+        public static ISkriptInsightHost CurrentHost { get; set; }
+        
         public static WorkspaceManager Instance { get; } = new WorkspaceManager();
-
-        public SkriptWorkspace Current { get; } = new SkriptWorkspace();
-
+        
+        public KnownTypesManager KnownTypesManager { get; }
+        
+        public SkriptWorkspace Current { get; }
+        
         public static SkriptWorkspace CurrentWorkspace => Instance.Current;
 
         public SkriptFile GetOrCreateByUri(Uri uri)

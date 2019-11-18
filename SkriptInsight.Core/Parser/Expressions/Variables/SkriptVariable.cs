@@ -40,11 +40,14 @@ namespace SkriptInsight.Core.Parser.Expressions.Variables
 
                 var context = ParseContext.FromCode(content);
                 var ignoreUntil = -1;
-                foreach (var c in context.WithContext(false))
+                var cs = context.ToList().WithContext(false, true);
+                for (var currPos = 0; currPos < cs.Count; currPos++)
                 {
+                    context.CurrentPosition = currPos + 1;
+                    var c = cs[currPos];
                     if (ignoreUntil > 0 && context.CurrentPosition <= ignoreUntil) continue;
                     ignoreUntil = -1;
-                    
+
                     if (c.Current == ':' && c.Next == ':')
                     {
                         AddLiteralContentToVariable();
@@ -57,8 +60,8 @@ namespace SkriptInsight.Core.Parser.Expressions.Variables
                         var exprEnd = context.FindNextBracket('%', true);
                         if (exprEnd > 0)
                         {
-                            var expression = c.Next + context.ReadUntilPosition(exprEnd);
-                            ignoreUntil = exprEnd + 2;
+                            var expression = context.ReadUntilPosition(exprEnd);
+                            ignoreUntil = exprEnd + 1;
                             variable.Contents.Add(new ExpressionVariableContent(expression));
                         }
                     }

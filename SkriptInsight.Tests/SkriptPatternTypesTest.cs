@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Linq;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.Parser;
 using SkriptInsight.Core.Parser.Expressions;
@@ -19,7 +20,7 @@ namespace SkriptInsight.Tests
             //Just to preload the workspace variable
             var workspace = WorkspaceManager.CurrentWorkspace;
         }
-        
+
         [Theory]
         [InlineData("type", None)]
         [InlineData("*type", LiteralsOnly)]
@@ -39,7 +40,7 @@ namespace SkriptInsight.Tests
         [InlineData("\"te\"\"st\"")]
         public void StringTypeParsesCorrectly(string input)
         {
-            KnownTypesManager.Instance.LoadKnownTypes();
+            WorkspaceManager.Instance.KnownTypesManager.LoadKnownTypes();
             var stringPattern = SkriptPattern.ParsePattern(ParseContext.FromCode("%string%"));
 
             var result = stringPattern.Parse(input);
@@ -72,7 +73,7 @@ namespace SkriptInsight.Tests
         [InlineData("println \"Hello World\"")]
         public void MixedStringTypeParsesCorrectly(string input, bool success = true)
         {
-            KnownTypesManager.Instance.LoadKnownTypes();
+            WorkspaceManager.Instance.KnownTypesManager.LoadKnownTypes();
             var stringPattern = SkriptPattern.ParsePattern(ParseContext.FromCode("print[ln] %string%"));
 
             var result = stringPattern.Parse(input);
@@ -91,7 +92,7 @@ namespace SkriptInsight.Tests
         [InlineData("println \"Hello World\" \"Howdy!\"")]
         public void MixedDoubleStringTypeParsesCorrectly(string input, bool success = true)
         {
-            KnownTypesManager.Instance.LoadKnownTypes();
+            WorkspaceManager.Instance.KnownTypesManager.LoadKnownTypes();
             var stringPattern = SkriptPattern.ParsePattern(ParseContext.FromCode("print[ln] %string% %string%"));
 
             var result = stringPattern.Parse(input);
@@ -106,7 +107,7 @@ namespace SkriptInsight.Tests
         [InlineData("(\"test\") and \"test\"")]
         public void MixedParenthesesTypeParsesCorrectly(string input)
         {
-            KnownTypesManager.Instance.LoadKnownTypes();
+            WorkspaceManager.Instance.KnownTypesManager.LoadKnownTypes();
             var stringPattern = SkriptPattern.ParsePattern("print %strings%");
 
             var result = stringPattern.Parse("print " + input);
@@ -119,7 +120,7 @@ namespace SkriptInsight.Tests
         public void MixedParenthesesWithMultipleValuesParsesCorrectly()
         {
             const string input = "(\"true\" and \"reee\") and \"false\"";
-            KnownTypesManager.Instance.LoadKnownTypes();
+            WorkspaceManager.Instance.KnownTypesManager.LoadKnownTypes();
             var stringPattern = SkriptPattern.ParsePattern("print %strings%");
 
             var result = stringPattern.Parse("print " + input);
@@ -134,7 +135,7 @@ namespace SkriptInsight.Tests
         [InlineData("(((\"test\")))")]
         public void ParenthesesTypeParsesCorrectly(string input)
         {
-            KnownTypesManager.Instance.LoadKnownTypes();
+            WorkspaceManager.Instance.KnownTypesManager.LoadKnownTypes();
             var stringPattern = SkriptPattern.ParsePattern(ParseContext.FromCode("print %string%"));
 
             var result = stringPattern.Parse("print " + input);
@@ -161,7 +162,7 @@ namespace SkriptInsight.Tests
         [InlineData("{_test::2::3}")]
         public void MixedVariableTypeParsesCorrectly(string input)
         {
-            KnownTypesManager.Instance.LoadKnownTypes();
+            WorkspaceManager.Instance.KnownTypesManager.LoadKnownTypes();
             var stringPattern = SkriptPattern.ParsePattern(ParseContext.FromCode("print %string%"));
 
             var result = stringPattern.Parse("print " + input);
@@ -202,27 +203,20 @@ namespace SkriptInsight.Tests
         [InlineData("number", "-2.3")]
         [InlineData("numbers", "-2.3, 1, -2, 5")]
         [InlineData("numbers", "-2.1234567")]
-        
         [InlineData("color", "red")]
         [InlineData("colors", "blue and red")]
-        
         [InlineData("click type", "creative action")]
         [InlineData("click types", "middle mouse button or left mouse button")]
-        
         [InlineData("difficulty", "medium")]
         [InlineData("difficulties", "medium or normal")]
-        
         [InlineData("enchantment", "unbreaking")]
         [InlineData("enchantments", "unbreaking and infinity")]
-        
         [InlineData("enchantment type", "efficiency 5")]
         [InlineData("enchantment type", "efficiency")]
-        
         [InlineData("entitydata", "arrow")]
         [InlineData("entitydata", "an arrow")]
         [InlineData("entitydata", "blaze")]
         [InlineData("entitydatas", "blaze and an arrow")]
-        
         [InlineData("entitytype", "2 arrows")]
         [InlineData("entitytype", "1 arrow")]
         [InlineData("entitytype", "a blaze")]
@@ -230,18 +224,35 @@ namespace SkriptInsight.Tests
         [InlineData("entity types", "a blaze and 2 arrows")]
         public void TypesCanBeRepresentedAsStrings(string type, string value)
         {
-            var pattern = SkriptPattern.ParsePattern($"%{type}%");
-            var result = pattern.Parse(value);
+            //Parse normal type from name
+            {
+                var pattern = SkriptPattern.ParsePattern($"%{type}%");
+                var result = pattern.Parse(value);
 
-            Assert.True(result.IsSuccess, "result.IsSuccess");
-            Assert.Single(result.Matches);
-            Assert.True(result.Context.HasFinishedLine, "result.Context.HasFinishedLine");
+                Assert.True(result.IsSuccess, "result.IsSuccess");
+                Assert.Single(result.Matches);
+                Assert.True(result.Context.HasFinishedLine, "result.Context.HasFinishedLine");
 
-            var match = result.Matches.First();
-            Assert.IsType<ExpressionParseMatch>(match);
-            var exprMatch = match as ExpressionParseMatch;
+                var match = result.Matches.First();
+                Assert.IsType<ExpressionParseMatch>(match);
+                var exprMatch = match as ExpressionParseMatch;
+                Assert.Equal(value, exprMatch?.Expression.AsString() ?? "--NULL--");
+            }
 
-            Assert.Equal(value, exprMatch?.Expression.AsString() ?? "--NULL--");
+            //Parse type from generic object type
+            {
+                var pattern = SkriptPattern.ParsePattern($"%object{(type.IsPlural() ? "s" : "")}%");
+                var result = pattern.Parse(value);
+
+                Assert.True(result.IsSuccess, "[object]result.IsSuccess");
+                Assert.Single(result.Matches);
+                Assert.True(result.Context.HasFinishedLine, "[object]result.Context.HasFinishedLine");
+
+                var match = result.Matches.First();
+                Assert.IsType<ExpressionParseMatch>(match);
+                var exprMatch = match as ExpressionParseMatch;
+                Assert.Equal(value, exprMatch?.Expression.AsString() ?? "--NULL--");
+            }
         }
 
         [Fact]
@@ -276,7 +287,7 @@ namespace SkriptInsight.Tests
         {
             var pattern = SkriptPattern.ParsePattern("%si_func_param_name%:");
             var result = pattern.Parse($"{input}: aaa, test2: bbbb");
-            
+
             Assert.True(result.IsSuccess);
             Assert.Single(result.Matches);
 
@@ -304,7 +315,7 @@ namespace SkriptInsight.Tests
                 "number key", "0-9", "double click using mouse", "double click", "drop key", "drop item", "Q",
                 "drop key with control", "drop stack", "Ctrl+Q", "creative action", "unknown", "unsupported", "custom"
             };
-            
+
             var pattern = SkriptPattern.ParsePattern("%click type%");
 
             foreach (var click in clicks)

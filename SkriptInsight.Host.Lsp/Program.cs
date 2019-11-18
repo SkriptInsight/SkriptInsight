@@ -1,19 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using DiscordRPC;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using OmniSharp.Extensions.JsonRpc;
-using OmniSharp.Extensions.LanguageServer.Protocol.Models;
-using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using OmniSharp.Extensions.LanguageServer.Server;
 using SkriptInsight.Core.Files;
 using SkriptInsight.Core.Managers;
-using SkriptInsight.Core.Parser.Patterns;
 using SkriptInsight.Host.Lsp.Handlers;
 
 namespace SkriptInsight.Host.Lsp
@@ -30,29 +24,27 @@ namespace SkriptInsight.Host.Lsp
         {
             StartAnalytics();
             AnalyticsApi.UserAgent = EditorName = GetEditorNameByArgs(args);
-            
+
             AnalyticsApi.TrackEvent("SessionStart", "Session Start", extraValues: new {sc = "start"});
             AnalyticsApi.TrackEvent("ServerStart", "Started LSP Server", extraValues: new {sc = "start"});
 
             if (args.Any(a => a.ToLower().Equals("-d")))
-            {
-                while (!System.Diagnostics.Debugger.IsAttached)
-                {
+                while (!Debugger.IsAttached)
                     await Task.Delay(100);
-                }
-            }
 
             var server = await LanguageServer.From(options =>
             {
                 options
                     .WithInput(Console.OpenStandardInput())
                     .WithOutput(Console.OpenStandardOutput())
-                    .AddDefaultLoggingProvider()
+                    .ConfigureLogging(c => c.AddLanguageServer())
                     .WithHandler<TextDocumentHandler>()
-                    .WithHandler<TextHoverHandler>()
-                    .OnRequest<object, int>("insight/inspectionsCount", _ => Task.FromResult(0));
+                    .WithHandler<TextHoverHandler>();
+
+                options.OnRequest<object, int>("insight/inspectionsCount", _ => Task.FromResult(0));
             });
-            WorkspaceManager.Instance.Current.Server = server;
+            
+            WorkspaceManager.CurrentHost = new LspSkriptInsightHost(server);
             Task.Run(() => StartDiscordRichPresence(WorkspaceManager.CurrentWorkspace));
 
             await server.WaitForExit;
@@ -92,10 +84,7 @@ namespace SkriptInsight.Host.Lsp
 
         private static void StartAnalytics()
         {
-            AnalyticsApi = new GoogleAnalyticsApi
-            {
-                /*DisableTracking = true*/
-            };
+            AnalyticsApi = new GoogleAnalyticsApi();
         }
     }
 }

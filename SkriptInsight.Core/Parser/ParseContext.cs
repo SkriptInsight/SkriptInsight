@@ -64,7 +64,7 @@ namespace SkriptInsight.Core.Parser
 
         public virtual string PeekNext(int count)
         {
-            return CurrentPosition + count > Text.Length ? "" : Text.Substring(CurrentPosition, count);
+            return count < 0 || CurrentPosition + count > Text.Length ? "" : Text.Substring(CurrentPosition, count);
         }
 
         public string PeekPrevious(int count)
@@ -95,7 +95,7 @@ namespace SkriptInsight.Core.Parser
 
         public string PeekUntilEnd()
         {
-            var result = Text.Substring(CurrentPosition);
+            var result = PeekNext(Text.Length - CurrentPosition);
             return result;
         }
 
@@ -324,7 +324,7 @@ namespace SkriptInsight.Core.Parser
             {
                 Context = this,
                 Range = new Range(new Position(CurrentLine, startingPos), new Position(CurrentLine, endingPos)),
-                RawContent = Text.Substring(startingPos, endingPos - startingPos)
+                RawContent = Text.SafeSubstring(startingPos, endingPos - startingPos)
             };
             if (save)
                 Matches.Add(result);

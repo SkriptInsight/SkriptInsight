@@ -3,20 +3,29 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using JetBrains.Annotations;
+using MoreLinq;
 using SkriptInsight.Core.Extensions;
+using SkriptInsight.Core.Parser.Patterns.Impl;
 using SkriptInsight.Core.Parser.Types;
+using SkriptInsight.Core.SyntaxInfo;
 
 namespace SkriptInsight.Core.Managers
 {
     public class KnownTypesManager
     {
-        private KnownTypesManager()
+        public WorkspaceManager WorkspaceManager { get; }
+
+        internal KnownTypesManager(WorkspaceManager workspaceManager)
         {
+            WorkspaceManager = workspaceManager;
             LoadKnownTypes();
+            LoadTypesCache();
         }
 
-        public static KnownTypesManager Instance { get; } = new KnownTypesManager();
+        [Obsolete("Use the new property on WorkspaceManager", true)]
+        public static KnownTypesManager Instance => WorkspaceManager.Instance.KnownTypesManager;
 
         public List<KnownType> KnownTypes { get; set; }
 
@@ -32,21 +41,49 @@ namespace SkriptInsight.Core.Managers
                     .Select(p => new KnownType(p)).ToList();
         }
 
+        public Dictionary<string, SkriptType> WholeTypeCache { get; set; }
+
+        public void LoadTypesCache()
+        {
+            var cleanSkriptTypes = WorkspaceManager.Current.AddonDocumentations
+                .SelectMany(c => c.Types).ToList();
+
+            var extraSkriptTypes = WorkspaceManager.Current.AddonDocumentations
+                .SelectMany(c => c.Effects).SelectMany(e => e.PatternNodes)
+                .SelectMany(c => c.Children.OfType<TypePatternElement>()).Select(c => c.Type).ToList();
+
+            WholeTypeCache = cleanSkriptTypes
+                .Select(neededType => InternalGetTypeForName(neededType.FinalTypeName, cleanSkriptTypes))
+                .Where(c => c != null)
+                .Concat(extraSkriptTypes.SelectMany(c => c.Split('/'))
+                    .Select(type => InternalGetTypeForName(type, cleanSkriptTypes)).Where(c => c != null))
+                .DistinctBy(c => c.FinalTypeName)
+                .ToDictionary(c => c.FinalTypeName, c => c);
+        }
+
+        private SkriptType InternalGetTypeForName(string name, IEnumerable<SkriptType> skriptTypes = null)
+        {
+            if (skriptTypes == null)
+                skriptTypes = WorkspaceManager.Current.KnownTypesFromAddons;
+
+            return skriptTypes
+                .Where(type => type.FinalTypeName.Equals(name))
+                .DefaultIfEmpty(
+                    WorkspaceManager.Current.KnownTypesFromAddons
+                        .Where(c => c.PatternsRegexps != null)
+                        .FirstOrDefault(c =>
+                            c.PatternsRegexps.Any(r => r.IsMatch(name)))
+                ).FirstOrDefault();
+        }
+
         [CanBeNull]
         public KnownType GetTypeByName(string name)
         {
             if (TypesLookupCache.ContainsKey(name))
                 return TypesLookupCache[name];
 
-
-            var patterns = WorkspaceManager.CurrentWorkspace.AddonDocumentations
-                .SelectMany(c => c.Types).Where(t => t.TypeName.Equals(name))
-                .DefaultIfEmpty(
-                    WorkspaceManager
-                        .CurrentWorkspace.AddonDocumentations.SelectMany(c => c.Types)
-                        .Where(c => c.PatternsRegexes != null)
-                        .FirstOrDefault(c => c.PatternsRegexes.Any(r => r.IsMatch(name)))
-                ).FirstOrDefault()?.PatternsRegexes;
+            var patterns = WholeTypeCache.GetValueOrCompute(name, typeName => InternalGetTypeForName(typeName))
+                ?.PatternsRegexps;
 
             var result = KnownTypes.FirstOrDefault(c => c.SkriptRepresentations.Contains(name)) ??
                          KnownTypes.FirstOrDefault(t =>

@@ -1,8 +1,11 @@
+using System;
 using System.Linq;
+using System.Reflection;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using Humanizer;
 using SkriptInsight.Core.Parser;
 using SkriptInsight.Core.Parser.Expressions;
-using SkriptInsight.Core.Parser.Patterns;
 using SkriptInsight.Core.Parser.Types.Impl.Internal;
 
 namespace SkriptInsight.Core.SyntaxInfo
@@ -19,11 +22,14 @@ namespace SkriptInsight.Core.SyntaxInfo
             Description = new[]
                 {"Default void type. Used by SkriptInsight to denote the lack of a return type on functions"}
         };
+
         public static readonly Expression<SkriptType> VoidExpr = new Expression<SkriptType>(Void)
         {
             Type = new SkriptVoid()
         };
 
+        private string _typeName;
+        private bool _isPlural;
 
         public int Id { get; set; }
 
@@ -35,7 +41,20 @@ namespace SkriptInsight.Core.SyntaxInfo
 
         public string Since { get; set; }
 
-        public string TypeName { get; set; }
+        public string TypeName
+        {
+            get => _typeName;
+            set
+            {
+                _typeName = value;
+                UpdateFinalTypeName();
+            }
+        }
+
+        private string CalculateFinalName()
+        {
+            return !IsPlural ? TypeName.Singularize(false) : TypeName.Pluralize(false);
+        }
 
         public string AddonName { get; set; }
 
@@ -47,14 +66,70 @@ namespace SkriptInsight.Core.SyntaxInfo
 
         public string[] Patterns { get; set; }
 
-        public Regex[] PatternsRegexes { get; set; }
+        public Regex[] LoosePatternsRegexps { get; set; }
+
+        public Regex[] PatternsRegexps { get; set; }
 
         public void LoadPatterns()
         {
             PossibleValuesAsNouns = PossibleValues?.Select(SkriptNounParser.ParseNoun).ToArray();
-            PatternsRegexes = Patterns?
+            UpdateLosePatternRegexps();
+            PatternsRegexps = Patterns?
                 .Select(c => new Regex('^' + c + '$', RegexOptions.Compiled | RegexOptions.IgnoreCase))
                 .ToArray();
+        }
+
+        [JsonIgnore]
+        public bool IsPlural
+        {
+            get => _isPlural;
+            set
+            {
+                _isPlural = value;
+                UpdateFinalTypeName();
+            }
+        }
+
+        private void UpdateFinalTypeName()
+        {
+            FinalTypeName = CalculateFinalName();
+            UpdateLosePatternRegexps();
+        }
+
+        private void UpdateLosePatternRegexps()
+        {
+            LoosePatternsRegexps = Patterns?
+                .Select(c => new Regex('^' + c.Replace("s?", IsPlural ? "s" : ""),
+                    RegexOptions.Compiled | RegexOptions.IgnoreCase))
+                .ToArray();
+        }
+
+        public SkriptType Clone()
+        {
+            return new SkriptType
+            {
+                Id = Id,
+                AddonName = AddonName,
+                TypeName = TypeName,
+                Description = Description,
+                Examples = Examples,
+                Patterns = Patterns,
+                Since = Since,
+                Usage = Usage,
+                ClassName = ClassName,
+                PatternsRegexps = PatternsRegexps,
+                LoosePatternsRegexps = LoosePatternsRegexps,
+                PossibleValues = PossibleValues,
+                PossibleValuesAsNouns = PossibleValuesAsNouns,
+                IsPlural = IsPlural
+            };
+        }
+
+        public string FinalTypeName { get; set; }
+
+        public override string ToString()
+        {
+            return FinalTypeName;
         }
     }
 }
