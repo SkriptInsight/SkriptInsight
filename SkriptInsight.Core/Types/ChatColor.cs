@@ -16,7 +16,7 @@ namespace SkriptInsight.Core.Types
         [PatternAlias("black")] [ChatColorInfo('0', "#000000")]
         Black = 1 << 1,
 
-        [PatternAlias("light blue", "indigo")] [ChatColorInfo('9', "#5555FF")]
+        [PatternAlias("light blue", "indigo", "brown")] [ChatColorInfo('9', "#5555FF")]
         Blue = 1 << 2,
 
         [PatternAlias("cyan", "aqua", "dark cyan", "dark aqua", "dark turquoise", "dark turquois")]
@@ -37,13 +37,11 @@ namespace SkriptInsight.Core.Types
 
         [PatternAlias("red", "dark red")] [ChatColorInfo('4', "#AA0000")]
         DarkRed = 1 << 8,
-
-
+        
         [PatternAlias("gold", "orange", "dark yellow")] [ChatColorInfo('6', "#FFAA00")]
         Gold = 1 << 9,
-
-
-        [PatternAlias("grey", "gray", "light grey", "light gray")] [ChatColorInfo('7', "#AAAAAA")]
+        
+        [PatternAlias("grey", "gray", "light grey", "light gray", "silver")] [ChatColorInfo('7', "#AAAAAA")]
         Gray = 1 << 10,
 
 
