@@ -83,6 +83,9 @@ namespace SkriptInsight.Core.Extensions
                 : new List<T>();
         }
 
+        public static T FastElementAtOrDefault<T>(this T[] source, int index) =>
+            source.Length >= index + 1 ? source[index] : default;
+
         public static T FastElementAtOrDefault<T>(this List<T> source, int index) =>
             source.Count >= index + 1 ? source[index] : default;
 

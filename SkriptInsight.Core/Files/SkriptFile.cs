@@ -8,10 +8,12 @@ using System.Threading.Tasks;
 using MoreLinq;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using SkriptInsight.Core.Extensions;
+using SkriptInsight.Core.Files.Nodes;
 using SkriptInsight.Core.Files.Nodes.Impl;
 using SkriptInsight.Core.Files.Processes;
 using SkriptInsight.Core.Files.Processes.Impl;
 using SkriptInsight.Core.Managers;
+using static SkriptInsight.Core.Files.Processes.Impl.ProcCreateOrUpdateNodeChildren;
 
 namespace SkriptInsight.Core.Files
 {
@@ -161,21 +163,28 @@ namespace SkriptInsight.Core.Files
             startLine = Math.Max(0, startLine);
             endLine = endLine < 0 ? RawContents.Count : endLine;
             RunProcess(new ProcCreateOrUpdateNodes(), startLine, endLine);
-            ProcessNodeIndentation(startLine, endLine);
+            ProcessNodeIndentation(startLine);
             RunProcess(ParseProcess, startLine, endLine);
         }
 
-        private void ProcessNodeIndentation(in int startLine, in int endLine)
+        internal void ProcessNodeIndentation(in int startLine)
         {
-            var nodes = Nodes.GetRange(startLine, endLine).ToList();
-            var indentLevels = new[] {0}.Concat(nodes.Where(n => n.Indentations.Length < 2)
-                .SelectMany(c => c.Indentations).GroupBy(i => i.Count)
-                .Select(c => c.Key)).ToList();
+            var nodes = Nodes.GetRange(startLine, Nodes.Count + 1);
+            var fileNodes = nodes as AbstractFileNode[] ?? nodes.ToArray();
+            
+            var firstNode = fileNodes.FastElementAtOrDefault(0);
+            var firstIndent = firstNode != null ? GetIndentCount(firstNode) : 0;
+            
+            var indentLevels = new[] {0}
+                .Concat(
+                    fileNodes.Where(n => n.Indentations.Length < 2)
+                        .TakeWhile(n => GetIndentCount(n) == firstIndent || IsChildrenAccordingToIndent(n, firstIndent))
+                        .SelectMany(c => c.Indentations)
+                        .GroupBy(i => i.Count)
+                        .Select(c => c.Key)
+                    ).ToList();
 
-            foreach (var level in indentLevels)
-            {
-                RunProcess(new ProcCreateOrUpdateNodeChildren(level));
-            }
+            foreach (var level in indentLevels) RunProcess(new ProcCreateOrUpdateNodeChildren(level));
         }
     }
 }
