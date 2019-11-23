@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:export-ydpi="192"
+   inkscape:export-xdpi="192"
+   inkscape:export-filename="C:\Users\NickAc\skriptinsight-banner.png"
+   sodipodi:docname="skriptinsight-banner-github.svg"
+   inkscape:version="1.0beta1 (08a003b, 2019-11-10)"
+   id="svg8"
+   version="1.1"
+   viewBox="0 0 338.66666 169.33333"
+   height="169.33333mm"
+   width="338.66666mm">
+  <defs
+     id="defs2">
+    <clipPath
+       id="clipPath4650"
+       clipPathUnits="userSpaceOnUse">
+      <path
+         sodipodi:nodetypes="ccccccccccccccc"
+         style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 98.66778,293.87079 v 3.57187 h 19.7776 v -3.57187 z m -103.8489585,0.0661 v 3.04271 H 33.58028 v -3.04271 z m 42.2010415,0.13229 v 3.10886 h 52.137591 v -3.10886 z"
+         id="path4652"
+         inkscape:connector-curvature="0" />
+    </clipPath>
+    <linearGradient
+       gradientTransform="matrix(0.6549783,0,0,0.6549783,-11.054986,179.56142)"
+       gradientUnits="userSpaceOnUse"
+       y2="145.43582"
+       x2="97.468369"
+       y1="53.762371"
+       x1="97.468369"
+       id="linearGradient921"
+       xlink:href="#linearGradient927"
+       inkscape:collect="always" />
+    <linearGradient
+       id="linearGradient927"
+       inkscape:collect="always">
+      <stop
+         id="stop923"
+         offset="0"
+         style="stop-color:#208bd2;stop-opacity:1;" />
+      <stop
+         id="stop925"
+         offset="1"
+         style="stop-color:#208bd2;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient
+       gradientTransform="matrix(0.91733897,0,0,0.91733897,8.2661257,8.2661296)"
+       gradientUnits="userSpaceOnUse"
+       y2="145.43582"
+       x2="97.468369"
+       y1="53.762371"
+       x1="97.468369"
+       id="linearGradient2450"
+       xlink:href="#linearGradient927"
+       inkscape:collect="always" />
+    <linearGradient
+       gradientUnits="userSpaceOnUse"
+       y2="294.15381"
+       x2="119.16023"
+       y1="294.15381"
+       x1="-5.0361395"
+       id="linearGradient2504"
+       xlink:href="#linearGradient927"
+       inkscape:collect="always" />
+    <linearGradient
+       gradientUnits="userSpaceOnUse"
+       y2="295.32599"
+       x2="117.12246"
+       y1="295.32599"
+       x1="-4.6520133"
+       id="linearGradient2520"
+       xlink:href="#linearGradient927"
+       inkscape:collect="always" />
+    <linearGradient
+       y2="294.15381"
+       x2="119.16023"
+       y1="294.15381"
+       x1="-5.0361395"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient2522"
+       xlink:href="#linearGradient927"
+       inkscape:collect="always" />
+    <linearGradient
+       y2="294.15381"
+       x2="119.16023"
+       y1="294.15381"
+       x1="-5.0361395"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient2524"
+       xlink:href="#linearGradient927"
+       inkscape:collect="always" />
+    <linearGradient
+       y2="294.15381"
+       x2="119.16023"
+       y1="294.15381"
+       x1="-5.0361395"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient2526"
+       xlink:href="#linearGradient927"
+       inkscape:collect="always" />
+  </defs>
+  <sodipodi:namedview
+     inkscape:document-rotation="0"
+     fit-margin-bottom="0"
+     fit-margin-right="0"
+     fit-margin-left="0"
+     fit-margin-top="0"
+     inkscape:showpageshadow="false"
+     showborder="true"
+     inkscape:window-maximized="1"
+     inkscape:window-y="0"
+     inkscape:window-x="0"
+     inkscape:window-height="993"
+     inkscape:window-width="1920"
+     inkscape:guide-bbox="true"
+     showguides="false"
+     showgrid="false"
+     inkscape:current-layer="layer1"
+     inkscape:document-units="mm"
+     inkscape:cy="366.61288"
+     inkscape:cx="335.09173"
+     inkscape:zoom="0.50000001"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base">
+    <sodipodi:guide
+       inkscape:locked="false"
+       id="guide6380"
+       orientation="-377.95276,0"
+       position="318.02915,148.92257" />
+    <sodipodi:guide
+       inkscape:locked="false"
+       id="guide860"
+       orientation="1,0"
+       position="20.205575,148.92257" />
+    <sodipodi:guide
+       inkscape:locked="false"
+       id="guide862"
+       orientation="0,1"
+       position="20.205575,148.92257" />
+    <sodipodi:guide
+       inkscape:locked="false"
+       id="guide866"
+       orientation="1,0"
+       position="20.205575,20.108332" />
+    <sodipodi:guide
+       inkscape:locked="false"
+       id="guide868"
+       orientation="0,1"
+       position="20.205575,20.108332" />
+    <sodipodi:guide
+       inkscape:locked="false"
+       id="guide870"
+       orientation="0,1280"
+       position="0,0" />
+    <sodipodi:guide
+       inkscape:locked="false"
+       id="guide872"
+       orientation="-639.99998,0"
+       position="338.66665,0" />
+    <sodipodi:guide
+       inkscape:locked="false"
+       id="guide874"
+       orientation="0,-1280"
+       position="338.66665,169.33332" />
+    <sodipodi:guide
+       inkscape:locked="false"
+       id="guide876"
+       orientation="639.99998,0"
+       position="0,169.33332" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(112.27128,-166.87079)"
+     id="layer1"
+     inkscape:groupmode="layer"
+     inkscape:label="Layer 1">
+    <rect
+       y="166.87079"
+       x="-112.27128"
+       height="169.33333"
+       width="338.66666"
+       id="rect889"
+       style="opacity:1;fill:#100f10;fill-opacity:1;stroke:none;stroke-width:0.195171;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <g
+       style="fill:#ffffff;fill-opacity:1"
+       transform="matrix(0.91029266,0,0,0.91029266,16.592051,268.02576)"
+       id="g6281" />
+    <g
+       id="g6341"
+       transform="matrix(0.91029266,0,0,0.91029266,29.601999,264.98305)"
+       style="fill:#4d9e4d;fill-opacity:1" />
+    <g
+       style="fill:url(#linearGradient2504);fill-opacity:1;stroke:none;stroke-opacity:1"
+       transform="translate(7.255052e-7,8.514544)"
+       id="g4671">
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.6007px;line-height:1.25;font-family:'Fira Code';-inkscape-font-specification:'Fira Code';letter-spacing:0px;word-spacing:0px;fill:url(#linearGradient2522);fill-opacity:1;stroke:none;stroke-width:0.390017;stroke-opacity:1"
+         x="-4.2641006"
+         y="293.67227"
+         id="text888"><tspan
+           sodipodi:role="line"
+           id="tspan884"
+           x="-4.2641006"
+           y="293.67227"
+           style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:'Fira Code';-inkscape-font-specification:'Fira Code Medium';letter-spacing:0.0206794px;word-spacing:-0.0284341px;fill:url(#linearGradient2522);fill-opacity:1;stroke:none;stroke-width:0.390017;stroke-opacity:1"><tspan
+             dx="0 0 0 0 0 0 -0.0074052988"
+             style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:'Fira Code';-inkscape-font-specification:'Fira Code Medium';letter-spacing:0.0206794px;word-spacing:-0.0284341px;fill:url(#linearGradient2522);fill-opacity:1;stroke:none;stroke-width:0.390017;stroke-opacity:1"
+             id="tspan880"
+             dy="-0.22958991 0 0 0 0 0 0">S<tspan
+   rotate="0 0 0 0 0 0"
+   id="tspan878"
+   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:'Fira Code';-inkscape-font-specification:'Fira Code Medium';letter-spacing:-0.00097966px;word-spacing:-7.83728px;fill:url(#linearGradient2522);fill-opacity:1;stroke:none;stroke-width:0.390017;stroke-opacity:1">kript</tspan>Insight</tspan></tspan><tspan
+           style="fill:url(#linearGradient2522);fill-opacity:1;stroke:none;stroke-opacity:1"
+           sodipodi:role="line"
+           x="-4.2641006"
+           y="313.17316"
+           id="tspan886" /></text>
+      <text
+         id="text898"
+         y="305.19983"
+         x="56.893539"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.52268px;line-height:1.25;font-family:'Fira Code';-inkscape-font-specification:'Fira Code';letter-spacing:0px;word-spacing:0px;fill:url(#linearGradient2524);fill-opacity:1;stroke:none;stroke-width:0.238067;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           id="tspan896"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Fira Code';-inkscape-font-specification:'Fira Code';text-align:center;letter-spacing:0.0126227px;word-spacing:-0.0173562px;text-anchor:middle;fill:url(#linearGradient2524);fill-opacity:1;stroke:none;stroke-width:0.238067;stroke-opacity:1"
+           y="305.19983"
+           x="56.899853"
+           sodipodi:role="line">Power tools for Skript</tspan></text>
+      <path
+         style="fill:url(#linearGradient2526);fill-opacity:1;stroke:url(#linearGradient2520);stroke-width:1.3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M -4.6520132,295.326 H 117.12246"
+         id="path4618"
+         inkscape:connector-curvature="0"
+         clip-path="url(#clipPath4650)"
+         transform="translate(0.13229166)" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-weight:bold;font-size:82.279px;line-height:1.25;font-family:'Fira Code';-inkscape-font-specification:'Fira Code Bold';letter-spacing:0px;word-spacing:0px;fill:url(#linearGradient921);fill-opacity:1;stroke-width:2.05697"
+       x="7.6832662"
+       y="273.61005"
+       id="text2202"><tspan
+         sodipodi:role="line"
+         id="tspan2200"
+         x="7.6832662"
+         y="273.61005"
+         style="fill:url(#linearGradient921);fill-opacity:1;stroke-width:2.05697">SI</tspan></text>
+  </g>
+</svg>
