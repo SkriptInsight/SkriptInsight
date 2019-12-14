@@ -1,8 +1,11 @@
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
+using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.SyntaxInfo;
 
@@ -69,6 +72,6 @@ namespace SkriptInsight.Core.Files
         
         public IReadOnlyList<SkriptType> KnownTypesFromAddons { get; set; }
 
-        public List<SkriptFile> Files { get; set; } = new List<SkriptFile>();
+        public ConcurrentFileDictionary Files { get; set; } = new ConcurrentFileDictionary();
     }
 }

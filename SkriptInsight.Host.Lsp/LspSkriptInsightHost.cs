@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using SkriptInsight.Core;
+using SkriptInsight.Core.Utils;
 using ILanguageServer = OmniSharp.Extensions.LanguageServer.Server.ILanguageServer;
 
 namespace SkriptInsight.Host.Lsp
@@ -48,5 +50,14 @@ namespace SkriptInsight.Host.Lsp
         {
             return Server.SendRequest<T, TResponse>(method, @params);
         }
+
+        public Task<TResponse> SendRawRequest<TResponse>(string method)
+        {
+            return Server.SendRequest<TResponse>(method);
+        }
+
+        public bool SupportsExtendedCapabilities => ExtendedCapabilities != null;
+
+        public ExtendedHostCapabilities ExtendedCapabilities { get; set; }
     }
 }

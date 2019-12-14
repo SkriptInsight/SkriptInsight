@@ -4,11 +4,16 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using DiscordRPC;
+using MediatR;
 using OmniSharp.Extensions.JsonRpc;
+using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using OmniSharp.Extensions.LanguageServer.Server;
 using SkriptInsight.Core.Files;
 using SkriptInsight.Core.Managers;
+using SkriptInsight.Core.Utils;
 using SkriptInsight.Host.Lsp.Handlers;
+using ThrottleDebounce;
+using ILanguageServer = OmniSharp.Extensions.LanguageServer.Server.ILanguageServer;
 
 namespace SkriptInsight.Host.Lsp
 {
@@ -32,7 +37,8 @@ namespace SkriptInsight.Host.Lsp
                 while (!Debugger.IsAttached)
                     await Task.Delay(100);
 
-            var server = await LanguageServer.From(options =>
+            ILanguageServer server = null;
+            server = await LanguageServer.From(options =>
             {
                 options
                     .WithInput(Console.OpenStandardInput())
@@ -42,8 +48,29 @@ namespace SkriptInsight.Host.Lsp
                     .WithHandler<TextHoverHandler>();
 
                 options.OnRequest<object, int>("insight/inspectionsCount", _ => Task.FromResult(0));
+                var debouncedParseRange = Debouncer.Debounce<SkriptFile>(file => file.NotifyVisibleNodesRangeChanged(), TimeSpan.FromMilliseconds(500));
+
+                options.OnNotification<ViewportChangedParams>("insight/viewportRangeChanged", e =>
+                {
+                    var file = WorkspaceManager.CurrentWorkspace.Files[e.Uri];
+                    if (file == null) return;
+                    
+                    file.VisibleRanges = e.Ranges;
+                    debouncedParseRange.Run(file);
+                });
+                
+                options.OnNotification("insight/notifySupportsExtendedCapabilities", async () =>
+                {
+                    if (WorkspaceManager.CurrentHost == null) return;
+                    
+                    var sendRequest = WorkspaceManager.CurrentHost.SendRawRequest<ExtendedHostCapabilities>("insight/queryExtendedCapabilities");
+                    if (sendRequest != null)
+                    {
+                        WorkspaceManager.CurrentHost.ExtendedCapabilities = await sendRequest;
+                    }
+                });
             });
-            
+
             WorkspaceManager.CurrentHost = new LspSkriptInsightHost(server);
             Task.Run(() => StartDiscordRichPresence(WorkspaceManager.CurrentWorkspace));
 

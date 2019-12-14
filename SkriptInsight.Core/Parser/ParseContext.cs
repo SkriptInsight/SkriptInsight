@@ -105,7 +105,7 @@ namespace SkriptInsight.Core.Parser
             return new ParseContext
             {
                 Text = Text,
-                Matches = includeMatches ? Matches.ToList() : new List<ParseMatch>(),
+                Matches = includeMatches ? new List<ParseMatch>(Matches) : new List<ParseMatch>(),
                 CurrentLine = CurrentLine,
                 CurrentPosition = CurrentPosition,
                 ElementContext = ElementContext,

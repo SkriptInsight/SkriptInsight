@@ -7,6 +7,7 @@ using SkriptInsight.Core;
 using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Files;
 using SkriptInsight.Core.Managers;
+using SkriptInsight.Core.Utils;
 using Xunit;
 using Xunit.Sdk;
 
@@ -42,6 +43,15 @@ namespace SkriptInsight.Tests
             {
                 throw new FalseException("This shouldn't be invoked", false);
             }
+
+            public Task<TResponse> SendRawRequest<TResponse>(string method)
+            {
+                throw new FalseException("This shouldn't be invoked", false);
+            }
+
+            public bool SupportsExtendedCapabilities => false;
+
+            public ExtendedHostCapabilities ExtendedCapabilities { get; set; }
         }
 
         public SkriptFileStructureTests()

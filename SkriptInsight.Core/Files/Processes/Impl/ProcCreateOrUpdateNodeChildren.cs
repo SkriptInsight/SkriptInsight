@@ -28,7 +28,8 @@ namespace SkriptInsight.Core.Files.Processes.Impl
                 {
                     var nextNode = nodes[i];
                     if (nextNode == null) continue;
-                    
+
+                    nextNode.Parent?.Children.Remove(node);
                     nextNode.Parent = node;
                     node.Children.Add(nextNode);
                 }

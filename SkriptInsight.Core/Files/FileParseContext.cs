@@ -35,7 +35,7 @@ namespace SkriptInsight.Core.Files
         {
             return new FileParseContext(File)
             {
-                Matches = includeMatches ? Matches.ToList() : new List<ParseMatch>(),
+                Matches = includeMatches ? new List<ParseMatch>(Matches) : new List<ParseMatch>(),
                 CurrentLine = CurrentLine,
                 MoveToNextLine = MoveToNextLine,
                 _currentLine = _currentLine,

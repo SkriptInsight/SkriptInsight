@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Files;
 
 namespace SkriptInsight.Core.Managers
@@ -24,19 +26,19 @@ namespace SkriptInsight.Core.Managers
 
         public SkriptFile GetOrCreateByUri(Uri uri)
         {
-            return Current.Files.FirstOrDefault(f => f.Url == uri) ?? new SkriptFile(uri);
+            return Current.Files.GetOrAdd(uri, u => new SkriptFile(u));
         }
         
         public void HandleOpenedFile(SkriptFile file)
         {
-            if (!Current.Files.Contains(file))
-                Current.Files.Add(file);
+            if (!Current.Files.ContainsKey(file.Url))
+                Current.Files[file.Url] = file;
         }
 
         public void HandleClosedFile(SkriptFile file)
         {
-            if (Current.Files.Contains(file))
-                Current.Files.Remove(file);
+            if (Current.Files.ContainsKey(file.Url))
+                Current.Files.TryRemove(file.Url, out _);
         }
     }
 }
