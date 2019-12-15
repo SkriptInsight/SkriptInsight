@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using JetBrains.Annotations;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using SkriptInsight.Core.Parser.Types;
 
@@ -14,5 +16,8 @@ namespace SkriptInsight.Core.Parser.Expressions
         ParseContext Context { get; set; }
 
         string AsString();
+
+        [NotNull]
+        public List<MatchAnnotation> MatchAnnotations { get; set; }
     }
 }

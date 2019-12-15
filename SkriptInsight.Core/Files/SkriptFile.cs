@@ -4,9 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Xml;
 using JetBrains.Annotations;
 using MoreLinq;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
@@ -16,6 +14,7 @@ using SkriptInsight.Core.Files.Nodes.Impl;
 using SkriptInsight.Core.Files.Processes;
 using SkriptInsight.Core.Files.Processes.Impl;
 using SkriptInsight.Core.Managers;
+using SkriptInsight.Core.Parser;
 using static SkriptInsight.Core.Files.Processes.Impl.ProcCreateOrUpdateNodeChildren;
 using Range = OmniSharp.Extensions.LanguageServer.Protocol.Models.Range;
 
@@ -105,7 +104,7 @@ namespace SkriptInsight.Core.Files
         public void RunProcess(FileProcess process, int startLine = -1, int endLine = -1)
         {
             if (process == null) return;
-            
+
             startLine = Math.Max(0, startLine);
             endLine = endLine < 0 ? RawContents.Count : endLine;
             var maxDegreeOfParallelism = Environment.ProcessorCount;
@@ -143,16 +142,28 @@ namespace SkriptInsight.Core.Files
                 var diags = new List<Diagnostic>();
                 Nodes.GetRange(startLine, endLine + 1).ForEach(node =>
                 {
-                    if (node != null && !(node is CommentLineNode) && node.MatchedSyntax == null)
-                        diags.Add(
-                            new Diagnostic
-                            {
-                                Code = "1",
-                                Message = "This node doesn't match any syntax!",
-                                Range = node.ContentRange,
-                                Severity = DiagnosticSeverity.Warning,
-                                Source = "SkriptInsight"
-                            });
+                    var matches = node.MatchedSyntax?.Result.Matches;
+                    if (matches == null) return;
+
+                    diags.AddRange(matches.OfType<ExpressionParseMatch>().Explode()
+                        .Select(c => (Expression: c,
+                            Matches: c.MatchAnnotations.Where(match => match.ShouldBeDiagnostic)))
+                        .Select(c => c.Matches.Select(match => match.ToDiagnostic(c.Expression)))
+                        .SelectMany(diagnostics => diagnostics));
+
+
+                    /*
+                        if (!(node is CommentLineNode) && node.MatchedSyntax == null)
+                            diags.Add(
+                                new Diagnostic
+                                {
+                                    Code = "1",
+                                    Message = "This node doesn't match any syntax!",
+                                    Range = node.ContentRange,
+                                    Severity = DiagnosticSeverity.Warning,
+                                    Source = "SkriptInsight"
+                                });
+                    */
                 });
                 WorkspaceManager.CurrentHost.PublishDiagnostics(Url, diags);
             }
@@ -197,10 +208,11 @@ namespace SkriptInsight.Core.Files
         public void NotifyVisibleNodesRangeChanged()
         {
             if (VisibleRanges == null) return;
-            
+
             foreach (var range in VisibleRanges)
             {
-                WorkspaceManager.CurrentHost.LogInfo($"Selectively Parsing nodes from {range.Start.Line} to {range.End.Line}.");
+                WorkspaceManager.CurrentHost.LogInfo(
+                    $"Selectively Parsing nodes from {range.Start.Line} to {range.End.Line}.");
                 var (start, end) = Nodes.ExpandRange((int) range.Start.Line, (int) range.End.Line);
                 RunProcess(ParseProcess, start, end);
             }

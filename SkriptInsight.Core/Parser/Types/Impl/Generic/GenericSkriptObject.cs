@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using SkriptInsight.Core.Managers;
+using SkriptInsight.Core.Parser.Expressions;
 using SkriptInsight.Core.Parser.Patterns.Impl;
 
 namespace SkriptInsight.Core.Parser.Types.Impl.Generic
@@ -10,18 +11,18 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
     {
         public class WrappedObject
         {
-            public object Value { get; }
+            public IExpression Expression { get; }
             
             public override string ToString()
             {
-                return Type?.AsString(Value) ?? "<none>";
+                return Type?.AsString(Expression) ?? "<none>";
             }
 
             public ISkriptType Type { get; }
 
-            public WrappedObject(object value, ISkriptType type)
+            public WrappedObject(IExpression expression, ISkriptType type)
             {
-                Value = value;
+                Expression = expression;
                 Type = type;
             }
         }
@@ -30,7 +31,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
         {
             var clone = ctx.Clone();
             var typePattern = new TypePatternElement();
-            var possibleValues = new List<(int lastPos, ISkriptType type, object result)>();
+            var possibleValues = new List<(int lastPos, ISkriptType type, IExpression result)>();
 
             var startPos = clone.CurrentPosition;
             foreach (var type in WorkspaceManager.CurrentWorkspace.KnownTypesFromAddons)
@@ -46,7 +47,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
                     var expression = clone.Matches.OfType<ExpressionParseMatch>().FirstOrDefault();
                     if (expression?.Expression != null || expression?.Expression?.Value != null )
                     {
-                        possibleValues.Add((clone.CurrentPosition, expression?.Expression.Type, expression.Expression.Value));
+                        possibleValues.Add((clone.CurrentPosition, expression?.Expression.Type, expression.Expression));
                     }
                 }
             }

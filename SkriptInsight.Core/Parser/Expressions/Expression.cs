@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using SkriptInsight.Core.Parser.Types;
 
@@ -38,6 +39,8 @@ namespace SkriptInsight.Core.Parser.Expressions
         {
             return Type?.AsString(Value) ?? "";
         }
+
+        public List<MatchAnnotation> MatchAnnotations { get; set; } = new List<MatchAnnotation>();
 
         public override string ToString()
         {
