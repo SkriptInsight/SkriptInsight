@@ -79,7 +79,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                     result = skriptTypeDescriptor?.TryParseValue(ctx);
                 if (result == null && !SkipParenthesis)
                 {
-                    // Type descriptor wasn't able to parse the code. Push back and try with parentheses.
+                    // Type descriptor wasn't able to parse the literal. Push back and try with parentheses.
                     ctx.CurrentPosition = oldPos;
                 
                     //Try parsing with parentheses first
