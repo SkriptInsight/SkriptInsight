@@ -38,25 +38,37 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
 
         public override ParseResult Parse(ParseContext ctx)
         {
+            //Split the types (if any)
             foreach (var typeRaw in Type.Split("/"))
             {
+                //Try to get a known type literal provider for that type
                 var type = WorkspaceManager.Instance.KnownTypesManager.GetTypeByName(typeRaw);
                 ISkriptType skriptTypeDescriptor = null;
+
+                //Check if this type requires more than one variable
                 var isMultipleValues = typeRaw.EndsWith("s");
                 if (isMultipleValues)
                 {
-                    type = WorkspaceManager.Instance.KnownTypesManager.GetTypeByName(typeRaw) ?? WorkspaceManager.Instance.KnownTypesManager.GetTypeByName(typeRaw.Substring(0, typeRaw.Length - 1));
+                    //It does so we first have to get the singular type representation for this type
+                    //Either get from the name we're given or just subtract the last letter ('s') from it
+                    type = WorkspaceManager.Instance.KnownTypesManager.GetTypeByName(typeRaw) ??
+                           WorkspaceManager.Instance.KnownTypesManager.GetTypeByName(
+                               typeRaw.Substring(0, typeRaw.Length - 1)
+                           );
 
-                    if (type != null) // We have a multiple value request. Hand over to GenericMultiValueType
+                    //If we have a type, replace the type descriptor for the generic multi type matcher
+                    if (type != null) // Hand over to GenericMultiValueType
                         skriptTypeDescriptor = new GenericMultiValueType(type, Constraint, CanMatchListConjunctions);
                 }
                 else
                 {
+                    //We got a single type so, use it.
                     skriptTypeDescriptor = type?.CreateNewInstance();
                 }
 
                 IExpression result = null;
 
+                //This type doesn't have a flag to just match literals So, let's try first matching variables.
                 if (!Constraint.HasFlagFast(SyntaxValueAcceptanceConstraint.LiteralsOnly))
                 {
                     //Try parsing a variable
@@ -77,16 +89,18 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                 var oldPos = ctx.CurrentPosition;
                 if (result == null)
                     result = skriptTypeDescriptor?.TryParseValue(ctx);
+                //We have not matched a result. Let's try matching with parentheses
                 if (result == null && !SkipParenthesis)
                 {
                     // Type descriptor wasn't able to parse the literal. Push back and try with parentheses.
                     ctx.CurrentPosition = oldPos;
-                
+
                     //Try parsing with parentheses first
                     var parenthesesType = new GenericParenthesesType(typeRaw);
                     result = parenthesesType.TryParseValue(ctx);
                 }
 
+                //If we have matched something, let's add it to the matches.
                 if (result != null)
                 {
                     if (result.Type == null) result.Type = skriptTypeDescriptor;
@@ -97,7 +111,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
 
                 return result != null ? ParseResult.Success(ctx) : ParseResult.Failure(ctx);
             }
-            
+
             return ParseResult.Failure(ctx);
         }
 
