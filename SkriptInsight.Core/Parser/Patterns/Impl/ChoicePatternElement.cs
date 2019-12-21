@@ -70,13 +70,17 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                 ctx.StartMatch();
                 var result = e.Element.Parse(ctx);
 
-                if (result?.IsSuccess ?? false)
+                var resultIsSuccess = result?.IsSuccess ?? false;
+                if (resultIsSuccess)
                     ctx.EndMatch(SaveChoice);
                 else
                     ctx.UndoMatch();
 
-                matchedParseMark = result?.ParseMark ?? 0; 
-                return result?.IsSuccess ?? false;
+                matchedParseMark = result?.ParseMark ?? 0;
+                
+                if (!resultIsSuccess)
+                    ctx.CurrentPosition = oldPos;
+                return resultIsSuccess;
             });
             if (matchedChoice == null) return ParseResult.Failure(ctx);
 

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
 using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.Parser.Expressions;
@@ -11,17 +12,6 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
     [GroupPatternElementInfo('%')]
     public class TypePatternElement : AbstractGroupPatternElement
     {
-        public SyntaxValueAcceptanceConstraint Constraint { get; set; }
-
-        public string Type { get; set; }
-
-        public bool SkipParenthesis { get; set; }
-
-        /// <summary>
-        /// Can this type, when matching list values, match 'and' or 'or'
-        /// </summary>
-        public bool CanMatchListConjunctions { get; set; } = true;
-
         public TypePatternElement(string contents) : base(contents)
         {
             var list = contents.TakeWhile(c => ParseConstraint(c) != SyntaxValueAcceptanceConstraint.None)
@@ -36,11 +26,30 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
         {
         }
 
+        public SyntaxValueAcceptanceConstraint Constraint { get; set; }
+
+        public string Type { get; set; }
+
+        public bool SkipParenthesis { get; set; }
+
+        /// <summary>
+        ///     Can this type, when matching list values, match 'and' or 'or'
+        /// </summary>
+        public bool CanMatchListConjunctions { get; set; } = true;
+
+        public string ConstraintAsString => string.Join("", Enum.GetValues(typeof(SyntaxValueAcceptanceConstraint))
+            .Cast<SyntaxValueAcceptanceConstraint>()
+            .Where(c => Constraint.HasFlagFast(c))
+            .Select(RenderConstraint));
+
         public override ParseResult Parse(ParseContext ctx)
         {
+            var skriptTypesManager = WorkspaceManager.CurrentWorkspace.TypesManager;
+
             //Split the types (if any)
             foreach (var typeRaw in Type.Split("/"))
             {
+                var skriptType = skriptTypesManager.GetType(typeRaw);
                 //Try to get a known type literal provider for that type
                 var type = WorkspaceManager.Instance.KnownTypesManager.GetTypeByName(typeRaw);
                 ISkriptType skriptTypeDescriptor = null;
@@ -100,6 +109,34 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                     result = parenthesesType.TryParseValue(ctx);
                 }
 
+                //If we didn't match any literal for this type, try to match an expression for this type
+                if (skriptType != null && result == null &&
+                    !Constraint.HasFlagFast(SyntaxValueAcceptanceConstraint.LiteralsOnly))
+                {
+                    var clone = ctx.Clone(false);
+                    var currentPos = clone.CurrentPosition;
+                    
+                    var exprFitType = skriptTypesManager.GetExpressionsThatCanFitType(skriptType);
+                    if (exprFitType != null)
+                        foreach (var expression in exprFitType.Where(c => !clone.HasVisitedExpression(skriptType, c)))
+                        {
+                            clone.CurrentPosition = currentPos;
+                            clone.Matches.Clear();
+
+                            clone.VisitExpression(skriptType, expression);
+
+                            Debug.WriteLine($"Trying with {expression.ClassName} (returning {expression.ReturnType}):");
+                            for (var index = 0; index < expression.PatternNodes.Length; index++)
+                            {
+                                Debug.WriteLine($"Has visited {clone.VisitedExpressions.Count} expressions so far.");
+                                Debug.WriteLine($"Trying with pattern #{index}: {expression.Patterns[index]}");
+                                var pattern = expression.PatternNodes[index];
+                                var resultValue = pattern.Parse(clone);
+                                if (resultValue.IsSuccess) Debugger.Break();
+                            }
+                        }
+                }
+
                 //If we have matched something, let's add it to the matches.
                 if (result != null)
                 {
@@ -115,10 +152,16 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
             return ParseResult.Failure(ctx);
         }
 
+        public override string RenderPattern()
+        {
+            return $"%{ConstraintAsString}{Type}%";
+        }
+
         #region Constraint
 
-        private static string RenderConstraint(SyntaxValueAcceptanceConstraint c) =>
-            c switch
+        private static string RenderConstraint(SyntaxValueAcceptanceConstraint c)
+        {
+            return c switch
             {
                 SyntaxValueAcceptanceConstraint.None => "",
                 SyntaxValueAcceptanceConstraint.LiteralsOnly => "*",
@@ -128,9 +171,11 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                 SyntaxValueAcceptanceConstraint.AllowConditionalExpressions => "=",
                 _ => throw new ArgumentOutOfRangeException()
             };
+        }
 
-        private static SyntaxValueAcceptanceConstraint ParseConstraint(char c) =>
-            c switch
+        private static SyntaxValueAcceptanceConstraint ParseConstraint(char c)
+        {
+            return c switch
             {
                 '*' => SyntaxValueAcceptanceConstraint.LiteralsOnly,
                 '~' => SyntaxValueAcceptanceConstraint.NoLiterals,
@@ -139,17 +184,8 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                 '=' => SyntaxValueAcceptanceConstraint.AllowConditionalExpressions,
                 _ => SyntaxValueAcceptanceConstraint.None
             };
+        }
 
         #endregion
-
-        public string ConstraintAsString => string.Join("", Enum.GetValues(typeof(SyntaxValueAcceptanceConstraint))
-            .Cast<SyntaxValueAcceptanceConstraint>()
-            .Where(c => Constraint.HasFlagFast(c))
-            .Select(RenderConstraint));
-
-        public override string RenderPattern()
-        {
-            return $"%{ConstraintAsString}{Type}%";
-        }
     }
 }

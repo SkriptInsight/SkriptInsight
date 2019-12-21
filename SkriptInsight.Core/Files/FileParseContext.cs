@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.Json.Serialization;
 using SkriptInsight.Core.Parser;
+using SkriptInsight.Core.SyntaxInfo;
 
 namespace SkriptInsight.Core.Files
 {
@@ -42,8 +43,9 @@ namespace SkriptInsight.Core.Files
                 CurrentPosition = CurrentPosition,
                 ElementContext = ElementContext,
                 CurrentMatchStack = new Stack<int>(CurrentMatchStack.Reverse()),
-                TemporaryRangeStack = new Stack<int>(TemporaryRangeStack.Reverse())
-
+                TemporaryRangeStack = new Stack<int>(TemporaryRangeStack.Reverse()),
+                VisitedExpressions = VisitedExpressions,
+                ForkCount = ForkCount + 1
             };
         }
 

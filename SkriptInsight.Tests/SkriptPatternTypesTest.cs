@@ -303,6 +303,18 @@ namespace SkriptInsight.Tests
         }
 
         [Fact]
+        public void TypeParserCanMatchNonLiteralExpressions()
+        {
+            WorkspaceManager.Instance.KnownTypesManager.LoadKnownTypes();
+            var pattern = SkriptPattern.ParsePattern("(message|send [message[s]]) %strings% [to %commandsenders%]");
+
+            var result = pattern.Parse("send \"hi\" to all players");
+            
+            Assert.True(result.IsSuccess);
+        }
+
+
+        [Fact]
         public void AllClickTypesCanBeParsedCorrectly()
         {
             var clicks = new[]

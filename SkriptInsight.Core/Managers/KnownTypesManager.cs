@@ -15,13 +15,19 @@ namespace SkriptInsight.Core.Managers
 {
     public class KnownTypesManager
     {
+        public const string JavaLangObjectClass = "java.lang.Object";
+        
         public WorkspaceManager WorkspaceManager { get; }
 
         internal KnownTypesManager(WorkspaceManager workspaceManager)
         {
             WorkspaceManager = workspaceManager;
-            LoadKnownTypes();
+        }
+
+        internal void LoadTypes()
+        {
             LoadTypesCache();
+            LoadKnownTypes();
         }
 
         [Obsolete("Use the new property on WorkspaceManager", true)]
@@ -64,12 +70,12 @@ namespace SkriptInsight.Core.Managers
         private SkriptType InternalGetTypeForName(string name, IEnumerable<SkriptType> skriptTypes = null)
         {
             if (skriptTypes == null)
-                skriptTypes = WorkspaceManager.Current.KnownTypesFromAddons;
+                skriptTypes = WorkspaceManager.Current.TypesManager.KnownTypesFromAddons;
 
             return skriptTypes
                 .Where(type => type.FinalTypeName.Equals(name))
                 .DefaultIfEmpty(
-                    WorkspaceManager.Current.KnownTypesFromAddons
+                    WorkspaceManager.Current.TypesManager.KnownTypesFromAddons
                         .Where(c => c.PatternsRegexps != null)
                         .FirstOrDefault(c =>
                             c.PatternsRegexps.Any(r => r.IsMatch(name)))

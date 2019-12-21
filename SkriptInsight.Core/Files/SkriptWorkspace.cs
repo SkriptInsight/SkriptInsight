@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using Newtonsoft.Json;
 using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Managers;
@@ -17,12 +15,19 @@ namespace SkriptInsight.Core.Files
     public class SkriptWorkspace
     {
         public WorkspaceManager WorkspaceManager { get; }
-        
+
         public ISkriptInsightHost Host => WorkspaceManager.CurrentHost;
 
+        public SkriptTypesManager TypesManager { get; set; }
+        
         public SkriptWorkspace(WorkspaceManager manager = null)
         {
             WorkspaceManager = manager ?? WorkspaceManager.Instance;
+            TypesManager = new SkriptTypesManager();
+        }
+
+        internal void InitWorkspace()
+        {
             LoadAddons();
         }
 
@@ -56,7 +61,7 @@ namespace SkriptInsight.Core.Files
                     return clone;
                 }));
                 //Sort the types by their position on the list and plural version first
-                
+
                 doc.Types = doc.Types
                     .GroupBy(c => c.Id)
                     .SelectMany(c => c.OrderByDescending(cc => cc.IsPlural ? 1 : 0))
@@ -64,13 +69,9 @@ namespace SkriptInsight.Core.Files
 
                 AddonDocumentations.Add(doc);
             }
-
-            KnownTypesFromAddons = AddonDocumentations.SelectMany(a => a.Types).ToList();
         }
 
         public List<SkriptAddonDocumentation> AddonDocumentations { get; set; } = new List<SkriptAddonDocumentation>();
-        
-        public IReadOnlyList<SkriptType> KnownTypesFromAddons { get; set; }
 
         public ConcurrentFileDictionary Files { get; set; } = new ConcurrentFileDictionary();
     }

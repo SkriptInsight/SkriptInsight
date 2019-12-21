@@ -183,6 +183,8 @@ namespace SkriptInsight.Core.Files
             endLine = endLine < 0 ? RawContents.Count : endLine;
             RunProcess(new ProcCreateOrUpdateNodes(), startLine, endLine);
             ProcessNodeIndentation(startLine);
+            if (!WorkspaceManager.CurrentHost?.SupportsExtendedCapabilities ?? false)
+                RunProcess(ParseProcess);
         }
 
         internal void ProcessNodeIndentation(in int startLine)

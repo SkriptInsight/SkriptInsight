@@ -16,7 +16,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl
             var clone = ctx.Clone();
             (int finalPos, SkriptType finalType)? regexMatch = null;
             
-            foreach (var type in CurrentWorkspace.KnownTypesFromAddons)
+            foreach (var type in CurrentWorkspace.TypesManager.KnownTypesFromAddons)
             {
                 clone.CurrentPosition = startPos;
                 litElement.Value = type.FinalTypeName;

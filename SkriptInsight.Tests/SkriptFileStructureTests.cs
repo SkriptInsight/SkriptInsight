@@ -66,11 +66,12 @@ namespace SkriptInsight.Tests
             var contents = "on chat\n    send \"hi\"".SplitOnNewLines();
             var file = new SkriptFile(url)
             {
-                RawContents =
-                    contents
+                RawContents = contents
             };
 
             WorkspaceManager.Instance.HandleOpenedFile(file);
+            file.PrepareNodes();
+            
             file.HandleChange(new TextDocumentContentChangeEvent
             {
                 Range = RangeExtensions.From(0, 7, 7),
@@ -85,7 +86,7 @@ namespace SkriptInsight.Tests
                 Assert.Equal(contents[i], file.Nodes[i].ToString());
 
 
-            var results = new[] {"AsyncPlayerChatEvent", "EffMessage"};
+            var results = new[] {"org.bukkit.event.player.AsyncPlayerChatEvent", "EffMessage"};
 
             for (var i = 0; i < results.Length; i++)
                 Assert.True(file.Nodes[i].IsMatchOfType(results[i]),
@@ -108,6 +109,8 @@ namespace SkriptInsight.Tests
             };
 
             WorkspaceManager.Instance.HandleOpenedFile(file);
+            file.PrepareNodes();
+            
             file.HandleChange(new TextDocumentContentChangeEvent
             {
                 Range = RangeExtensions.From(2, 31, 31),
@@ -136,7 +139,7 @@ namespace SkriptInsight.Tests
                 Assert.Equal(contents[i], file.Nodes[i].ToString());
 
 
-            var results = new[] {"AsyncPlayerChatEvent", "", "", "EffMessage"};
+            var results = new[] {"org.bukkit.event.player.AsyncPlayerChatEvent", "", "", "EffMessage"};
 
             for (var i = 0; i < results.Length; i++)
                 if (!string.IsNullOrEmpty(results[i]))

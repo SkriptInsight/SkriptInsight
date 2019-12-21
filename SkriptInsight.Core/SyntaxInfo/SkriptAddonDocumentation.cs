@@ -38,6 +38,7 @@ namespace SkriptInsight.Core.SyntaxInfo
             Types.ForEach(e => e.LoadPatterns());
             Effects.ForEach(e => e.LoadPatterns());
             var types = Enum.GetValues(typeof(ExpressionType)).Cast<ExpressionType>().ToList();
+            
             foreach (var expr in InnerExpressions)
             {
                 var typeOrdinal = (int) expr.ExpressionType;
@@ -48,6 +49,8 @@ namespace SkriptInsight.Core.SyntaxInfo
 
                 Expressions.Insert(_expressionTypesStartIndices[typeOrdinal], expr);
             }
+            
+            Expressions.ForEach(e => e.LoadPatterns());
         }
     }
 }

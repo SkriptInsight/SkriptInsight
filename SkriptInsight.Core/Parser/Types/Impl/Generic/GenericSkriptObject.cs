@@ -15,7 +15,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
             
             public override string ToString()
             {
-                return Type?.AsString(Expression) ?? "<none>";
+                return Type?.AsString(Expression.Value) ?? "<none>";
             }
 
             public ISkriptType Type { get; }
@@ -34,7 +34,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
             var possibleValues = new List<(int lastPos, ISkriptType type, IExpression result)>();
 
             var startPos = clone.CurrentPosition;
-            foreach (var type in WorkspaceManager.CurrentWorkspace.KnownTypesFromAddons)
+            foreach (var type in WorkspaceManager.CurrentWorkspace.TypesManager.KnownTypesFromAddons)
             {
                 if (type.IsPlural) continue;
                 clone.Matches.Clear();

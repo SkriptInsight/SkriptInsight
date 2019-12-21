@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Files;
+using SkriptInsight.Core.SyntaxInfo;
 
 namespace SkriptInsight.Core.Managers
 {
@@ -12,6 +14,16 @@ namespace SkriptInsight.Core.Managers
         {
             Current = new SkriptWorkspace(this);
             KnownTypesManager = new KnownTypesManager(this);
+            //First of all, init the workspace
+            Current.InitWorkspace();
+            
+            //Init the types
+            Current.TypesManager.InitTypesFromAddons(Current, this);
+            //Then finally load them (from cache)
+            KnownTypesManager.LoadTypes();
+            
+            //Load the expressions at the end
+            Current.TypesManager.LoadExpressionsFromTypes();
         }
 
         public static ISkriptInsightHost CurrentHost { get; set; }

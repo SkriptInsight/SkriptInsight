@@ -1,12 +1,15 @@
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Parser.Patterns;
+using SkriptInsight.Core.SyntaxInfo;
 using Range = OmniSharp.Extensions.LanguageServer.Protocol.Models.Range;
 
 namespace SkriptInsight.Core.Parser
@@ -18,6 +21,7 @@ namespace SkriptInsight.Core.Parser
 
         public ParseContext()
         {
+            VisitedExpressions = new ConcurrentDictionary<string, List<SkriptExpression>>();
         }
 
         public virtual string Text { get; set; } = "";
@@ -110,7 +114,9 @@ namespace SkriptInsight.Core.Parser
                 CurrentPosition = CurrentPosition,
                 ElementContext = ElementContext,
                 CurrentMatchStack = new Stack<int>(CurrentMatchStack.Reverse()),
-                TemporaryRangeStack = new Stack<int>(TemporaryRangeStack.Reverse())
+                TemporaryRangeStack = new Stack<int>(TemporaryRangeStack.Reverse()),
+                VisitedExpressions = VisitedExpressions,
+                ForkCount = ForkCount + 1
             };
         }
 
@@ -334,5 +340,24 @@ namespace SkriptInsight.Core.Parser
         #endregion
 
         public static implicit operator ParseContext(string code) => FromCode(code);
+
+        public ConcurrentDictionary<string, List<SkriptExpression>> VisitedExpressions { get; set; }
+
+        public void VisitExpression(SkriptType type, SkriptExpression expr)
+        {
+            GetOrCreateVisitedExpressionsForType(type).Add(expr);
+        }
+
+        private List<SkriptExpression> GetOrCreateVisitedExpressionsForType(SkriptType type)
+        {
+            return VisitedExpressions.GetOrAdd(type.ClassName, _ => new List<SkriptExpression>());
+        }
+
+        public bool HasVisitedExpression(SkriptType type, SkriptExpression expr)
+        {
+            return GetOrCreateVisitedExpressionsForType(type).Contains(expr);
+        }
+
+        public long ForkCount { get; set; }
     }
 }

@@ -7,6 +7,8 @@ namespace SkriptInsight.Core.SyntaxInfo
     {
         public string ClassName { get; set; }
 
+        public string ReturnType { get; set; }
+
         public ExpressionType ExpressionType { get; set; }
     }
 }

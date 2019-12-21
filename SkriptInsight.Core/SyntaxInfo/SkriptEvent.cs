@@ -12,11 +12,11 @@ namespace SkriptInsight.Core.SyntaxInfo
 
         public int Id { get; set; }
 
-        public string[] CurrentEventNames { get; set; }
+        public EventValueInfo[] CurrentEventNames { get; set; }
 
-        public string[] PastEventNames { get; set; }
+        public EventValueInfo[] PastEventNames { get; set; }
 
-        public string[] FutureEventNames { get; set; }
+        public EventValueInfo[] FutureEventNames { get; set; }
 
         public string[] Description { get; set; }
 
