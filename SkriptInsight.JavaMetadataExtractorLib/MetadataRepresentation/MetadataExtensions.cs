@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using Apache.NBCEL.ClassFile;
+using Apache.NBCEL.Util;
 using SkriptInsight.JavaMetadata.Model;
 using SkriptInsight.JavaReader;
 
@@ -31,8 +33,11 @@ namespace SkriptInsight.JavaMetadataExtractorLib.MetadataRepresentation
         {
             var archive = new JarArchive("Memory-File.jar", new byte[0]);
             var javaClasses = meta.JavaClasses.Select(c => (c.Key, c.Value.ToDataClass()));
+            
+            var repository = SyntheticRepository.GetInstance();
             foreach (var (name, clazz) in javaClasses)
             {
+                repository.StoreClass(new VirtualDataClass(clazz));
                 LoadedClassRepository.Instance.StoreClass(clazz);
                 archive.Classes.Add(name, clazz);
             }

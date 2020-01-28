@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Apache.NBCEL" Version="1.0.8" />
+      <PackageReference Include="Apache.NBCEL" Version="1.0.9" />
     </ItemGroup>
 
 </Project>

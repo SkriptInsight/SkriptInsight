@@ -1,12 +1,5 @@
 using System;
-using System.Diagnostics;
 using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using Apache.NBCEL;
-using Apache.NBCEL.ClassFile;
-using Apache.NBCEL.Util;
-using SkriptInsight.JavaMetadata;
 using SkriptInsight.JavaReader;
 
 namespace SkriptInsight.JavaMetadataExtractorLib

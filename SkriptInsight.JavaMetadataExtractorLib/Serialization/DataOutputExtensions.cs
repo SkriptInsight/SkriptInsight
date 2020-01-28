@@ -2,6 +2,7 @@ using System;
 using Apache.NBCEL.Java.IO;
 using SkriptInsight.JavaMetadata.Model;
 using SkriptInsight.JavaReader;
+using static SkriptInsight.JavaMetadataExtractorLib.MetadataIo;
 
 namespace SkriptInsight.JavaMetadataExtractorLib.Serialization
 {
@@ -9,11 +10,14 @@ namespace SkriptInsight.JavaMetadataExtractorLib.Serialization
     {
         public static void WriteJarArchive(this DataOutputStream stream, MetadataJarArchive archive)
         {
+            LogVerbose($"Writing {archive.JavaClasses.Count} metadata classes to file.");
             stream.WriteInt(archive.JavaClasses.Count);
             foreach (var (key, value) in archive.JavaClasses)
             {
+                LogDebug($"Writing the class {key} to file.");
                 stream.WriteJarArchiveClass(key, value);
             }
+            LogVerbose($"Finished writing {archive.JavaClasses.Count} metadata classes to file.");
         }
 
         private static void WriteJarArchiveClass(this DataOutputStream stream, string name, MetadataJavaClass @class)
