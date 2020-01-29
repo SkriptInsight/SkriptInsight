@@ -29,6 +29,7 @@ namespace SkriptInsight.JavaMetadataExtractorLib.Serialization
         private static void WriteJarClass(this DataOutputStream stream, MetadataJavaClass @class)
         {
             stream.WriteUTF(@class.ClassName);
+            stream.WriteAccessFlagsParameter(@class.AccessFlags);
             stream.WriteArray(@class.Interfaces, stream.WriteUTF);
             stream.WriteArray(@class.AllInterfaces, stream.WriteUTF);
             stream.WriteArray(@class.Interfaces, stream.WriteUTF);

@@ -35,6 +35,7 @@ namespace SkriptInsight.JavaMetadataExtractorLib.Serialization
             var @class = new MetadataJavaClass
             {
                 ClassName = stream.ReadUtfAndIntern(),
+                AccessFlags = stream.ReadAccessFlagsParameter(),
                 Interfaces = stream.ReadArray(stream.ReadUtfAndIntern),
                 AllInterfaces = stream.ReadArray(stream.ReadUtfAndIntern)
             };

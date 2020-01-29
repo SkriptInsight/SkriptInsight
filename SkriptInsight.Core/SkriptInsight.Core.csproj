@@ -20,6 +20,7 @@
       <EmbeddedResource Include="JarMetadataRepo\Skript.simeta" />
       <None Remove="JarMetadataRepo\rt.simeta" />
       <EmbeddedResource Include="JarMetadataRepo\rt.simeta" />
+      <EmbeddedResource Include="JarMetadataRepo\spigot-api-1.14.4.simeta" />
     </ItemGroup>
 
     <ItemGroup>
