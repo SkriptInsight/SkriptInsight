@@ -5,6 +5,9 @@ using SkriptInsight.Core.Parser;
 
 namespace SkriptInsight.Core.Utils
 {
+    /// <summary>
+    /// Helper used to parse signatures
+    /// </summary>
     public static class SignatureParserHelper
     {
         private static Dictionary<Type, Delegate> SignatureDelegates { get; } = new Dictionary<Type, Delegate>();

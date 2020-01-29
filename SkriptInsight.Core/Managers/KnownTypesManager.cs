@@ -30,9 +30,6 @@ namespace SkriptInsight.Core.Managers
             LoadKnownTypes();
         }
 
-        [Obsolete("Use the new property on WorkspaceManager", true)]
-        public static KnownTypesManager Instance => WorkspaceManager.Instance.KnownTypesManager;
-
         public List<KnownType> KnownTypes { get; set; }
 
         private ConcurrentDictionary<string, KnownType> TypesLookupCache { get; } =
@@ -103,6 +100,9 @@ namespace SkriptInsight.Core.Managers
             return result;
         }
 
+        /// <summary>
+        /// Represents the connection between a Skript type and a C# type 
+        /// </summary>
         public class KnownType
         {
             public KnownType(Type type)

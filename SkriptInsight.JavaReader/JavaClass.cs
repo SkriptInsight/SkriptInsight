@@ -78,5 +78,56 @@ namespace SkriptInsight.JavaReader
         
         public virtual JavaMethod[] Methods
             => _methods ??= InternalClass.Methods.Select(c => new JavaMethod(c)).ToArray();
+
+
+        public virtual bool InstanceOf(JavaClass superClass)
+        {
+            if (Equals(superClass))
+                return true;
+            if (SuperClasses != null)
+            {
+                foreach (var superClass1 in SuperClasses)
+                {
+                    if (superClass1.Equals(superClass))
+                        return true;
+                }
+            }
+
+            return superClass.Flags.HasFlag(AccessFlags.Interface) && ImplementationOf(superClass);
+        }
+
+        public virtual bool ImplementationOf(JavaClass inter)
+        {
+            if (!inter.Flags.HasFlag(AccessFlags.Interface))
+                return false;
+            if (Equals(inter))
+                return true;
+            if (AllInterfaces == null) return false;
+            
+            foreach (var allInterface in AllInterfaces)
+            {
+                if (allInterface.Equals(inter))
+                    return true;
+            }
+            return false;
+        }
+
+        protected bool Equals(JavaClass other)
+        {
+            return FullClassName == other.FullClassName;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals((JavaClass) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (FullClassName != null ? FullClassName.GetHashCode() : 0);
+        }
     }
 }

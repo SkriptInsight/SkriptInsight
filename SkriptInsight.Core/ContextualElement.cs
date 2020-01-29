@@ -1,5 +1,9 @@
 namespace SkriptInsight.Core
 {
+    /// <summary>
+    /// Represents an element that knows the element that's previous and next to the current one
+    /// </summary>
+    /// <typeparam name="T">Generic type</typeparam>
     public class ContextualElement<T>
     {
         public T Previous { get; }

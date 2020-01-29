@@ -2,6 +2,9 @@ using SkriptInsight.Core.Parser.Patterns;
 
 namespace SkriptInsight.Core.Parser
 {
+    /// <summary>
+    /// Represents a Skript noun
+    /// </summary>
     public class Noun
     {
         public string Gender { get; set; }

@@ -8,6 +8,9 @@ using SkriptInsight.Core.Parser.Patterns.Impl;
 
 namespace SkriptInsight.Core.Parser.Patterns
 {
+    /// <summary>
+    /// Represents an entire Skript pattern.
+    /// </summary>
     public class SkriptPattern : AbstractSkriptPatternElement
     {
         private static readonly Type[] GroupTypes =

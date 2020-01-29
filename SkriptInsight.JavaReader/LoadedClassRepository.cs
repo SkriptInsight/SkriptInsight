@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using Apache.NBCEL;
 
 namespace SkriptInsight.JavaReader
 {
@@ -15,7 +16,7 @@ namespace SkriptInsight.JavaReader
 
         public JavaClass this[string key]
         {
-            get => KnownClasses/*.GetOrAdd(key, s => new JavaClass{FullClassName = s})*/[key];
+            get => KnownClasses.GetOrNull(key);
             set => KnownClasses[key] = value;
         }
 

@@ -16,6 +16,14 @@
 
     <ItemGroup>
       <EmbeddedResource Include="KnownAddonInfo\Skript.json" />
+      <None Remove="JarMetadataRepo\Skript.simeta" />
+      <EmbeddedResource Include="JarMetadataRepo\Skript.simeta" />
+      <None Remove="JarMetadataRepo\rt.simeta" />
+      <EmbeddedResource Include="JarMetadataRepo\rt.simeta" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SkriptInsight.JavaMetadataExtractorLib\SkriptInsight.JavaMetadataExtractorLib.csproj" />
     </ItemGroup>
 
 </Project>

@@ -4,7 +4,8 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 namespace SkriptInsight.Core.Parser.Expressions
 {
     /// <summary>
-    /// Represents an annotation given to an expression whilst parsing
+    /// Represents an annotation given to an expression whilst parsing.
+    /// <para>Can be used to show warnings or errors to the user without requiring an extra code inspection.</para>
     /// </summary>
     public class MatchAnnotation
     {

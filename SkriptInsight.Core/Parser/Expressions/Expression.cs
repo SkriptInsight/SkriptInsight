@@ -4,6 +4,10 @@ using SkriptInsight.Core.Parser.Types;
 
 namespace SkriptInsight.Core.Parser.Expressions
 {
+    /// <summary>
+    /// Represents a skript expression backed by a C# type
+    /// </summary>
+    /// <typeparam name="T">The type that backs this expression</typeparam>
     public class Expression<T> : IExpression
     {
         public Expression(T value)

@@ -1,11 +1,16 @@
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Apache.NBCEL;
 using Newtonsoft.Json;
 using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.SyntaxInfo;
+using SkriptInsight.JavaMetadataExtractorLib;
+using SkriptInsight.JavaMetadataExtractorLib.MetadataRepresentation;
+using SkriptInsight.JavaReader;
 
 namespace SkriptInsight.Core.Files
 {
@@ -29,6 +34,35 @@ namespace SkriptInsight.Core.Files
         internal void InitWorkspace()
         {
             LoadAddons();
+            LoadJarMetadata();
+        }
+
+        private void LoadJarMetadata()
+        {
+            var knownMetadata = new[]
+            {
+                "rt", //Base Java classes
+                "spigot-api-1.14.4", //Spigot API classes
+                "Skript" //Skript classes
+            };
+            
+            var archives = new List<JarArchive>();
+            foreach (var metaName in knownMetadata)
+            {
+                var assembly = typeof(SkriptWorkspace).Assembly;
+                var resourceName = assembly.GetManifestResourceNames()
+                    .SingleOrDefault(str => str.EndsWith($"{metaName}.simeta"));
+                if (resourceName == null) continue;
+                
+                using var stream = assembly.GetManifestResourceStream(resourceName);
+                if (stream == null) continue;
+                
+                //Load metadata
+                archives.Add(MetadataIo.ReadArchiveMetadataFromStream(stream).ToDataClass());
+            }
+            archives.ForEach(a => a.LoadDataProperties());
+            
+            GC.Collect();
         }
 
         private void LoadAddons()

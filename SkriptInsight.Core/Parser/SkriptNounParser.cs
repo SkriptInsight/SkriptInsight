@@ -9,6 +9,9 @@ using SkriptInsight.Core.Types;
 
 namespace SkriptInsight.Core.Parser
 {
+    /// <summary>
+    /// Simple Skript Noun parser
+    /// </summary>
     public static class SkriptNounParser
     {
         private const char BrokenPipe = '¦';

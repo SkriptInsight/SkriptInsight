@@ -6,6 +6,9 @@ using SkriptInsight.Core.Parser.Expressions;
 
 namespace SkriptInsight.Core.Parser
 {
+    /// <summary>
+    /// Parse match that matched an expression 
+    /// </summary>
     public class ExpressionParseMatch : ParseMatch
     {
         public ExpressionParseMatch(IExpression expression)

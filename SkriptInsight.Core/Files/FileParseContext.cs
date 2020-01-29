@@ -8,6 +8,9 @@ using SkriptInsight.Core.SyntaxInfo;
 
 namespace SkriptInsight.Core.Files
 {
+    /// <summary>
+    /// Parse context used to parse an entire file
+    /// </summary>
     public class FileParseContext : ParseContext
     {
         private int _currentLine;

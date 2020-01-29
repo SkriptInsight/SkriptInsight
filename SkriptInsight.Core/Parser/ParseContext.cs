@@ -14,6 +14,9 @@ using Range = OmniSharp.Extensions.LanguageServer.Protocol.Models.Range;
 
 namespace SkriptInsight.Core.Parser
 {
+    /// <summary>
+    /// The base context for parsing a line of code
+    /// </summary>
     [JsonObject]
     public class ParseContext : IEnumerable<char>
     {
