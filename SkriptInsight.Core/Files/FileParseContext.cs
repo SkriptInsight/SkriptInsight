@@ -60,7 +60,7 @@ namespace SkriptInsight.Core.Files
             {
                 //Line has been finished, so move to the next line.
                 CurrentLine += 1;
-                Debug.WriteLine($"Moved to next line whilst reading {count} chars.");
+                // Debug.WriteLine($"Moved to next line whilst reading {count} chars.");
             }
 
             return next;

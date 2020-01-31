@@ -38,7 +38,7 @@ namespace SkriptInsight.Core.Managers
         [CanBeNull]
         public IReadOnlyList<SyntaxSkriptExpression> GetExpressionsThatCanFitType(SkriptType type)
         {
-            Debug.WriteLine($"Got query for GetExpressionsThatCanFitType({type.ClassName})");
+            // Debug.WriteLine($"Got query for GetExpressionsThatCanFitType({type.ClassName})");
             return ExpressionsForType.GetValue(type.ClassName);
         }
 
@@ -47,7 +47,7 @@ namespace SkriptInsight.Core.Managers
         public ConcurrentDictionary<string, IReadOnlyList<SyntaxSkriptExpression>> GetEventExpressionsForEvent(
             SkriptEvent @event)
         {
-            Debug.WriteLine($"Got query for GetEventExpressionsForEvent({@event.Name})");
+            // Debug.WriteLine($"Got query for GetEventExpressionsForEvent({@event.Name})");
             return EventExpressionsForType.GetValue(@event);
         }
 

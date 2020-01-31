@@ -149,14 +149,14 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
 
                                                 clone.VisitExpression(skriptType, expression);
 
-                                                Debug.WriteLine(
-                                                    $"Trying with (event value) {expression.ClassName} (returning {expression.ReturnType}):");
+                                                // Debug.WriteLine(
+                                                //     $"Trying with (event value) {expression.ClassName} (returning {expression.ReturnType}):");
                                                 for (var index = 0; index < expression.PatternNodes.Length; index++)
                                                 {
-                                                    Debug.WriteLine(
-                                                        $"Has visited (event value) {clone.VisitedExpressions.Count} expressions so far.");
-                                                    Debug.WriteLine(
-                                                        $"Trying with pattern #{index}: {expression.Patterns[index]}");
+                                                    // Debug.WriteLine(
+                                                        // $"Has visited (event value) {clone.VisitedExpressions.Count} expressions so far.");
+                                                    // Debug.WriteLine(
+                                                        // $"Trying with pattern #{index}: {expression.Patterns[index]}");
                                                     var pattern = expression.PatternNodes[index];
                                                     var resultValue = pattern.Parse(clone);
                                                     if (resultValue.IsSuccess)
@@ -197,13 +197,13 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
 
                                 clone.VisitExpression(skriptType, expression);
 
-                                Debug.WriteLine(
-                                    $"Trying with {expression.ClassName} (returning {expression.ReturnType}):");
+                                // Debug.WriteLine(
+                                    // $"Trying with {expression.ClassName} (returning {expression.ReturnType}):");
                                 for (var index = 0; index < expression.PatternNodes.Length; index++)
                                 {
-                                    Debug.WriteLine(
-                                        $"Has visited {clone.VisitedExpressions.Count} expressions so far.");
-                                    Debug.WriteLine($"Trying with pattern #{index}: {expression.Patterns[index]}");
+                                    // Debug.WriteLine(
+                                        // $"Has visited {clone.VisitedExpressions.Count} expressions so far.");
+                                    // Debug.WriteLine($"Trying with pattern #{index}: {expression.Patterns[index]}");
                                     var pattern = expression.PatternNodes[index];
 
                                     var resultValue = pattern.Parse(clone);
