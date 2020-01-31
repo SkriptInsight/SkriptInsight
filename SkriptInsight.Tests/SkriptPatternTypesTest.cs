@@ -225,6 +225,10 @@ namespace SkriptInsight.Tests
         [InlineData("weathers", "raining and sunny")]
         [InlineData("weather conditions", "raining or sunny or thunder")]
         [InlineData("weather types", "raining or sunny and thunder")]
+        [InlineData("gamemode", "survival")]
+        [InlineData("gamemode", "spectator")]
+        [InlineData("game mode", "creative")]
+        [InlineData("game modes", "adventure or creative or survival or spectator")]
         public void TypesCanBeRepresentedAsStrings(string type, string value)
         {
             //Parse normal type from name
