@@ -129,7 +129,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                         {
                             var currentNode = fileParseContext.File.Nodes[fileParseContext.CurrentLine];
 
-                            if (currentNode.RootParentSyntax?.Element is SkriptEvent rootEvent)
+                            if (currentNode?.RootParentSyntax?.Element is SkriptEvent rootEvent)
                             {
                                 var typesAndExpressions = skriptTypesManager.GetEventExpressionsForEvent(rootEvent);
 
