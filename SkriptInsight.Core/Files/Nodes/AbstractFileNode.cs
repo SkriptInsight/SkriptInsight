@@ -1,15 +1,22 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using JetBrains.Annotations;
 using MoreLinq;
-using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Parser;
 using SkriptInsight.Core.SyntaxInfo;
+using Range = OmniSharp.Extensions.LanguageServer.Protocol.Models.Range;
 
 namespace SkriptInsight.Core.Files.Nodes
 {
     public abstract class AbstractFileNode
     {
+        /// <summary>
+        /// The identification number of this node
+        /// </summary>
+        public Guid Id { get; set; }
+
         /// <summary>
         ///     The line number of this node. Zero based integer value.
         /// </summary>
@@ -101,5 +108,10 @@ namespace SkriptInsight.Core.Files.Nodes
                     m.Range.ShiftLineNumber(amount);
             });
         }
+
+        public AbstractFileNode RootParent => this.FindRootParent();
+
+        [CanBeNull]
+        public SyntaxMatch RootParentSyntax => RootParent?.MatchedSyntax;
     }
 }

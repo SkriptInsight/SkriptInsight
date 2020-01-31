@@ -3,7 +3,7 @@ using System.Diagnostics;
 namespace SkriptInsight.Core.SyntaxInfo
 {
     [DebuggerDisplay("{" + nameof(ClassName) + "}")]
-    public class SkriptExpression : AbstractSyntaxElement
+    public class SyntaxSkriptExpression : AbstractSyntaxElement
     {
         public virtual string ClassName { get; set; }
 

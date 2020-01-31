@@ -13,6 +13,22 @@ namespace SkriptInsight.Core.Managers
 {
     public class SkriptTypesManager
     {
+        public IReadOnlyList<SyntaxSkriptExpression> KnownExpressionsFromAddons { get; set; }
+
+        public IReadOnlyList<SkriptType> KnownTypesFromAddons { get; set; }
+
+        private ConcurrentDictionary<string, SkriptType> NamedKnownTypesFromAddons { get; set; }
+
+        private ConcurrentDictionary<string, IReadOnlyList<SyntaxSkriptExpression>> ExpressionsForType { get; set; }
+
+        //Just like above, but instead we have <Event id, Dictionary<Return type, Expression>>
+        private ConcurrentDictionary<SkriptEvent, ConcurrentDictionary<string, IReadOnlyList<SyntaxSkriptExpression>>>
+            EventExpressionsForType { get; set; }
+
+        public SkriptWorkspace Workspace { get; set; }
+
+        public WorkspaceManager WorkspaceManager { get; set; }
+
         [CanBeNull]
         public SkriptType GetType(string name)
         {
@@ -20,19 +36,20 @@ namespace SkriptInsight.Core.Managers
         }
 
         [CanBeNull]
-        public IReadOnlyList<SkriptExpression> GetExpressionsThatCanFitType(SkriptType type)
+        public IReadOnlyList<SyntaxSkriptExpression> GetExpressionsThatCanFitType(SkriptType type)
         {
             Debug.WriteLine($"Got query for GetExpressionsThatCanFitType({type.ClassName})");
             return ExpressionsForType.GetValue(type.ClassName);
         }
 
-        public IReadOnlyList<SkriptExpression> KnownExpressionsFromAddons { get; set; }
 
-        public IReadOnlyList<SkriptType> KnownTypesFromAddons { get; set; }
-
-        private ConcurrentDictionary<string, SkriptType> NamedKnownTypesFromAddons { get; set; }
-
-        private ConcurrentDictionary<string, IReadOnlyList<SkriptExpression>> ExpressionsForType { get; set; }
+        [CanBeNull]
+        public ConcurrentDictionary<string, IReadOnlyList<SyntaxSkriptExpression>> GetEventExpressionsForEvent(
+            SkriptEvent @event)
+        {
+            Debug.WriteLine($"Got query for GetEventExpressionsForEvent({@event.Name})");
+            return EventExpressionsForType.GetValue(@event);
+        }
 
         private void LoadTypesFromAddons()
         {
@@ -45,10 +62,7 @@ namespace SkriptInsight.Core.Managers
         private void LoadNamedTypes()
         {
             NamedKnownTypesFromAddons = new ConcurrentDictionary<string, SkriptType>();
-            foreach (var type in KnownTypesFromAddons)
-            {
-                NamedKnownTypesFromAddons.TryAdd(type.FinalTypeName, type);
-            }
+            foreach (var type in KnownTypesFromAddons) NamedKnownTypesFromAddons.TryAdd(type.FinalTypeName, type);
         }
 
         private void LoadExpressionsFromAddons()
@@ -70,40 +84,86 @@ namespace SkriptInsight.Core.Managers
                 RegisterEventValuesFor(skriptEvent, skriptEvent.FutureEventValues);
             }
 
-            KnownExpressionsFromAddons = info.DistinctBy(c => c is SkriptEventValueExpression eventValueExpression ? (object)(eventValueExpression.Parent, eventValueExpression.RawName) : c).ToList();
+            KnownExpressionsFromAddons = info
+                .DistinctBy(c =>
+                    c is SyntaxSkriptEventValueExpression eventValueExpression
+                        ? (object) (eventValueExpression.Parent, eventValueExpression.RawName)
+                        : c)
+                .Where(c => !c.ClassName?.Equals("ch.njol.skript.expressions.ExprEntity") ?? true)
+                .ToList();
         }
 
         private void MapExpressionsForSkriptTypes()
         {
-            ExpressionsForType = new ConcurrentDictionary<string, IReadOnlyList<SkriptExpression>>();
+            ExpressionsForType = new ConcurrentDictionary<string, IReadOnlyList<SyntaxSkriptExpression>>();
+            EventExpressionsForType =
+                new ConcurrentDictionary<SkriptEvent,
+                    ConcurrentDictionary<string, IReadOnlyList<SyntaxSkriptExpression>>>();
             LoadMatchingExpressionsForTypes();
+
+            GenericExpressions = Workspace.AddonDocumentations.SelectMany(c => c.Expressions)
+                .Where(c => c.ReturnType == KnownTypesManager.JavaLangObjectClass).ToList();
         }
+
+        public IReadOnlyList<SyntaxSkriptExpression> GenericExpressions { get; set; }
 
         private void LoadMatchingExpressionsForTypes()
         {
-            foreach (var (type, expressions) in WorkspaceManager.KnownTypesManager.WholeTypeCache
+            var nonPluralTypes = WorkspaceManager.KnownTypesManager.WholeTypeCache
                 .Where(c =>
                 {
                     var (_, expression) = c;
                     return !expression.IsPlural;
-                })
+                }).ToList();
+            foreach (var (type, expressions) in nonPluralTypes
                 .Select(cc => (Type: cc.Value.ClassName, Expressions: KnownExpressionsFromAddons
-                    .Where(c => c.ReturnType == cc.Value.ClassName ||
-                                CheckClassExtendsAnother(c.ReturnType, cc.Value.ClassName)).ToList())))
+                    .Where(c => !(c is SyntaxSkriptEventValueExpression)).Where(c =>
+                        c.ReturnType == cc.Value.ClassName ||
+                        CheckClassExtendsAnother(c.ReturnType,
+                            cc.Value.ClassName)).ToList())))
                 ExpressionsForType.TryAdd(type, expressions);
 
             ExpressionsForType.TryAdd(KnownTypesManager.JavaLangObjectClass,
                 KnownExpressionsFromAddons.ToList());
+
+            LoadEventExpressionsForTypes(nonPluralTypes);
+        }
+
+        private void LoadEventExpressionsForTypes(IReadOnlyCollection<KeyValuePair<string, SkriptType>> nonPluralTypes)
+        {
+            foreach (var skriptEvent in Workspace.AddonDocumentations.SelectMany(c => c.Events))
+            {
+                var types = nonPluralTypes
+                    .Select(cc => (Type: cc.Value.ClassName, Expressions: KnownExpressionsFromAddons
+                        .OfType<SyntaxSkriptEventValueExpression>()
+                        .Where(c => c.Parent == skriptEvent)
+                        .Where(c => c.ReturnType == cc.Value.ClassName || CheckClassExtendsAnother(c.ReturnType,
+                                        cc.Value.ClassName)).ToList()))
+                    .Where(c => c.Expressions.Count > 0)
+                    .Select(c =>
+                        new KeyValuePair<string, IReadOnlyList<SyntaxSkriptExpression>>(c.Type, c.Expressions))
+                    .ToList();
+
+                EventExpressionsForType.TryAdd(skriptEvent,
+                    new ConcurrentDictionary<string, IReadOnlyList<SyntaxSkriptExpression>>(types));
+            }
         }
 
         private bool CheckClassExtendsAnother(string returnType, string className)
         {
+            /*
+            if ((returnType == "java.lang.Object") &&
+                (returnType.Contains("Player") || className.Contains("Player")))
+                Debugger.Break();
+                */
+
             var returnTypeClass = LoadedClassRepository.Instance[returnType];
             var classNameClass = LoadedClassRepository.Instance[className];
 
             if (returnTypeClass == null || classNameClass == null) return false;
 
-            return returnTypeClass.InstanceOf(classNameClass);
+            return returnTypeClass.InstanceOf(classNameClass) ||
+                   returnType != KnownTypesManager.JavaLangObjectClass && classNameClass.InstanceOf(returnTypeClass);
         }
 
         public void InitTypesFromAddons(SkriptWorkspace workspace = null, WorkspaceManager workspaceManager = null)
@@ -118,9 +178,5 @@ namespace SkriptInsight.Core.Managers
             LoadExpressionsFromAddons();
             MapExpressionsForSkriptTypes();
         }
-
-        public SkriptWorkspace Workspace { get; set; }
-
-        public WorkspaceManager WorkspaceManager { get; set; }
     }
 }

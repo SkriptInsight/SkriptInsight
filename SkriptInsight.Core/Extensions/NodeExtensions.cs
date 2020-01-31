@@ -51,7 +51,7 @@ namespace SkriptInsight.Core.Extensions
                     if (skriptEvent.ClassNames.Any(cl => cl == name))
                         return true;
                     break;
-                case SkriptExpression skriptExpression:
+                case SyntaxSkriptExpression skriptExpression:
                     return skriptExpression.ClassName == name;
             }
 

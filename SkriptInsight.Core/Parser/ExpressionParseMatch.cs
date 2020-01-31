@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Parser.Expressions;
+using SkriptInsight.Core.Parser.Patterns.Impl;
 
 namespace SkriptInsight.Core.Parser
 {
@@ -11,7 +12,7 @@ namespace SkriptInsight.Core.Parser
     /// </summary>
     public class ExpressionParseMatch : ParseMatch
     {
-        public ExpressionParseMatch(IExpression expression)
+        public ExpressionParseMatch(IExpression expression, TypePatternElement matchedElement)
         {
             int ResolveFor(Position pos, Position otherPos, List<string> list)
             {
@@ -21,6 +22,7 @@ namespace SkriptInsight.Core.Parser
             }
 
             Expression = expression;
+            MatchedElement = matchedElement;
             Range = expression.Range;
             Context = expression.Context;
             
@@ -31,5 +33,7 @@ namespace SkriptInsight.Core.Parser
         }
 
         public IExpression Expression { get; set; }
+        
+        public TypePatternElement MatchedElement { get; set; }
     }
 }

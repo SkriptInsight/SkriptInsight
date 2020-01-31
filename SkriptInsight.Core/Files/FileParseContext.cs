@@ -48,7 +48,8 @@ namespace SkriptInsight.Core.Files
                 CurrentMatchStack = new Stack<int>(CurrentMatchStack.Reverse()),
                 TemporaryRangeStack = new Stack<int>(TemporaryRangeStack.Reverse()),
                 VisitedExpressions = VisitedExpressions,
-                ForkCount = ForkCount + 1
+                ForkCount = ForkCount + 1,
+                ShouldJustCheckExpressionsThatMatchType = ShouldJustCheckExpressionsThatMatchType
             };
         }
 

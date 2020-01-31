@@ -10,9 +10,9 @@ namespace SkriptInsight.Core.SyntaxInfo
 
         public string ValueClass { get; set; }
 
-        public SkriptExpression ToEventExpression(SkriptTypesManager manager, SkriptEvent skriptEvent)
+        public SyntaxSkriptExpression ToEventExpression(SkriptTypesManager manager, SkriptEvent skriptEvent)
         {
-            return new SkriptEventValueExpression(this, skriptEvent)
+            return new SyntaxSkriptEventValueExpression(this, skriptEvent)
             {
                 AddonName = skriptEvent.AddonName,
                 Patterns = new[] {ValueName}

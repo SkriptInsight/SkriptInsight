@@ -88,7 +88,7 @@ namespace SkriptInsight.JavaReader
             {
                 foreach (var superClass1 in SuperClasses)
                 {
-                    if (superClass1.Equals(superClass))
+                    if (superClass1.Equals(superClass) || superClass1.InstanceOf(superClass))
                         return true;
                 }
             }
@@ -106,7 +106,7 @@ namespace SkriptInsight.JavaReader
             
             foreach (var allInterface in AllInterfaces)
             {
-                if (allInterface.Equals(inter))
+                if (allInterface.Equals(inter) || allInterface.ImplementationOf(inter))
                     return true;
             }
             return false;

@@ -24,7 +24,7 @@ namespace SkriptInsight.Core.Parser
 
         public ParseContext()
         {
-            VisitedExpressions = new ConcurrentDictionary<string, List<SkriptExpression>>();
+            VisitedExpressions = new ConcurrentDictionary<int, List<SyntaxSkriptExpression>>();
         }
 
         public virtual string Text { get; set; } = "";
@@ -119,7 +119,8 @@ namespace SkriptInsight.Core.Parser
                 CurrentMatchStack = new Stack<int>(CurrentMatchStack.Reverse()),
                 TemporaryRangeStack = new Stack<int>(TemporaryRangeStack.Reverse()),
                 VisitedExpressions = VisitedExpressions,
-                ForkCount = ForkCount + 1
+                ForkCount = ForkCount + 1,
+                ShouldJustCheckExpressionsThatMatchType = ShouldJustCheckExpressionsThatMatchType
             };
         }
 
@@ -344,23 +345,25 @@ namespace SkriptInsight.Core.Parser
 
         public static implicit operator ParseContext(string code) => FromCode(code);
 
-        public ConcurrentDictionary<string, List<SkriptExpression>> VisitedExpressions { get; set; }
+        public ConcurrentDictionary<int, List<SyntaxSkriptExpression>> VisitedExpressions { get; set; }
 
-        public void VisitExpression(SkriptType type, SkriptExpression expr)
+        public void VisitExpression(SkriptType type, SyntaxSkriptExpression expr)
         {
-            GetOrCreateVisitedExpressionsForType(type).Add(expr);
+            GetOrCreateVisitedExpressionsForType(CurrentPosition).Add(expr);
         }
 
-        private List<SkriptExpression> GetOrCreateVisitedExpressionsForType(SkriptType type)
+        private List<SyntaxSkriptExpression> GetOrCreateVisitedExpressionsForType(int pos)
         {
-            return VisitedExpressions.GetOrAdd(type.ClassName, _ => new List<SkriptExpression>());
+            return VisitedExpressions.GetOrAdd(pos, _ => new List<SyntaxSkriptExpression>());
         }
 
-        public bool HasVisitedExpression(SkriptType type, SkriptExpression expr)
+        public bool HasVisitedExpression(SkriptType type, SyntaxSkriptExpression expr)
         {
-            return GetOrCreateVisitedExpressionsForType(type).Contains(expr);
+            return GetOrCreateVisitedExpressionsForType(CurrentPosition).Contains(expr);
         }
 
         public long ForkCount { get; set; }
+
+        public bool ShouldJustCheckExpressionsThatMatchType { get; set; }
     }
 }

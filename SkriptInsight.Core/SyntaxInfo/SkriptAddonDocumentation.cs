@@ -17,9 +17,9 @@ namespace SkriptInsight.Core.SyntaxInfo
 
         public List<SkriptEvent> Events { get; set; }
 
-        [JsonProperty("expressions")] protected List<SkriptExpression> InnerExpressions { get; set; }
+        [JsonProperty("expressions")] protected List<SyntaxSkriptExpression> InnerExpressions { get; set; }
 
-        public List<SkriptExpression> Expressions { get; } = new List<SkriptExpression>();
+        public List<SyntaxSkriptExpression> Expressions { get; } = new List<SyntaxSkriptExpression>();
 
         public List<SkriptEffect> Effects { get; set; }
 

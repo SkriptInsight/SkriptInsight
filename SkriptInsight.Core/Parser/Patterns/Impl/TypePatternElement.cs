@@ -1,11 +1,14 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using SkriptInsight.Core.Files;
 using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.Parser.Expressions;
 using SkriptInsight.Core.Parser.Types;
 using SkriptInsight.Core.Parser.Types.Impl;
 using SkriptInsight.Core.Parser.Types.Impl.Generic;
+using SkriptInsight.Core.SyntaxInfo;
 
 namespace SkriptInsight.Core.Parser.Patterns.Impl
 {
@@ -53,6 +56,9 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                 //Try to get a known type literal provider for that type
                 var type = WorkspaceManager.Instance.KnownTypesManager.GetTypeByName(typeRaw);
                 ISkriptType skriptTypeDescriptor = null;
+
+                if (!RuntimeHelpers.TryEnsureSufficientExecutionStack())
+                    return ParseResult.Failure(ctx);
 
                 //Check if this type requires more than one variable
                 var isMultipleValues = typeRaw.EndsWith("s");
@@ -114,27 +120,105 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                     !Constraint.HasFlagFast(SyntaxValueAcceptanceConstraint.LiteralsOnly))
                 {
                     var clone = ctx.Clone(false);
+                    clone.ShouldJustCheckExpressionsThatMatchType = true;
                     var currentPos = clone.CurrentPosition;
-                    
-                    var exprFitType = skriptTypesManager.GetExpressionsThatCanFitType(skriptType);
-                    if (exprFitType != null)
-                        foreach (var expression in exprFitType.Where(c => !clone.HasVisitedExpression(skriptType, c)))
+
+                    {
+                        //If we're dealing with a file, try matching event values too
+                        if (ctx is FileParseContext fileParseContext)
                         {
-                            clone.CurrentPosition = currentPos;
-                            clone.Matches.Clear();
+                            var currentNode = fileParseContext.File.Nodes[fileParseContext.CurrentLine];
 
-                            clone.VisitExpression(skriptType, expression);
-
-                            Debug.WriteLine($"Trying with {expression.ClassName} (returning {expression.ReturnType}):");
-                            for (var index = 0; index < expression.PatternNodes.Length; index++)
+                            if (currentNode.RootParentSyntax?.Element is SkriptEvent rootEvent)
                             {
-                                Debug.WriteLine($"Has visited {clone.VisitedExpressions.Count} expressions so far.");
-                                Debug.WriteLine($"Trying with pattern #{index}: {expression.Patterns[index]}");
-                                var pattern = expression.PatternNodes[index];
-                                var resultValue = pattern.Parse(clone);
-                                if (resultValue.IsSuccess) Debugger.Break();
+                                var typesAndExpressions = skriptTypesManager.GetEventExpressionsForEvent(rootEvent);
+
+                                var exprs = typesAndExpressions;
+
+                                if (exprs != null)
+                                {
+                                    foreach (var (_, expressions) in exprs)
+                                    {
+                                        if (expressions != null)
+                                        {
+                                            foreach (var expression in expressions)
+                                            {
+                                                clone.CurrentPosition = currentPos;
+                                                clone.StartRangeMeasure("Event-Value Expression");
+                                                clone.Matches.Clear();
+
+                                                clone.VisitExpression(skriptType, expression);
+
+                                                Debug.WriteLine(
+                                                    $"Trying with (event value) {expression.ClassName} (returning {expression.ReturnType}):");
+                                                for (var index = 0; index < expression.PatternNodes.Length; index++)
+                                                {
+                                                    Debug.WriteLine(
+                                                        $"Has visited (event value) {clone.VisitedExpressions.Count} expressions so far.");
+                                                    Debug.WriteLine(
+                                                        $"Trying with pattern #{index}: {expression.Patterns[index]}");
+                                                    var pattern = expression.PatternNodes[index];
+                                                    var resultValue = pattern.Parse(clone);
+                                                    if (resultValue.IsSuccess)
+                                                    {
+                                                        var range = clone.EndRangeMeasure("Event-Value Expression");
+                                                        ctx.ReadUntilPosition(clone.CurrentPosition);
+
+                                                        result = new SkriptExpression(expression, range, ctx);
+                                                    }
+                                                }
+
+                                                clone.UndoRangeMeasure();
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
+                    }
+
+                    {
+                        //Try matching a Skript expression
+                        // Time to check all expressions to make sure the user isn't just trying to mix types for whatever reason...
+                        var exprFitType = ctx.ShouldJustCheckExpressionsThatMatchType
+                            ? skriptTypesManager.GetExpressionsThatCanFitType(skriptType)
+                            : skriptTypesManager.KnownExpressionsFromAddons;
+
+                        if (exprFitType != null)
+                            foreach (var expression in exprFitType /*.Where(
+                                c => !clone.HasVisitedExpression(skriptType, c))*/)
+                            {
+                                clone.CurrentPosition = currentPos;
+
+                                if (clone.HasVisitedExpression(skriptType, expression)) continue;
+
+                                clone.StartRangeMeasure("Expression");
+                                clone.Matches.Clear();
+
+                                clone.VisitExpression(skriptType, expression);
+
+                                Debug.WriteLine(
+                                    $"Trying with {expression.ClassName} (returning {expression.ReturnType}):");
+                                for (var index = 0; index < expression.PatternNodes.Length; index++)
+                                {
+                                    Debug.WriteLine(
+                                        $"Has visited {clone.VisitedExpressions.Count} expressions so far.");
+                                    Debug.WriteLine($"Trying with pattern #{index}: {expression.Patterns[index]}");
+                                    var pattern = expression.PatternNodes[index];
+
+                                    var resultValue = pattern.Parse(clone);
+                                    if (resultValue.IsSuccess && clone.CurrentPosition >= ctx.CurrentPosition)
+                                    {
+                                        var range = clone.EndRangeMeasure("Expression");
+                                        ctx.ReadUntilPosition(clone.CurrentPosition);
+
+                                        result = new SkriptExpression(expression, range, ctx);
+                                    }
+                                }
+
+                                clone.UndoRangeMeasure();
+                            }
+                    }
                 }
 
                 //If we have matched something, let's add it to the matches.
@@ -142,7 +226,8 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                 {
                     if (result.Type == null) result.Type = skriptTypeDescriptor;
                     result.Context = ctx;
-                    var match = new ExpressionParseMatch(result);
+                    var match = new ExpressionParseMatch(result, this);
+                    
                     ctx.Matches.Add(match);
                 }
 

@@ -41,6 +41,7 @@ namespace SkriptInsight.Core.Managers
                 KnownTypes = AppDomain.CurrentDomain.GetAssemblies()
                     .SelectMany(c => c.GetTypes())
                     .Where(c => c.IsSubclassOfRawGeneric(typeof(SkriptGenericType<>)))
+                    .Where(c => c.GetCustomAttribute<TypeDescriptionAttribute>() != null)
                     .Select(p => new KnownType(p)).ToList();
         }
 

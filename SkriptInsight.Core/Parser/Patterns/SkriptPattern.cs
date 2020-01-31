@@ -88,7 +88,7 @@ namespace SkriptInsight.Core.Parser.Patterns
                 //Pass the current element context to the parse context
                 ctx.ElementContext = c;
 
-                //If a match fails and this pattern needs perform a fastfail (optionals), return a failure imediately   
+                //If a match fails and this pattern needs perform a fastfail (optionals), return a failure immediately   
                 if (shouldFastFail && FastFail) return ParseResult.Failure(ctx);
 
                 var parse = c.Current.Parse(ctx);
