@@ -22,10 +22,6 @@ namespace SkriptInsight.Core.Parser.Types
                 );
                 if (expression.Type == null)
                     expression.Type = this;
-
-                if (this is SkriptString)
-                    expression.MatchAnnotations.Add(new MatchAnnotation(MatchAnnotationSeverity.Error,
-                        "StringsAreBigGae", "Strings are sad and should be banned!"));
                 return expression;
             }
 

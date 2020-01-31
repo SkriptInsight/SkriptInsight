@@ -13,11 +13,6 @@ namespace SkriptInsight.Core.Files.Nodes
     public abstract class AbstractFileNode
     {
         /// <summary>
-        /// The identification number of this node
-        /// </summary>
-        public Guid Id { get; set; }
-
-        /// <summary>
         ///     The line number of this node. Zero based integer value.
         /// </summary>
         public int LineNumber { get; set; }
@@ -109,6 +104,7 @@ namespace SkriptInsight.Core.Files.Nodes
             });
         }
 
+        [JsonIgnore]
         public AbstractFileNode RootParent => this.FindRootParent();
 
         [CanBeNull]

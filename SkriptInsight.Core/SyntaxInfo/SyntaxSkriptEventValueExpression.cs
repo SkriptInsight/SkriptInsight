@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text.Json.Serialization;
 using SkriptInsight.Core.Parser.Patterns;
 using SkriptInsight.JavaReader;
 
@@ -14,6 +15,7 @@ namespace SkriptInsight.Core.SyntaxInfo
         
         public SkriptPattern NamePattern { get; set; }
 
+        [JsonIgnore]
         public JavaClass JavaReturnType => _returnType ??= LoadedClassRepository.Instance[ReturnType];
 
         public string RawName { get; set; }
