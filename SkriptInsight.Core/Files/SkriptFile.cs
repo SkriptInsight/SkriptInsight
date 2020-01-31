@@ -152,18 +152,16 @@ namespace SkriptInsight.Core.Files
                         .SelectMany(diagnostics => diagnostics));
 
 
-                    /*
-                        if (!(node is CommentLineNode) && node.MatchedSyntax == null)
-                            diags.Add(
-                                new Diagnostic
-                                {
-                                    Code = "1",
-                                    Message = "This node doesn't match any syntax!",
-                                    Range = node.ContentRange,
-                                    Severity = DiagnosticSeverity.Warning,
-                                    Source = "SkriptInsight"
-                                });
-                    */
+                    if (!(node is CommentLineNode) && node.MatchedSyntax == null)
+                        diags.Add(
+                            new Diagnostic
+                            {
+                                Code = "1",
+                                Message = "This node doesn't match any syntax!",
+                                Range = node.ContentRange,
+                                Severity = DiagnosticSeverity.Warning,
+                                Source = "SkriptInsight"
+                            });
                 });
                 WorkspaceManager.CurrentHost.PublishDiagnostics(Url, diags);
             }
