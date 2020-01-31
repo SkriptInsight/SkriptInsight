@@ -222,6 +222,9 @@ namespace SkriptInsight.Tests
         [InlineData("entitytype", "a blaze")]
         [InlineData("entitytypes", "2 blazes")]
         [InlineData("entity types", "a blaze and 2 arrows")]
+        [InlineData("weathers", "raining and sunny")]
+        [InlineData("weather conditions", "raining or sunny or thunder")]
+        [InlineData("weather types", "raining or sunny and thunder")]
         public void TypesCanBeRepresentedAsStrings(string type, string value)
         {
             //Parse normal type from name
