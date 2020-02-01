@@ -181,7 +181,8 @@ namespace SkriptInsight.Core.Files
             endLine = endLine < 0 ? RawContents.Count : endLine;
             RunProcess(new ProcCreateOrUpdateNodes(), startLine, endLine);
             ProcessNodeIndentation(startLine);
-            if (!WorkspaceManager.CurrentHost?.SupportsExtendedCapabilities ?? false)
+            if (!((WorkspaceManager.CurrentHost?.SupportsExtendedCapabilities ?? false) &&
+                  (WorkspaceManager.CurrentHost?.ExtendedCapabilities?.SupportsViewportReporting ?? false)))
                 RunProcess(ParseProcess);
         }
 

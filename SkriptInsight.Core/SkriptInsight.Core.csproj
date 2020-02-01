@@ -10,7 +10,7 @@
         <PackageReference Include="Humanizer" Version="2.7.9" />
         <PackageReference Include="JetBrains.Annotations" Version="2019.1.3" />
         <PackageReference Include="morelinq" Version="3.3.2" />
-        <PackageReference Include="OmniSharp.Extensions.LanguageProtocol" Version="0.14.2" />
+        <PackageReference Include="OmniSharp.Extensions.LanguageProtocol" Version="0.15.0-alpha0027" />
         <PackageReference Include="ThrottleDebounce" Version="1.0.2" />
     </ItemGroup>
 
@@ -25,6 +25,11 @@
 
     <ItemGroup>
       <ProjectReference Include="..\SkriptInsight.JavaMetadataExtractorLib\SkriptInsight.JavaMetadataExtractorLib.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Inspections\Impl\Node" />
+      <Folder Include="Inspections\Impl\Syntax" />
     </ItemGroup>
 
 </Project>

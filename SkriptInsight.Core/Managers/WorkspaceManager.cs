@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Files;
+using SkriptInsight.Core.Inspections;
 using SkriptInsight.Core.SyntaxInfo;
 
 namespace SkriptInsight.Core.Managers
@@ -22,10 +23,15 @@ namespace SkriptInsight.Core.Managers
             //Then finally load them (from cache)
             KnownTypesManager.LoadTypes();
             
-            //Load the expressions at the end
+            //Load Skript expressions
             Current.TypesManager.LoadExpressionsFromTypes();
+            
+            //Finally load code inspections
+            InspectionsManager = new InspectionsManager();
         }
-
+    
+        public InspectionsManager InspectionsManager { get; set; } 
+        
         public static ISkriptInsightHost CurrentHost { get; set; }
         
         public static WorkspaceManager Instance { get; } = new WorkspaceManager();
