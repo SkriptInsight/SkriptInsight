@@ -17,9 +17,9 @@ namespace SkriptInsight.Core.SyntaxInfo
 
         public List<SkriptEvent> Events { get; set; }
 
-        [JsonProperty("expressions")] protected List<SkriptExpression> InnerExpressions { get; set; }
+        [JsonProperty("expressions")] protected List<SyntaxSkriptExpression> InnerExpressions { get; set; }
 
-        public List<SkriptExpression> Expressions { get; } = new List<SkriptExpression>();
+        public List<SyntaxSkriptExpression> Expressions { get; } = new List<SyntaxSkriptExpression>();
 
         public List<SkriptEffect> Effects { get; set; }
 
@@ -38,6 +38,7 @@ namespace SkriptInsight.Core.SyntaxInfo
             Types.ForEach(e => e.LoadPatterns());
             Effects.ForEach(e => e.LoadPatterns());
             var types = Enum.GetValues(typeof(ExpressionType)).Cast<ExpressionType>().ToList();
+            
             foreach (var expr in InnerExpressions)
             {
                 var typeOrdinal = (int) expr.ExpressionType;
@@ -48,6 +49,8 @@ namespace SkriptInsight.Core.SyntaxInfo
 
                 Expressions.Insert(_expressionTypesStartIndices[typeOrdinal], expr);
             }
+            
+            Expressions.ForEach(e => e.LoadPatterns());
         }
     }
 }

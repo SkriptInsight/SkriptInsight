@@ -9,12 +9,27 @@
     <ItemGroup>
         <PackageReference Include="Humanizer" Version="2.7.9" />
         <PackageReference Include="JetBrains.Annotations" Version="2019.1.3" />
-        <PackageReference Include="morelinq" Version="3.2.0" />
-        <PackageReference Include="OmniSharp.Extensions.LanguageProtocol" Version="0.14.1-alpha0004" />
+        <PackageReference Include="morelinq" Version="3.3.2" />
+        <PackageReference Include="OmniSharp.Extensions.LanguageProtocol" Version="0.15.0-alpha0027" />
+        <PackageReference Include="ThrottleDebounce" Version="1.0.2" />
     </ItemGroup>
 
     <ItemGroup>
       <EmbeddedResource Include="KnownAddonInfo\Skript.json" />
+      <None Remove="JarMetadataRepo\Skript.simeta" />
+      <EmbeddedResource Include="JarMetadataRepo\Skript.simeta" />
+      <None Remove="JarMetadataRepo\rt.simeta" />
+      <EmbeddedResource Include="JarMetadataRepo\rt.simeta" />
+      <EmbeddedResource Include="JarMetadataRepo\spigot-api-1.14.4.simeta" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SkriptInsight.JavaMetadataExtractorLib\SkriptInsight.JavaMetadataExtractorLib.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Inspections\Impl\Node" />
+      <Folder Include="Inspections\Impl\Syntax" />
       <None Remove="KnownMetadata\Skript.skm" />
       <EmbeddedResource Include="KnownMetadata\Skript.skm" />
     </ItemGroup>

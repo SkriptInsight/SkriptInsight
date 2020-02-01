@@ -1,16 +1,22 @@
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Parser.Patterns;
+using SkriptInsight.Core.SyntaxInfo;
 using Range = OmniSharp.Extensions.LanguageServer.Protocol.Models.Range;
 
 namespace SkriptInsight.Core.Parser
 {
+    /// <summary>
+    /// The base context for parsing a line of code
+    /// </summary>
     [JsonObject]
     public class ParseContext : IEnumerable<char>
     {
@@ -18,6 +24,7 @@ namespace SkriptInsight.Core.Parser
 
         public ParseContext()
         {
+            VisitedExpressions = new ConcurrentDictionary<int, List<SyntaxSkriptExpression>>();
         }
 
         public virtual string Text { get; set; } = "";
@@ -105,12 +112,15 @@ namespace SkriptInsight.Core.Parser
             return new ParseContext
             {
                 Text = Text,
-                Matches = includeMatches ? Matches.ToList() : new List<ParseMatch>(),
+                Matches = includeMatches ? new List<ParseMatch>(Matches) : new List<ParseMatch>(),
                 CurrentLine = CurrentLine,
                 CurrentPosition = CurrentPosition,
                 ElementContext = ElementContext,
                 CurrentMatchStack = new Stack<int>(CurrentMatchStack.Reverse()),
-                TemporaryRangeStack = new Stack<int>(TemporaryRangeStack.Reverse())
+                TemporaryRangeStack = new Stack<int>(TemporaryRangeStack.Reverse()),
+                VisitedExpressions = VisitedExpressions,
+                ForkCount = ForkCount + 1,
+                ShouldJustCheckExpressionsThatMatchType = ShouldJustCheckExpressionsThatMatchType
             };
         }
 
@@ -334,5 +344,26 @@ namespace SkriptInsight.Core.Parser
         #endregion
 
         public static implicit operator ParseContext(string code) => FromCode(code);
+
+        public ConcurrentDictionary<int, List<SyntaxSkriptExpression>> VisitedExpressions { get; set; }
+
+        public void VisitExpression(SkriptType type, SyntaxSkriptExpression expr)
+        {
+            GetOrCreateVisitedExpressionsForType(CurrentPosition).Add(expr);
+        }
+
+        private List<SyntaxSkriptExpression> GetOrCreateVisitedExpressionsForType(int pos)
+        {
+            return VisitedExpressions.GetOrAdd(pos, _ => new List<SyntaxSkriptExpression>());
+        }
+
+        public bool HasVisitedExpression(SkriptType type, SyntaxSkriptExpression expr)
+        {
+            return GetOrCreateVisitedExpressionsForType(CurrentPosition).Contains(expr);
+        }
+
+        public long ForkCount { get; set; }
+
+        public bool ShouldJustCheckExpressionsThatMatchType { get; set; }
     }
 }

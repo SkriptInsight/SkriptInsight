@@ -222,6 +222,13 @@ namespace SkriptInsight.Tests
         [InlineData("entitytype", "a blaze")]
         [InlineData("entitytypes", "2 blazes")]
         [InlineData("entity types", "a blaze and 2 arrows")]
+        [InlineData("weathers", "raining and sunny")]
+        [InlineData("weather conditions", "raining or sunny or thunder")]
+        [InlineData("weather types", "raining or sunny and thunder")]
+        [InlineData("gamemode", "survival")]
+        [InlineData("gamemode", "spectator")]
+        [InlineData("game mode", "creative")]
+        [InlineData("game modes", "adventure or creative or survival or spectator")]
         public void TypesCanBeRepresentedAsStrings(string type, string value)
         {
             //Parse normal type from name
@@ -301,6 +308,18 @@ namespace SkriptInsight.Tests
 
             Assert.Equal(input, strExpr.GenericValue);
         }
+
+        [Fact]
+        public void TypeParserCanMatchNonLiteralExpressions()
+        {
+            WorkspaceManager.Instance.KnownTypesManager.LoadKnownTypes();
+            var pattern = SkriptPattern.ParsePattern("(message|send [message[s]]) %strings% [to %commandsenders%]");
+
+            var result = pattern.Parse("send \"hi\" to all players");
+            
+            Assert.True(result.IsSuccess);
+        }
+
 
         [Fact]
         public void AllClickTypesCanBeParsedCorrectly()

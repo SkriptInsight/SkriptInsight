@@ -5,13 +5,19 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using MoreLinq;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using SkriptInsight.Core.Extensions;
+using SkriptInsight.Core.Files.Nodes;
 using SkriptInsight.Core.Files.Nodes.Impl;
 using SkriptInsight.Core.Files.Processes;
 using SkriptInsight.Core.Files.Processes.Impl;
+using SkriptInsight.Core.Inspections.Problems;
 using SkriptInsight.Core.Managers;
+using SkriptInsight.Core.Parser;
+using static SkriptInsight.Core.Files.Processes.Impl.ProcCreateOrUpdateNodeChildren;
+using Range = OmniSharp.Extensions.LanguageServer.Protocol.Models.Range;
 
 namespace SkriptInsight.Core.Files
 {
@@ -19,6 +25,7 @@ namespace SkriptInsight.Core.Files
     {
         private static DocumentSelector _selector;
         private FileProcess _parseProcess;
+        private FileProcess _inspectProcess;
 
         public SkriptFile(Uri url)
         {
@@ -32,7 +39,7 @@ namespace SkriptInsight.Core.Files
 
         public List<string> RawContents { get; set; } = new List<string>();
 
-        public ConcurrentNodeDictionary Nodes { get; internal set; } =
+        public ConcurrentNodeDictionary Nodes { get; } =
             new ConcurrentNodeDictionary();
 
         public FileParseContext ParseContext { get; }
@@ -42,6 +49,14 @@ namespace SkriptInsight.Core.Files
             get => _parseProcess ??= ProvideParseProcess();
             set => _parseProcess = value;
         }
+        
+        public FileProcess InspectProcess
+        {
+            get => _inspectProcess ??= ProvideInspectProcess();
+            set => _inspectProcess = value;
+        }
+        
+        [CanBeNull] public List<Range> VisibleRanges { get; set; }
 
         public void HandleChange(TextDocumentContentChangeEvent edit)
         {
@@ -96,6 +111,8 @@ namespace SkriptInsight.Core.Files
 
         public void RunProcess(FileProcess process, int startLine = -1, int endLine = -1)
         {
+            if (process == null) return;
+
             startLine = Math.Max(0, startLine);
             endLine = endLine < 0 ? RawContents.Count : endLine;
             var maxDegreeOfParallelism = Environment.ProcessorCount;
@@ -128,12 +145,22 @@ namespace SkriptInsight.Core.Files
                     }
                 });
 
-            if (GetType() == typeof(SkriptFile))
+            if (process == ParseProcess && GetType() == typeof(SkriptFile))
             {
                 var diags = new List<Diagnostic>();
-                Nodes.Select(c => c.Value).ForEach(node =>
+                Nodes.GetRange(startLine, endLine + 1).ForEach(node =>
                 {
-                    if (node != null && !(node is CommentLineNode) && node.MatchedSyntax == null)
+                    var matches = node.MatchedSyntax?.Result.Matches;
+                    if (matches == null) return;
+
+                    diags.AddRange(matches.OfType<ExpressionParseMatch>().Explode()
+                        .Select(c => (Expression: c,
+                            Matches: c.MatchAnnotations.Where(match => match.ShouldBeDiagnostic)))
+                        .Select(c => c.Matches.Select(match => match.ToDiagnostic(c.Expression)))
+                        .SelectMany(diagnostics => diagnostics));
+
+
+                    if (!(node is CommentLineNode) && node.MatchedSyntax == null)
                         diags.Add(
                             new Diagnostic
                             {
@@ -156,26 +183,59 @@ namespace SkriptInsight.Core.Files
             return new ProcTryParseEffects();
         }
 
+        protected virtual FileProcess ProvideInspectProcess()
+        {
+            return new ProcInspectCode(new ProblemHolder());
+        }
+
+
         public void PrepareNodes(int startLine = -1, int endLine = -1)
         {
             startLine = Math.Max(0, startLine);
             endLine = endLine < 0 ? RawContents.Count : endLine;
             RunProcess(new ProcCreateOrUpdateNodes(), startLine, endLine);
-            ProcessNodeIndentation(startLine, endLine);
-            RunProcess(ParseProcess, startLine, endLine);
+            ProcessNodeIndentation(startLine);
+            if (!((WorkspaceManager.CurrentHost?.SupportsExtendedCapabilities ?? false) &&
+                  (WorkspaceManager.CurrentHost?.ExtendedCapabilities?.SupportsViewportReporting ?? false)))
+            {
+                RunProcess(ParseProcess);
+                RunProcess(InspectProcess);
+            }
         }
 
-        private void ProcessNodeIndentation(in int startLine, in int endLine)
+        internal void ProcessNodeIndentation(in int startLine)
         {
-            var nodes = Nodes.GetRange(startLine, endLine).ToList();
-            var indentLevels = new[] {0}.Concat(nodes.Where(n => n.Indentations.Length < 2)
-                .SelectMany(c => c.Indentations).GroupBy(i => i.Count)
-                .Select(c => c.Key)).ToList();
+            var nodes = Nodes.GetRange(startLine, Nodes.Count + 1);
+            var fileNodes = nodes as AbstractFileNode[] ?? nodes.ToArray();
 
-            foreach (var level in indentLevels)
+            var firstNode = fileNodes.FastElementAtOrDefault(0);
+            var firstIndent = firstNode != null ? GetIndentCount(firstNode) : 0;
+
+            var indentLevels = new[] {0}
+                .Concat(
+                    fileNodes.Where(n => n.Indentations.Length < 2)
+                        .TakeWhile(n => GetIndentCount(n) == firstIndent || IsChildrenAccordingToIndent(n, firstIndent))
+                        .SelectMany(c => c.Indentations)
+                        .GroupBy(i => i.Count)
+                        .Select(c => c.Key)
+                ).ToList();
+
+            foreach (var level in indentLevels) RunProcess(new ProcCreateOrUpdateNodeChildren(level));
+        }
+
+        public void NotifyVisibleNodesRangeChanged()
+        {
+            if (VisibleRanges == null) return;
+
+            foreach (var range in VisibleRanges)
             {
-                RunProcess(new ProcCreateOrUpdateNodeChildren(level));
+                WorkspaceManager.CurrentHost.LogInfo(
+                    $"Selectively Parsing nodes from {range.Start.Line} to {range.End.Line}.");
+                var (start, end) = Nodes.ExpandRange((int) range.Start.Line, (int) range.End.Line);
+                RunProcess(ParseProcess, start, end);
+                RunProcess(InspectProcess, start, end);
             }
+            
         }
     }
 }

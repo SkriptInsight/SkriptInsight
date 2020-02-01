@@ -1,10 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using JetBrains.Annotations;
 using MoreLinq;
-using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Parser;
 using SkriptInsight.Core.SyntaxInfo;
+using Range = OmniSharp.Extensions.LanguageServer.Protocol.Models.Range;
 
 namespace SkriptInsight.Core.Files.Nodes
 {
@@ -101,5 +103,11 @@ namespace SkriptInsight.Core.Files.Nodes
                     m.Range.ShiftLineNumber(amount);
             });
         }
+
+        [JsonIgnore]
+        public AbstractFileNode RootParent => this.FindRootParent();
+
+        [CanBeNull]
+        public SyntaxMatch RootParentSyntax => RootParent?.MatchedSyntax;
     }
 }

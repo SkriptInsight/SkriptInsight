@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using SkriptInsight.Core.Parser.Types;
-using SkriptInsight.Core.Parser.Types.Impl;
 
 namespace SkriptInsight.Core.Parser.Expressions
 {
@@ -30,5 +30,7 @@ namespace SkriptInsight.Core.Parser.Expressions
         {
             return $"({InnerExpression?.AsString() ?? "<none>"})";
         }
+
+        public List<MatchAnnotation> MatchAnnotations { get; set; } = new List<MatchAnnotation>();
     }
 }

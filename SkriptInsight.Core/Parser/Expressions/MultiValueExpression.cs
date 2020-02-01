@@ -46,6 +46,8 @@ namespace SkriptInsight.Core.Parser.Expressions
             return string.Join(" ", Values.Select(c => c.ToString()));
         }
 
+        public List<MatchAnnotation> MatchAnnotations { get; set; } = new List<MatchAnnotation>();
+
         public override string ToString() => AsString();
     }
 }

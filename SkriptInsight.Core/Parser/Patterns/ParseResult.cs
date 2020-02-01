@@ -3,6 +3,9 @@ using System.Diagnostics;
 
 namespace SkriptInsight.Core.Parser.Patterns
 {
+    /// <summary>
+    /// Represents a parse result of a given syntax
+    /// </summary>
     [DebuggerDisplay("{ResultType} - {Context}")]
     public class ParseResult
     {

@@ -8,6 +8,9 @@ using SkriptInsight.Core.Parser.Patterns.Impl;
 
 namespace SkriptInsight.Core.Parser.Patterns
 {
+    /// <summary>
+    /// Represents an entire Skript pattern.
+    /// </summary>
     public class SkriptPattern : AbstractSkriptPatternElement
     {
         private static readonly Type[] GroupTypes =
@@ -22,7 +25,7 @@ namespace SkriptInsight.Core.Parser.Patterns
 
         public List<AbstractSkriptPatternElement> Children { get; set; } = new List<AbstractSkriptPatternElement>();
 
-        public static SkriptPattern ParsePattern(ParseContext ctx)
+        public static SkriptPattern ParsePattern(ParseContext ctx, bool fastFail = false)
         {
             var pattern = new SkriptPattern();
             var literalBuilder = new StringBuilder();
@@ -71,6 +74,7 @@ namespace SkriptInsight.Core.Parser.Patterns
             }
             AddLiteralIfExists();
 
+            pattern.FastFail = fastFail;
             return pattern;
         }
 
@@ -84,7 +88,7 @@ namespace SkriptInsight.Core.Parser.Patterns
                 //Pass the current element context to the parse context
                 ctx.ElementContext = c;
 
-                //If a match fails and this pattern needs perform a fastfail (optionals), return a failure imediately   
+                //If a match fails and this pattern needs perform a fastfail (optionals), return a failure immediately   
                 if (shouldFastFail && FastFail) return ParseResult.Failure(ctx);
 
                 var parse = c.Current.Parse(ctx);

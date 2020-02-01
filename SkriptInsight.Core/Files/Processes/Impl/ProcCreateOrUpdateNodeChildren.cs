@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Files.Nodes;
 using SkriptInsight.Core.Files.Nodes.Impl;
 using SkriptInsight.Core.Managers;
@@ -22,21 +23,25 @@ namespace SkriptInsight.Core.Files.Processes.Impl
 
             if (node != null && node.IsSectionNode && IsCurrentNodeOnSameIndentLevel(node.Indentations))
             {
-                for (var i = lineNumber + 1;
-                    i < nodes.Count && (GetIndentCount(nodes[i]) > CurrentLevel || nodes[i] is EmptyLineNode ||
-                                        nodes[i] is CommentLineNode);
+                for (var i = lineNumber + 1; i < nodes.Count && IsChildrenAccordingToIndent(nodes[i], CurrentLevel);
                     i++)
                 {
                     var nextNode = nodes[i];
                     if (nextNode == null) continue;
-                    
+
+                    nextNode.Parent?.Children.Remove(node);
                     nextNode.Parent = node;
                     node.Children.Add(nextNode);
                 }
             }
         }
 
-        private int GetIndentCount(AbstractFileNode node)
+        internal static bool IsChildrenAccordingToIndent(AbstractFileNode node, int level)
+        {
+            return (GetIndentCount(node) > level || node is EmptyLineNode || node is CommentLineNode);
+        }
+
+        internal static int GetIndentCount(AbstractFileNode node)
         {
             return node?.Indentations?.Select(c => (c.Type == IndentType.Tab ? 4 : 1) * c.Count).Sum() ?? 0;
         }

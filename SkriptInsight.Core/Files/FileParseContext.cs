@@ -4,9 +4,13 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.Json.Serialization;
 using SkriptInsight.Core.Parser;
+using SkriptInsight.Core.SyntaxInfo;
 
 namespace SkriptInsight.Core.Files
 {
+    /// <summary>
+    /// Parse context used to parse an entire file
+    /// </summary>
     public class FileParseContext : ParseContext
     {
         private int _currentLine;
@@ -35,15 +39,17 @@ namespace SkriptInsight.Core.Files
         {
             return new FileParseContext(File)
             {
-                Matches = includeMatches ? Matches.ToList() : new List<ParseMatch>(),
+                Matches = includeMatches ? new List<ParseMatch>(Matches) : new List<ParseMatch>(),
                 CurrentLine = CurrentLine,
                 MoveToNextLine = MoveToNextLine,
                 _currentLine = _currentLine,
                 CurrentPosition = CurrentPosition,
                 ElementContext = ElementContext,
                 CurrentMatchStack = new Stack<int>(CurrentMatchStack.Reverse()),
-                TemporaryRangeStack = new Stack<int>(TemporaryRangeStack.Reverse())
-
+                TemporaryRangeStack = new Stack<int>(TemporaryRangeStack.Reverse()),
+                VisitedExpressions = VisitedExpressions,
+                ForkCount = ForkCount + 1,
+                ShouldJustCheckExpressionsThatMatchType = ShouldJustCheckExpressionsThatMatchType
             };
         }
 
@@ -54,7 +60,7 @@ namespace SkriptInsight.Core.Files
             {
                 //Line has been finished, so move to the next line.
                 CurrentLine += 1;
-                Debug.WriteLine($"Moved to next line whilst reading {count} chars.");
+                // Debug.WriteLine($"Moved to next line whilst reading {count} chars.");
             }
 
             return next;

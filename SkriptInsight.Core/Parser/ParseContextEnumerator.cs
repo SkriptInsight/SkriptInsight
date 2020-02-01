@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace SkriptInsight.Core.Parser
 {
+    /// <summary>
+    /// Enumerator for a parse context. Goes through all chars by reading one by one.
+    /// </summary>
     public class ParseContextEnumerator : IEnumerator<char>
     {
         private ParseContext Context { get; set; }

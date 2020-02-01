@@ -38,7 +38,7 @@ namespace SkriptInsight.Host.Lsp.Handlers
                     })
                 });
 
-            return null;
+            return Task.FromResult(new Hover());
         }
 
         public TextDocumentRegistrationOptions GetRegistrationOptions()

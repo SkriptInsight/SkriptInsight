@@ -21,6 +21,15 @@ namespace SkriptInsight.Core.Managers
 
         private void LoadSignatureTypes()
         {
+            /*
+             * SignatureTypes =
+             * Get all loaded assemblies. Then,
+             * Get all Types from them. Then,
+             * Get the ones that are classes and not abstract. Then,
+             * Get the ones that extend SignatureFileNode<>. Then,
+             * Organize them by the base type and signature class. Then, finally,
+             * Make a dictionary out of it for future lookups.
+             */
             SignatureTypes = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(c => c.GetTypes())
                 .Where(t => t.IsClass && !t.IsAbstract)

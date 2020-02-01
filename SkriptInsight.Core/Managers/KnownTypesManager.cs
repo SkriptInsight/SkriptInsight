@@ -15,17 +15,20 @@ namespace SkriptInsight.Core.Managers
 {
     public class KnownTypesManager
     {
+        public const string JavaLangObjectClass = "java.lang.Object";
+        
         public WorkspaceManager WorkspaceManager { get; }
 
         internal KnownTypesManager(WorkspaceManager workspaceManager)
         {
             WorkspaceManager = workspaceManager;
-            LoadKnownTypes();
-            LoadTypesCache();
         }
 
-        [Obsolete("Use the new property on WorkspaceManager", true)]
-        public static KnownTypesManager Instance => WorkspaceManager.Instance.KnownTypesManager;
+        internal void LoadTypes()
+        {
+            LoadTypesCache();
+            LoadKnownTypes();
+        }
 
         public List<KnownType> KnownTypes { get; set; }
 
@@ -38,6 +41,7 @@ namespace SkriptInsight.Core.Managers
                 KnownTypes = AppDomain.CurrentDomain.GetAssemblies()
                     .SelectMany(c => c.GetTypes())
                     .Where(c => c.IsSubclassOfRawGeneric(typeof(SkriptGenericType<>)))
+                    .Where(c => c.GetCustomAttribute<TypeDescriptionAttribute>() != null)
                     .Select(p => new KnownType(p)).ToList();
         }
 
@@ -64,12 +68,12 @@ namespace SkriptInsight.Core.Managers
         private SkriptType InternalGetTypeForName(string name, IEnumerable<SkriptType> skriptTypes = null)
         {
             if (skriptTypes == null)
-                skriptTypes = WorkspaceManager.Current.KnownTypesFromAddons;
+                skriptTypes = WorkspaceManager.Current.TypesManager.KnownTypesFromAddons;
 
             return skriptTypes
                 .Where(type => type.FinalTypeName.Equals(name))
                 .DefaultIfEmpty(
-                    WorkspaceManager.Current.KnownTypesFromAddons
+                    WorkspaceManager.Current.TypesManager.KnownTypesFromAddons
                         .Where(c => c.PatternsRegexps != null)
                         .FirstOrDefault(c =>
                             c.PatternsRegexps.Any(r => r.IsMatch(name)))
@@ -97,6 +101,9 @@ namespace SkriptInsight.Core.Managers
             return result;
         }
 
+        /// <summary>
+        /// Represents the connection between a Skript type and a C# type 
+        /// </summary>
         public class KnownType
         {
             public KnownType(Type type)

@@ -1,6 +1,5 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using SkriptInsight.Core.Files.Nodes;
 
 namespace SkriptInsight.Core.Extensions
@@ -20,6 +19,14 @@ namespace SkriptInsight.Core.Extensions
         {
             get => this.GetValue(key);
             set => base[key] = value;
+        }
+
+        public (int start, int end) ExpandRange(int startLine, int endLine)
+        {
+            var topMostParent = this[startLine].FindRootParent();
+            var bottomMostChild = this[endLine].FindBottomRootChildNode();
+            
+            return (topMostParent.LineNumber, bottomMostChild.LineNumber);
         }
     }
 }

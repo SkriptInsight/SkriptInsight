@@ -31,6 +31,7 @@ namespace SkriptInsight.Core.Files.Processes.Impl
                         if (result.IsSuccess)
                         {
                             result.Context = context.Clone();
+                            result.Matches = result.Context.Matches;
                             node.MatchedSyntax = new SyntaxMatch(effect, result);
                             workDone = true;
                         }
