@@ -13,6 +13,7 @@ using SkriptInsight.Core.Files.Nodes;
 using SkriptInsight.Core.Files.Nodes.Impl;
 using SkriptInsight.Core.Files.Processes;
 using SkriptInsight.Core.Files.Processes.Impl;
+using SkriptInsight.Core.Inspections.Problems;
 using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.Parser;
 using static SkriptInsight.Core.Files.Processes.Impl.ProcCreateOrUpdateNodeChildren;
@@ -24,6 +25,7 @@ namespace SkriptInsight.Core.Files
     {
         private static DocumentSelector _selector;
         private FileProcess _parseProcess;
+        private FileProcess _inspectProcess;
 
         public SkriptFile(Uri url)
         {
@@ -47,7 +49,13 @@ namespace SkriptInsight.Core.Files
             get => _parseProcess ??= ProvideParseProcess();
             set => _parseProcess = value;
         }
-
+        
+        public FileProcess InspectProcess
+        {
+            get => _inspectProcess ??= ProvideInspectProcess();
+            set => _inspectProcess = value;
+        }
+        
         [CanBeNull] public List<Range> VisibleRanges { get; set; }
 
         public void HandleChange(TextDocumentContentChangeEvent edit)
@@ -175,6 +183,12 @@ namespace SkriptInsight.Core.Files
             return new ProcTryParseEffects();
         }
 
+        protected virtual FileProcess ProvideInspectProcess()
+        {
+            return new ProcInspectCode(new ProblemHolder());
+        }
+
+
         public void PrepareNodes(int startLine = -1, int endLine = -1)
         {
             startLine = Math.Max(0, startLine);
@@ -183,7 +197,10 @@ namespace SkriptInsight.Core.Files
             ProcessNodeIndentation(startLine);
             if (!((WorkspaceManager.CurrentHost?.SupportsExtendedCapabilities ?? false) &&
                   (WorkspaceManager.CurrentHost?.ExtendedCapabilities?.SupportsViewportReporting ?? false)))
+            {
                 RunProcess(ParseProcess);
+                RunProcess(InspectProcess);
+            }
         }
 
         internal void ProcessNodeIndentation(in int startLine)
@@ -216,7 +233,9 @@ namespace SkriptInsight.Core.Files
                     $"Selectively Parsing nodes from {range.Start.Line} to {range.End.Line}.");
                 var (start, end) = Nodes.ExpandRange((int) range.Start.Line, (int) range.End.Line);
                 RunProcess(ParseProcess, start, end);
+                RunProcess(InspectProcess, start, end);
             }
+            
         }
     }
 }
