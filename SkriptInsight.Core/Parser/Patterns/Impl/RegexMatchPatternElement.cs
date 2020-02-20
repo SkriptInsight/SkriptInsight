@@ -1,9 +1,24 @@
+using System.Text.RegularExpressions;
+using SkriptInsight.Core.Extensions;
+  
 namespace SkriptInsight.Core.Parser.Patterns.Impl
 {
     [GroupPatternElementInfo('<', '>')]
     public class RegexMatchPatternElement : AbstractGroupPatternElement
     {
-        public string Expression { get; set; }
+        private string _expression;
+
+        public string Expression
+        {
+            get => _expression;
+            set
+            {
+                _expression = value;
+                ExpressionRegex = new Regex(_expression, RegexOptions.Compiled);
+            }
+        }
+
+        public Regex ExpressionRegex { get; set; }
 
         public RegexMatchPatternElement()
         {
@@ -16,7 +31,29 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
 
         public override ParseResult Parse(ParseContext ctx)
         {
-            return ParseResult.Failure(ctx);
+            var untilEnd = ctx.PeekUntilEnd();
+            var limit = untilEnd.IndexOfAny(new[] {'(', ')', '{', '}', '[', ']'});
+
+            var text = limit > -1 ? untilEnd.SafeSubstring(0, limit) : untilEnd;
+            ctx.StartRangeMeasure();
+            var match = ExpressionRegex.Match(text);
+            
+            if (!match.Success)
+            {
+                ctx.UndoRangeMeasure();
+                return ParseResult.Failure(ctx);
+            }
+
+            ctx.ReadUntilPosition(ctx.CurrentPosition + match.Index + match.Length);
+            
+            ctx.Matches.Add(new ParseMatch
+            {
+                Context = ctx,
+                Range = ctx.EndRangeMeasure(),
+                RawContent = match.Value
+            });
+            
+            return ParseResult.Success(ctx);
         }
 
         public override string RenderPattern()

@@ -167,7 +167,7 @@ namespace SkriptInsight.Tests
 
             var result = stringPattern.Parse("print " + input);
 
-            Assert.True(result.IsSuccess);
+            Assert.True(result.IsSuccess, "result.IsSuccess");
             Assert.Single(result.Context.Matches);
 
             var match = result.Context.Matches.First();

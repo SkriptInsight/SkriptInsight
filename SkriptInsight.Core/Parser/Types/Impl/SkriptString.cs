@@ -5,7 +5,8 @@ namespace SkriptInsight.Core.Parser.Types.Impl
     {
         protected override string TryParse(ParseContext ctx)
         {
-            if (ctx.ReadNext(1) != "\"") return null;
+            if (ctx.PeekNext(1) != "\"") return null;
+            ctx.ReadNext(1); //Read open quote
             var closingPos = ctx.FindNextBracket('"', true);
             if (closingPos <= -1) return null;
             var value = ctx.ReadUntilPosition(closingPos);

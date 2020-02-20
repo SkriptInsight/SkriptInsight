@@ -13,6 +13,8 @@ namespace SkriptInsight.Core.Managers
 {
     public class SkriptTypesManager
     {
+        public const string ExprEntityClassName = "ch.njol.skript.expressions.ExprEntity";
+        public const string ExprEntitiesClassName = "ch.njol.skript.expressions.ExprEntities";
         public IReadOnlyList<SyntaxSkriptExpression> KnownExpressionsFromAddons { get; set; }
 
         public IReadOnlyList<SkriptType> KnownTypesFromAddons { get; set; }
@@ -38,8 +40,13 @@ namespace SkriptInsight.Core.Managers
         [CanBeNull]
         public IReadOnlyList<SyntaxSkriptExpression> GetExpressionsThatCanFitType(SkriptType type)
         {
-            // Debug.WriteLine($"Got query for GetExpressionsThatCanFitType({type.ClassName})");
-            return ExpressionsForType.GetValue(type.ClassName);
+            return GetExpressionsThatCanFitType(type.ClassName);
+        }
+
+        [CanBeNull]
+        public IReadOnlyList<SyntaxSkriptExpression> GetExpressionsThatCanFitType(string type)
+        {
+            return ExpressionsForType.GetValue(type);
         }
 
 
@@ -85,11 +92,12 @@ namespace SkriptInsight.Core.Managers
             }
 
             KnownExpressionsFromAddons = info
+                .Where(c => c.ClassName != ExprEntityClassName)
+                .Where(c => c.ClassName != ExprEntitiesClassName)
                 .DistinctBy(c =>
                     c is SyntaxSkriptEventValueExpression eventValueExpression
                         ? (object) (eventValueExpression.Parent, eventValueExpression.RawName)
                         : c)
-                .Where(c => !c.ClassName?.Equals("ch.njol.skript.expressions.ExprEntity") ?? true)
                 .ToList();
         }
 
@@ -117,10 +125,11 @@ namespace SkriptInsight.Core.Managers
                 }).ToList();
             foreach (var (type, expressions) in nonPluralTypes
                 .Select(cc => (Type: cc.Value.ClassName, Expressions: KnownExpressionsFromAddons
-                    .Where(c => !(c is SyntaxSkriptEventValueExpression)).Where(c =>
+                    .Where(c => !(c is SyntaxSkriptEventValueExpression))
+                    .Where(c => c.ClassName != ExprEntityClassName)
+                    .Where(c =>
                         c.ReturnType == cc.Value.ClassName ||
-                        CheckClassExtendsAnother(c.ReturnType,
-                            cc.Value.ClassName)).ToList())))
+                        CheckClassExtendsAnother(c.ReturnType, cc.Value.ClassName)).ToList())))
                 ExpressionsForType.TryAdd(type, expressions);
 
             ExpressionsForType.TryAdd(KnownTypesManager.JavaLangObjectClass,
