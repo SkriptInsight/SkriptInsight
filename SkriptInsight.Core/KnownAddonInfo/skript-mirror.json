@@ -1,0 +1,436 @@
+{
+    "addon": {
+        "name": "skript-mirror"
+    },
+    "types": [
+        {
+            "id": 96891546,
+            "typeName": "event",
+            "className": "org.bukkit.event.Event",
+            "addonName": "skript-mirror",
+            "patterns": [
+                "events?"
+            ]
+        },
+        {
+            "id": -580757412,
+            "typeName": "javatype",
+            "className": "com.btk5h.skriptmirror.JavaType",
+            "addonName": "skript-mirror",
+            "patterns": [
+                "javatypes?"
+            ]
+        },
+        {
+            "id": 3392903,
+            "typeName": "null",
+            "className": "com.btk5h.skriptmirror.Null",
+            "addonName": "skript-mirror"
+        },
+        {
+            "id": 73313249,
+            "typeName": "javaobject",
+            "className": "com.btk5h.skriptmirror.ObjectWrapper",
+            "addonName": "skript-mirror",
+            "patterns": [
+                "javaobjects?"
+            ]
+        }
+    ],
+    "conditions": [
+        {
+            "patterns": [
+                "%objects% (is not|isn't|are not|aren't) [a[n]] instance[s] of %javatypes%",
+                "%objects% (is|are) [a[n]] instance[s] of %javatypes%"
+            ],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.CondIsInstanceOf"
+        },
+        {
+            "patterns": [
+                "[(1¦await)] %~javaobject%"
+            ],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.CondExpressionStatement"
+        },
+        {
+            "patterns": [
+                "\\(parse[d] later\\) <.+>"
+            ],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.CondParseLater"
+        },
+        {
+            "patterns": [],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.custom.condition.CustomCondition"
+        }
+    ],
+    "events": [
+        {
+            "name": "Define Expression",
+            "id": 1300773788,
+            "patterns": [
+                "[(2¦local)] [(1¦(plural|non(-|[ ])single))] %*classinfos% property <.+>",
+                "[(2¦local)] [(1¦(plural|non(-|[ ])single))] expression",
+                "[(2¦local)] [(1¦(plural|non(-|[ ])single))] expression <.+>"
+            ],
+            "currentEventValues": [],
+            "pastEventValues": [],
+            "futureEventValues": [],
+            "addonName": "skript-mirror",
+            "classNames": [],
+            "cancellable": false
+        },
+        {
+            "name": "Define Constant",
+            "id": -1525482072,
+            "patterns": [
+                "option <.+>"
+            ],
+            "currentEventValues": [],
+            "pastEventValues": [],
+            "futureEventValues": [],
+            "addonName": "skript-mirror",
+            "classNames": [],
+            "cancellable": false
+        },
+        {
+            "name": "Define Effect",
+            "id": -1101495147,
+            "patterns": [
+                "[(1¦local)] effect",
+                "[(1¦local)] effect <.+>"
+            ],
+            "currentEventValues": [],
+            "pastEventValues": [],
+            "futureEventValues": [],
+            "addonName": "skript-mirror",
+            "classNames": [],
+            "cancellable": false
+        },
+        {
+            "name": "Define Condition",
+            "id": -484338793,
+            "patterns": [
+                "[(1¦local)] %*classinfos% property condition <.+>",
+                "[(1¦local)] condition",
+                "[(1¦local)] condition <.+>"
+            ],
+            "currentEventValues": [],
+            "pastEventValues": [],
+            "futureEventValues": [],
+            "addonName": "skript-mirror",
+            "classNames": [],
+            "cancellable": false
+        },
+        {
+            "name": "Import",
+            "id": -1184795739,
+            "patterns": [
+                "import"
+            ],
+            "currentEventValues": [],
+            "pastEventValues": [],
+            "futureEventValues": [],
+            "addonName": "skript-mirror",
+            "classNames": [],
+            "cancellable": false
+        },
+        {
+            "name": "On Bukkit Event",
+            "id": 1298449529,
+            "patterns": [
+                "[(1¦all)] %javatypes% [(at|on|with) priority <.+>]"
+            ],
+            "currentEventValues": [],
+            "pastEventValues": [],
+            "futureEventValues": [],
+            "addonName": "skript-mirror",
+            "classNames": [
+                "com.btk5h.skriptmirror.skript.reflect.EvtByReflection$BukkitEvent"
+            ],
+            "cancellable": true
+        },
+        {
+            "name": "Consent",
+            "id": 951500826,
+            "patterns": [
+                "skript-mirror, I know what I'm doing"
+            ],
+            "currentEventValues": [],
+            "pastEventValues": [],
+            "futureEventValues": [],
+            "addonName": "skript-mirror",
+            "classNames": [],
+            "cancellable": false
+        }
+    ],
+    "effects": [
+        {
+            "patterns": [
+                "return [%-objects%]"
+            ],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.custom.expression.EffReturn"
+        },
+        {
+            "patterns": [
+                "delay [the] [current] effect"
+            ],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.custom.effect.EffDelayEffect"
+        },
+        {
+            "patterns": [
+                "negate [the] [current] condition"
+            ],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.custom.condition.EffNegateCondition"
+        },
+        {
+            "patterns": [
+                "import <((?:[_a-zA-Z$][\\w$]*\\.)*(?:[_a-zA-Z$][\\w$]*))(?:\\s+as ([_a-zA-Z$][\\w$]*))?>"
+            ],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.custom.CustomImport$EffImport"
+        },
+        {
+            "patterns": [
+                "continue [if (%-boolean%|<.+>)]"
+            ],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.custom.EffContinue"
+        },
+        {
+            "patterns": [
+                "[(1¦await)] %~javaobject%"
+            ],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.EffExpressionStatement"
+        },
+        {
+            "patterns": [],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.custom.effect.CustomEffect"
+        }
+    ],
+    "expressions": [
+        {
+            "patterns": [
+                "[the] event"
+            ],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.reflect.ExprEvent",
+            "returnType": "org.bukkit.event.Event",
+            "expressionType": "SIMPLE"
+        },
+        {
+            "patterns": [
+                "[the] [last] [java] (throwable|exception|error)"
+            ],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.reflect.ExprJavaError",
+            "returnType": "java.lang.Throwable",
+            "expressionType": "SIMPLE"
+        },
+        {
+            "patterns": [
+                "null"
+            ],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.LitNullObject",
+            "returnType": "com.btk5h.skriptmirror.Null",
+            "expressionType": "SIMPLE"
+        },
+        {
+            "patterns": [],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.custom.CustomImport$ImportHandler",
+            "returnType": "com.btk5h.skriptmirror.JavaType",
+            "expressionType": "SIMPLE"
+        },
+        {
+            "patterns": [
+                "[the] [matched] pattern"
+            ],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.custom.ExprMatchedPattern",
+            "returnType": "java.lang.Number",
+            "expressionType": "SIMPLE"
+        },
+        {
+            "patterns": [
+                "[the] [parse[r]] (regex|regular expression)(-| )<\\d+>"
+            ],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.custom.ExprParseRegex",
+            "returnType": "java.lang.String",
+            "expressionType": "SIMPLE"
+        },
+        {
+            "patterns": [
+                "[the] [parse[r]] mark"
+            ],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.custom.ExprParseMark",
+            "returnType": "java.lang.Number",
+            "expressionType": "SIMPLE"
+        },
+        {
+            "patterns": [
+                "event-classes"
+            ],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.custom.ExprEventClasses",
+            "returnType": "com.btk5h.skriptmirror.JavaType",
+            "expressionType": "SIMPLE"
+        },
+        {
+            "patterns": [
+                "[the] expr[ession][(1¦s)](-| )<\\d+>"
+            ],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.custom.ExprExpression",
+            "returnType": "java.lang.Object",
+            "expressionType": "SIMPLE"
+        },
+        {
+            "patterns": [],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.custom.expression.CustomExpression",
+            "returnType": "java.lang.Object",
+            "expressionType": "SIMPLE"
+        },
+        {
+            "patterns": [
+                "[the] change value[(1¦s)]"
+            ],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.custom.expression.ExprChangeValue",
+            "returnType": "java.lang.Object",
+            "expressionType": "SIMPLE"
+        },
+        {
+            "patterns": [
+                "[the] [java] class %string%"
+            ],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.reflect.ExprJavaType",
+            "returnType": "com.btk5h.skriptmirror.JavaType",
+            "expressionType": "COMBINED"
+        },
+        {
+            "patterns": [
+                "[a] [new] proxy [instance] of %javatypes% (using|from) %objects%"
+            ],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.reflect.ExprProxy",
+            "returnType": "java.lang.Object",
+            "expressionType": "COMBINED"
+        },
+        {
+            "patterns": [
+                "...%object%"
+            ],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.ExprSpread",
+            "returnType": "java.lang.Object",
+            "expressionType": "COMBINED"
+        },
+        {
+            "patterns": [
+                "[the] raw %objects%"
+            ],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.custom.ExprRawExpression",
+            "returnType": "ch.njol.skript.lang.Expression",
+            "expressionType": "COMBINED"
+        },
+        {
+            "patterns": [
+                "%javaobject%\\[%number%\\]"
+            ],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.ExprArrayAccess",
+            "returnType": "java.lang.Object",
+            "expressionType": "COMBINED"
+        },
+        {
+            "patterns": [
+                "\\[%objects%[ as %-javatype%[ ]]\\]"
+            ],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.ExprCollect",
+            "returnType": "com.btk5h.skriptmirror.ObjectWrapper",
+            "expressionType": "COMBINED"
+        },
+        {
+            "patterns": [
+                "[the] function(s| [reference[s]]) %strings% [called with [[the] [arg[ument][s]]] %-objects%]"
+            ],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.ExprFunction",
+            "returnType": "com.btk5h.skriptmirror.FunctionWrapper",
+            "expressionType": "PROPERTY"
+        },
+        {
+            "patterns": [
+                "%objects%'[s] [java] class[es]",
+                "[the] [java] class[es] of %objects%"
+            ],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.reflect.ExprJavaTypeOf",
+            "returnType": "com.btk5h.skriptmirror.JavaType",
+            "expressionType": "PROPERTY"
+        },
+        {
+            "patterns": [
+                "%objects%'[s] (0¦fields|1¦methods|2¦constructors)",
+                "[the] (0¦fields|1¦methods|2¦constructors) of %objects%"
+            ],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.reflect.ExprMembers",
+            "returnType": "java.lang.String",
+            "expressionType": "PROPERTY"
+        },
+        {
+            "patterns": [
+                "%objects%'[s] (0¦field|1¦method) names",
+                "[the] (0¦field|1¦method) names of %objects%"
+            ],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.reflect.ExprMemberNames",
+            "returnType": "java.lang.String",
+            "expressionType": "PROPERTY"
+        },
+        {
+            "patterns": [
+                "%numbers%'[s] (0¦bit %-number%|1¦bit(s| range) [from] %-number%( to |[ ]-[ ])%-number%)",
+                "[the] (0¦bit %-number%|1¦bit(s| range) [from] %-number%( to |[ ]-[ ])%-number%) of %numbers%"
+            ],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.ExprBits",
+            "returnType": "java.lang.Number",
+            "expressionType": "PROPERTY"
+        },
+        {
+            "patterns": [
+                "[(2¦try)] %object%..%string%[\\((1¦[%-objects%])\\)]",
+                "[(2¦try)] %object%.<[^.]+\\b>[\\((1¦[%-objects%])\\)]",
+                "[(2¦try)] [a] new %javatype%\\([%-objects%]\\)"
+            ],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.reflect.ExprJavaCall",
+            "returnType": "java.lang.Object",
+            "expressionType": "PATTERN_MATCHES_EVERYTHING"
+        },
+        {
+            "patterns": [],
+            "addonName": "skript-mirror",
+            "className": "com.btk5h.skriptmirror.skript.custom.expression.CustomExpression",
+            "returnType": "java.lang.Object",
+            "expressionType": "PATTERN_MATCHES_EVERYTHING"
+        }
+    ]
+}

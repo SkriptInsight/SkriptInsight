@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -37,17 +38,24 @@ namespace SkriptInsight.Core.Parser.Patterns
                 literalBuilder.Clear();
             }
 
+            var isNextCharEscaped = false;
             foreach (var c in ctx)
             {
+                if (c == '\\' && !isNextCharEscaped)
+                {
+                    isNextCharEscaped = true;
+                    continue;
+                }
+                
                 var (type, info) = GroupTypes
                     .Select(cc => (Type: cc, Info: cc.GetCustomAttribute<GroupPatternElementInfoAttribute>()))
                     .FirstOrDefault(cc => cc.Item2.OpeningBracket == c);
 
-                if (info != null)
+                if (!isNextCharEscaped && info != null)
                 {
                     AddLiteralIfExists();
                     var closingBracketPos =
-                        ctx.FindNextBracket(info.OpeningBracket, info.ClosingBracket);
+                        ctx.FindNextBracket(info.OpeningBracket, info.ClosingBracket, escapeWithBackSlash: true);
 
                     if (closingBracketPos >= 0)
                     {
@@ -71,6 +79,7 @@ namespace SkriptInsight.Core.Parser.Patterns
                     else
                         literalBuilder.Append(c);
                 }
+                isNextCharEscaped = false;
             }
             AddLiteralIfExists();
 
@@ -83,6 +92,9 @@ namespace SkriptInsight.Core.Parser.Patterns
             var shouldFastFail = false;
             var results = Children.WithContext().Select(c =>
             {
+                // if (ToString().Equals("[(2¦try)] %object%.<[^.]+\\b>[\\((1¦[%-objects%])\\)]"))
+                    // Debugger.Break();
+                
                 //Store old position in case of a rollback needed.
                 var oldPos = ctx.CurrentPosition;
                 //Pass the current element context to the parse context

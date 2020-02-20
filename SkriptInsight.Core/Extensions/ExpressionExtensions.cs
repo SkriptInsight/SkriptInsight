@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MoreLinq;
 using SkriptInsight.Core.Parser;
 using SkriptInsight.Core.Parser.Expressions;
 using SkriptInsight.Core.Parser.Types.Impl.Generic;
@@ -76,7 +77,9 @@ namespace SkriptInsight.Core.Extensions
                     default:
                         if (expr is Expression<GenericSkriptObject.WrappedObject> wrappedObj)
                         {
-                            yield return wrappedObj.GenericValue.Expression;
+                            foreach (var parseMatch in wrappedObj.GenericValue.Matches)
+                                if (parseMatch is ExpressionParseMatch expressionParse)
+                                    yield return expressionParse.Expression;
                             break;
                         }
                         yield return expr;

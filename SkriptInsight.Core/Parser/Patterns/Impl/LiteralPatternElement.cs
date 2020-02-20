@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using SkriptInsight.Core.Extensions;
 
 namespace SkriptInsight.Core.Parser.Patterns.Impl
@@ -25,9 +26,11 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                 : ParseResult.Failure(ctx);
         }
 
+        
+        private static readonly Regex LiteralRegexReplacement = new Regex("([\\(\\)\\[\\]])", RegexOptions.Compiled);
         public override string RenderPattern()
         {
-            return Value;
+            return LiteralRegexReplacement.Replace(Value, "\\$1");
         }
 
         public static explicit operator LiteralPatternElement(string str)

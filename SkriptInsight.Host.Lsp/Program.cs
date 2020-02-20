@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using DiscordRPC;
 using MediatR;
 using OmniSharp.Extensions.JsonRpc;
+using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using OmniSharp.Extensions.LanguageServer.Server;
+using SkriptInsight.Core;
 using SkriptInsight.Core.Files;
 using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.Utils;
@@ -25,13 +28,14 @@ namespace SkriptInsight.Host.Lsp
 
         public static string EditorName { get; set; }
 
+
         private static async Task Main(string[] args)
         {
             StartAnalytics();
             AnalyticsApi.UserAgent = EditorName = GetEditorNameByArgs(args);
 
-            AnalyticsApi.TrackEvent("SessionStart", "Session Start", extraValues: new {sc = "start"});
-            AnalyticsApi.TrackEvent("ServerStart", "Started LSP Server", extraValues: new {sc = "start"});
+            AnalyticsApi.TrackEvent("SessionStart", "Session Start", extraValues: new { sc = "start" });
+            AnalyticsApi.TrackEvent("ServerStart", "Started LSP Server", extraValues: new { sc = "start" });
 
             if (args.Any(a => a.ToLower().Equals("-d")))
                 while (!Debugger.IsAttached)
@@ -54,15 +58,15 @@ namespace SkriptInsight.Host.Lsp
                 {
                     var file = WorkspaceManager.CurrentWorkspace.Files[e.Uri];
                     if (file == null) return;
-                    
+
                     file.VisibleRanges = e.Ranges;
                     debouncedParseRange.Run(file);
                 });
-                
+
                 options.OnNotification("insight/notifySupportsExtendedCapabilities", async () =>
                 {
                     if (WorkspaceManager.CurrentHost == null) return;
-                    
+
                     var sendRequest = WorkspaceManager.CurrentHost.SendRawRequest<ExtendedHostCapabilities>("insight/queryExtendedCapabilities");
                     if (sendRequest != null)
                     {
@@ -79,7 +83,7 @@ namespace SkriptInsight.Host.Lsp
             DiscordRpcClient?.Dispose();
             AnalyticsApi.CancellationToken.Cancel();
             AnalyticsApi.TrackEvent("ServerStop", "Stopped LSP Server");
-            AnalyticsApi.TrackEvent("SessionStop", "Session Stop", extraValues: new {sc = "stop"});
+            AnalyticsApi.TrackEvent("SessionStop", "Session Stop", extraValues: new { sc = "stop" });
         }
 
         private static void StartDiscordRichPresence(SkriptWorkspace workspace)

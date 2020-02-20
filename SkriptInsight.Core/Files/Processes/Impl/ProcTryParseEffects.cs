@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
@@ -19,12 +20,15 @@ namespace SkriptInsight.Core.Files.Processes.Impl
             var node = file.Nodes[lineNumber];
             var workDone = false;
             foreach (var elements in WorkspaceManager.Instance.Current.AddonDocumentations.Select(addon =>
-                node.IsSectionNode ? addon.Events.Cast<AbstractSyntaxElement>() : addon.Effects))
+                node.IsSectionNode ? addon.Events : addon.Expressions.Cast<AbstractSyntaxElement>().Concat(addon.Effects)))
             {
                 foreach (var effect in elements)
                 {
                     foreach (var effectPattern in effect.PatternNodes)
                     {
+                        // if ((effect as SyntaxSkriptExpression)?.ClassName == "com.btk5h.skriptmirror.skript.reflect.ExprJavaCall")
+                            // Debugger.Break();
+                            
                         context.Matches = new List<ParseMatch>();
                         context.CurrentLine = lineNumber;
                         var result = effectPattern.Parse(context);

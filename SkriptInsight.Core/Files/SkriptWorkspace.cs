@@ -69,6 +69,7 @@ namespace SkriptInsight.Core.Files
         {
             var knownAddons = new[]
             {
+                //"skript-mirror",
                 "Skript"
             };
 

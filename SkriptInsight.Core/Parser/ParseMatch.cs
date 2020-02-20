@@ -14,5 +14,10 @@ namespace SkriptInsight.Core.Parser
         public Range Range { get; set; }
 
         public string RawContent { get; set; }
+
+        public override string ToString()
+        {
+            return RawContent;
+        }
     }
 }

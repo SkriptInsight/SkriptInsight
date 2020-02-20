@@ -1,5 +1,5 @@
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using SkriptInsight.Core.Files;
@@ -82,9 +82,19 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                 }
 
                 IExpression result = null;
+                var oldPos = ctx.CurrentPosition;
+
+                if (!ctx.ShouldJustCheckExpressionsThatMatchType)
+                {
+                    result = skriptTypeDescriptor?.TryParseValue(ctx);
+                }
+                else if (!(typeRaw.Equals("object") || typeRaw.Equals("objects")))
+                {
+                    result = skriptTypeDescriptor?.TryParseValue(ctx);
+                }
 
                 //This type doesn't have a flag to just match literals So, let's try first matching variables.
-                if (!Constraint.HasFlagFast(SyntaxValueAcceptanceConstraint.LiteralsOnly))
+                if (result == null && !Constraint.HasFlagFast(SyntaxValueAcceptanceConstraint.LiteralsOnly))
                 {
                     //Try parsing a variable
                     var reference = new SkriptVariableReferenceType();
@@ -101,9 +111,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                     if (result != null) ctx.ReadUntilPosition(ctxClone.CurrentPosition);
                 }
 
-                var oldPos = ctx.CurrentPosition;
-                if (result == null)
-                    result = skriptTypeDescriptor?.TryParseValue(ctx);
+
                 //We have not matched a result. Let's try matching with parentheses
                 if (result == null && !SkipParenthesis)
                 {
@@ -154,9 +162,9 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                                                 for (var index = 0; index < expression.PatternNodes.Length; index++)
                                                 {
                                                     // Debug.WriteLine(
-                                                        // $"Has visited (event value) {clone.VisitedExpressions.Count} expressions so far.");
+                                                    // $"Has visited (event value) {clone.VisitedExpressions.Count} expressions so far.");
                                                     // Debug.WriteLine(
-                                                        // $"Trying with pattern #{index}: {expression.Patterns[index]}");
+                                                    // $"Trying with pattern #{index}: {expression.Patterns[index]}");
                                                     var pattern = expression.PatternNodes[index];
                                                     var resultValue = pattern.Parse(clone);
                                                     if (resultValue.IsSuccess)
@@ -176,7 +184,8 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                             }
                         }
                     }
-
+                    //BRUH!
+                    if (false)
                     {
                         //Try matching a Skript expression
                         // Time to check all expressions to make sure the user isn't just trying to mix types for whatever reason...
@@ -198,11 +207,11 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                                 clone.VisitExpression(skriptType, expression);
 
                                 // Debug.WriteLine(
-                                    // $"Trying with {expression.ClassName} (returning {expression.ReturnType}):");
+                                // $"Trying with {expression.ClassName} (returning {expression.ReturnType}):");
                                 for (var index = 0; index < expression.PatternNodes.Length; index++)
                                 {
                                     // Debug.WriteLine(
-                                        // $"Has visited {clone.VisitedExpressions.Count} expressions so far.");
+                                    // $"Has visited {clone.VisitedExpressions.Count} expressions so far.");
                                     // Debug.WriteLine($"Trying with pattern #{index}: {expression.Patterns[index]}");
                                     var pattern = expression.PatternNodes[index];
 
@@ -227,7 +236,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                     if (result.Type == null) result.Type = skriptTypeDescriptor;
                     result.Context = ctx;
                     var match = new ExpressionParseMatch(result, this);
-                    
+
                     ctx.Matches.Add(match);
                 }
 

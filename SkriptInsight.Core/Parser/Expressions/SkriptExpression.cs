@@ -32,7 +32,7 @@ namespace SkriptInsight.Core.Parser.Expressions
         
         public string AsString()
         {
-            throw new System.NotImplementedException();
+            return Context.Text.Substring((int) Range.Start.Character, (int) (Range.End.Character - Range.Start.Character));
         }
 
         public List<MatchAnnotation> MatchAnnotations { get; set; } = new List<MatchAnnotation>();

@@ -35,5 +35,10 @@ namespace SkriptInsight.Core.Parser
         public IExpression Expression { get; set; }
         
         public TypePatternElement MatchedElement { get; set; }
+        
+        public override string ToString()
+        {
+            return Expression.AsString();
+        }
     }
 }

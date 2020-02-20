@@ -180,7 +180,11 @@ namespace SkriptInsight.Core.Parser
                             if (openCloseStack[opening].Count % 2 != 0)
                             {
                                 openCloseStack[opening].Pop();
-                                posStack.Pop();
+                                if (!posStack.TryPop(out _) && returnOnUnopenedBrackets)
+                                {
+                                    // Return now because the callee requested
+                                    forceBreak = true;
+                                }
                             }
                             else
                             {
@@ -218,7 +222,7 @@ namespace SkriptInsight.Core.Parser
         }
 
         public int FindNextBracket(char opening, char closing, bool matchByPair = false, bool escapeByDouble = false,
-            (char, char)[] matchExclusions = null)
+            (char, char)[] matchExclusions = null, bool escapeWithBackSlash = false)
         {
             var exclusionStack = new Stack<int>();
             var openedBracketStack = new Stack<int>();
@@ -248,6 +252,13 @@ namespace SkriptInsight.Core.Parser
                         if (escapeByDouble && Text.ElementAtOrDefault(i + 1) == ch)
                         {
                             // Found a double escape. Ignore and skip
+                            i++;
+                            continue;
+                        }
+                        
+                        if (!escapeByDouble && escapeWithBackSlash && Text.ElementAtOrDefault(i - 1) == '\\')
+                        {
+                            // Found a backslash escape. Ignore and skip.
                             i++;
                             continue;
                         }

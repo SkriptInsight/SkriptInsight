@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.Parser.Expressions;
+using SkriptInsight.Core.Parser.Patterns;
 using SkriptInsight.Core.Parser.Patterns.Impl;
 
 namespace SkriptInsight.Core.Parser.Types.Impl.Generic
@@ -11,27 +12,25 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
     {
         public class WrappedObject
         {
-            public IExpression Expression { get; }
-            
             public override string ToString()
             {
-                return Type?.AsString(Expression.Value) ?? "<none>";
+                return string.Join("", Matches.Select(c => c?.ToString()));
             }
 
-            public ISkriptType Type { get; }
+            public List<ParseMatch> Matches { get; }
 
-            public WrappedObject(IExpression expression, ISkriptType type)
+            public WrappedObject(List<ParseMatch> matches)
             {
-                Expression = expression;
-                Type = type;
+                Matches = matches;
             }
         }
-        
+
         protected override WrappedObject TryParse(ParseContext ctx)
         {
             var clone = ctx.Clone();
+
             var typePattern = new TypePatternElement();
-            var possibleValues = new List<(int lastPos, ISkriptType type, IExpression result)>();
+            var possibleValues = new List<(int CurrentPosition, List<ParseMatch> expression, ParseResult result)>();
 
             var startPos = clone.CurrentPosition;
             foreach (var type in WorkspaceManager.CurrentWorkspace.TypesManager.KnownTypesFromAddons)
@@ -44,23 +43,61 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
 
                 if (result.IsSuccess)
                 {
-                    var expression = clone.Matches.OfType<ExpressionParseMatch>().FirstOrDefault();
-                    if (expression?.Expression != null || expression?.Expression?.Value != null )
+                    var expression = new List<ParseMatch>(clone.Matches);
+                    if (expression.Count > 0)
                     {
-                        possibleValues.Add((clone.CurrentPosition, expression?.Expression.Type, expression.Expression));
+                        possibleValues.Add((clone.CurrentPosition, expression, result));
                     }
                 }
             }
 
-            possibleValues.Sort((c1, c2) => -1 * c1.lastPos.CompareTo(c2.lastPos));
+
+            // if (possibleValues.Count <= 0)
+            {
+                clone.ShouldJustCheckExpressionsThatMatchType = true;
+                var expressions =
+                    WorkspaceManager.CurrentWorkspace.TypesManager.GetExpressionsThatCanFitType(KnownTypesManager
+                        .JavaLangObjectClass);
+                if (expressions != null)
+                {
+                    foreach (var expression in expressions)
+                    {
+                        foreach (var pattern in expression.PatternNodes)
+                        {
+                            clone.Matches.Clear();
+                            clone.CurrentPosition = startPos;
+                            clone.StartRangeMeasure();
+                            var result = pattern.Parse(clone);
+
+                            if (!result.IsSuccess)
+                            {
+                                clone.UndoRangeMeasure();
+                                continue;
+                            }
+
+                            var exprResult = clone.Matches;
+                            if (exprResult.Count > 0)
+                            {
+                                var cloneParseContext = clone.Clone();
+                                result.Context = cloneParseContext;
+                                var expr = new SkriptExpression(expression, clone.EndRangeMeasure(), cloneParseContext);
+                                possibleValues.Add((clone.CurrentPosition,
+                                    new List<ParseMatch>(new[] {new ExpressionParseMatch(expr, null)}), result));
+                            }
+                        }
+                    }
+                }
+            }
+
+            possibleValues.Sort((c1, c2) => -1 * c1.CurrentPosition.CompareTo(c2.CurrentPosition));
 
             if (possibleValues.Count <= 0) return null;
-            
+
             {
-                var (lastPos, type, result) = possibleValues[0];
-                
+                var (lastPos, matches, _) = possibleValues[0];
+
                 ctx.ReadUntilPosition(lastPos);
-                return new WrappedObject(result, type);
+                return new WrappedObject(matches);
             }
         }
 
