@@ -7,7 +7,7 @@ namespace SkriptInsight.Tests
 {
     public class UtilTests
     {
-
+        
         [Fact]
         public void ConstructionUtilsCanConstructObject()
         {

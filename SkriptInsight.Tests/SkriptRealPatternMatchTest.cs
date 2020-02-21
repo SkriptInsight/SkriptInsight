@@ -19,6 +19,20 @@ namespace SkriptInsight.Tests
         {
             WorkspaceManager.CurrentHost = new TestInsightHost();
         }
+
+        [Fact]
+        public void EmptyUnitTest()
+        {
+            var code = "{_test}.hello().world().bruh()";
+            
+            var file = new SkriptFile(new Uri("memory://file"))
+            {
+                RawContents = ("on chat:\n" +
+                               "    " + code).SplitOnNewLines()
+            };
+            WorkspaceManager.Instance.HandleOpenedFile(file);
+            file.PrepareNodes();
+        }
         
         [Fact]
         public void RandomWeirdPatternMatchesCorrectly()

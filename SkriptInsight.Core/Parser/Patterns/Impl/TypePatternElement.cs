@@ -184,7 +184,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                             }
                         }
                     }
-                    //BRUH!
+                    //Temporarily disable
                     if (false)
                     {
                         //Try matching a Skript expression

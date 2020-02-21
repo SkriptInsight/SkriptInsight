@@ -1,22 +1,33 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkriptInsight.Host.Lsp", "SkriptInsight.Host.Lsp\SkriptInsight.Host.Lsp.csproj", "{D3FCC15D-E83D-42F5-BFF5-00A493C59668}"
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29721.120
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkriptInsight.Host.Lsp", "SkriptInsight.Host.Lsp\SkriptInsight.Host.Lsp.csproj", "{D3FCC15D-E83D-42F5-BFF5-00A493C59668}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hosts", "Hosts", "{217C4A5D-C55D-4DD9-B580-D61F1ADE08B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkriptInsight.Core", "SkriptInsight.Core\SkriptInsight.Core.csproj", "{7C5E1D0B-D3E1-4568-BAEF-2CE1B37B7F73}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkriptInsight.Core", "SkriptInsight.Core\SkriptInsight.Core.csproj", "{7C5E1D0B-D3E1-4568-BAEF-2CE1B37B7F73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkriptInsight.Tests", "SkriptInsight.Tests\SkriptInsight.Tests.csproj", "{CEED2DE8-D53F-47C9-826A-91D67A6026C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkriptInsight.Tests", "SkriptInsight.Tests\SkriptInsight.Tests.csproj", "{CEED2DE8-D53F-47C9-826A-91D67A6026C4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JavaMetadata", "JavaMetadata", "{2BC3584D-6A02-4187-BD86-018D23DD9CB2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkriptInsight.JavaMetadata", "SkriptInsight.JavaMetadata\SkriptInsight.JavaMetadata.csproj", "{1E09D1D0-A293-4EF7-B715-DFE48F905A27}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkriptInsight.JavaMetadata", "SkriptInsight.JavaMetadata\SkriptInsight.JavaMetadata.csproj", "{1E09D1D0-A293-4EF7-B715-DFE48F905A27}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkriptInsight.JavaMetadataExtractorLib", "SkriptInsight.JavaMetadataExtractorLib\SkriptInsight.JavaMetadataExtractorLib.csproj", "{D7B10151-7050-4416-BD70-7EE77F6ACBAE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkriptInsight.JavaMetadataExtractorLib", "SkriptInsight.JavaMetadataExtractorLib\SkriptInsight.JavaMetadataExtractorLib.csproj", "{D7B10151-7050-4416-BD70-7EE77F6ACBAE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkriptInsight.JavaMetadataExtractorConsole", "SkriptInsight.JavaMetadataExtractorConsole\SkriptInsight.JavaMetadataExtractorConsole.csproj", "{B16DDDA5-128B-4D40-8AFE-028F9DE38220}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkriptInsight.JavaMetadataExtractorConsole", "SkriptInsight.JavaMetadataExtractorConsole\SkriptInsight.JavaMetadataExtractorConsole.csproj", "{B16DDDA5-128B-4D40-8AFE-028F9DE38220}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkriptInsight.JavaReader", "SkriptInsight.JavaReader\SkriptInsight.JavaReader.csproj", "{127F3D25-434C-4DA3-A8DF-93CEE1B8F9E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkriptInsight.JavaReader", "SkriptInsight.JavaReader\SkriptInsight.JavaReader.csproj", "{127F3D25-434C-4DA3-A8DF-93CEE1B8F9E8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkriptInsight.MachineLearning.Testing", "SkriptInsight.MachineLearning.Testing\SkriptInsight.MachineLearning.Testing.csproj", "{F4265A78-3943-49EC-B0FD-4A467EA3548F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkriptInsight.MachineLearning.Bruh", "SkriptInsight.MachineLearning.Bruh\SkriptInsight.MachineLearning.Bruh.csproj", "{2333E7F7-19DC-46E4-AAA7-14D95844109B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkriptInsightML.Model", "SkriptInsightML.Model\SkriptInsightML.Model.csproj", "{539CB02A-601D-4EB4-8E30-90DC702A4D6D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkriptInsightML.ConsoleApp", "SkriptInsightML.ConsoleApp\SkriptInsightML.ConsoleApp.csproj", "{EBAF06A9-20D9-4599-AF12-379EE67FCB13}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,6 +63,25 @@ Global
 		{127F3D25-434C-4DA3-A8DF-93CEE1B8F9E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{127F3D25-434C-4DA3-A8DF-93CEE1B8F9E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{127F3D25-434C-4DA3-A8DF-93CEE1B8F9E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4265A78-3943-49EC-B0FD-4A467EA3548F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4265A78-3943-49EC-B0FD-4A467EA3548F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4265A78-3943-49EC-B0FD-4A467EA3548F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4265A78-3943-49EC-B0FD-4A467EA3548F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2333E7F7-19DC-46E4-AAA7-14D95844109B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2333E7F7-19DC-46E4-AAA7-14D95844109B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2333E7F7-19DC-46E4-AAA7-14D95844109B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2333E7F7-19DC-46E4-AAA7-14D95844109B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{539CB02A-601D-4EB4-8E30-90DC702A4D6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{539CB02A-601D-4EB4-8E30-90DC702A4D6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{539CB02A-601D-4EB4-8E30-90DC702A4D6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{539CB02A-601D-4EB4-8E30-90DC702A4D6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBAF06A9-20D9-4599-AF12-379EE67FCB13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBAF06A9-20D9-4599-AF12-379EE67FCB13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBAF06A9-20D9-4599-AF12-379EE67FCB13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBAF06A9-20D9-4599-AF12-379EE67FCB13}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D3FCC15D-E83D-42F5-BFF5-00A493C59668} = {217C4A5D-C55D-4DD9-B580-D61F1ADE08B8}
@@ -59,5 +89,9 @@ Global
 		{D7B10151-7050-4416-BD70-7EE77F6ACBAE} = {2BC3584D-6A02-4187-BD86-018D23DD9CB2}
 		{B16DDDA5-128B-4D40-8AFE-028F9DE38220} = {2BC3584D-6A02-4187-BD86-018D23DD9CB2}
 		{127F3D25-434C-4DA3-A8DF-93CEE1B8F9E8} = {2BC3584D-6A02-4187-BD86-018D23DD9CB2}
+		{F4265A78-3943-49EC-B0FD-4A467EA3548F} = {217C4A5D-C55D-4DD9-B580-D61F1ADE08B8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E39E4395-70F6-4ECE-BB8D-2A25FF0B5CEA}
 	EndGlobalSection
 EndGlobal
