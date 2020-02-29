@@ -92,9 +92,6 @@ namespace SkriptInsight.Core.Parser.Patterns
             var shouldFastFail = false;
             var results = Children.WithContext().Select(c =>
             {
-                // if (ToString().Equals("[(2¦try)] %object%.<[^.]+\\b>[\\((1¦[%-objects%])\\)]"))
-                    // Debugger.Break();
-                
                 //Store old position in case of a rollback needed.
                 var oldPos = ctx.CurrentPosition;
                 //Pass the current element context to the parse context
@@ -115,7 +112,7 @@ namespace SkriptInsight.Core.Parser.Patterns
 
             var finalResult = ParseResult.Success(ctx);
             //Calculate Parse Marks for this final result
-            finalResult.ParseMark = results.Select(c => c.ParseMark).Aggregate(0, (left, right) => left ^ right);
+            finalResult.ParseMark = results.Select(c => c.IsOptionallyMatched ? 0 : c.ParseMark).Aggregate(0, (left, right) => left ^ right);
             
             return finalResult;
         }

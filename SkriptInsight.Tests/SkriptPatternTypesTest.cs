@@ -229,6 +229,12 @@ namespace SkriptInsight.Tests
         [InlineData("gamemode", "spectator")]
         [InlineData("game mode", "creative")]
         [InlineData("game modes", "adventure or creative or survival or spectator")]
+        [InlineData("experience", "1 xp")]
+        [InlineData("experience", "3 exp")]
+        [InlineData("experience", "1 experience")]
+        [InlineData("experience", "1 experience point")]
+        [InlineData("experience", "3 experience")]
+        [InlineData("experience", "3 experience points")]
         public void TypesCanBeRepresentedAsStrings(string type, string value)
         {
             //Parse normal type from name
@@ -238,7 +244,7 @@ namespace SkriptInsight.Tests
 
                 Assert.True(result.IsSuccess, "result.IsSuccess");
                 Assert.Single(result.Matches);
-                Assert.True(result.Context.HasFinishedLine, "result.Context.HasFinishedLine");
+                Assert.True(result.Context.HasFinishedLine, $"result.Context.HasFinishedLine => {result.Context.PeekUntilEnd()}");
 
                 var match = result.Matches.First();
                 Assert.IsType<ExpressionParseMatch>(match);

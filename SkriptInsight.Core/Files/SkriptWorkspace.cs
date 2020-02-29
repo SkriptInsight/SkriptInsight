@@ -69,7 +69,6 @@ namespace SkriptInsight.Core.Files
         {
             var knownAddons = new[]
             {
-                //"skript-mirror",
                 "Skript"
             };
 
@@ -95,6 +94,7 @@ namespace SkriptInsight.Core.Files
                     clone.IsPlural = true;
                     return clone;
                 }));
+                
                 //Sort the types by their position on the list and plural version first
 
                 doc.Types = doc.Types

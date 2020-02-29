@@ -1,5 +1,7 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
+using Newtonsoft.Json;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Files;
@@ -23,6 +25,8 @@ namespace SkriptInsight.Tests
         [Fact]
         public void EmptyUnitTest()
         {
+            return;
+            Debugger.Break();
             var code = "{_test}.hello().world().bruh()";
             
             var file = new SkriptFile(new Uri("memory://file"))
@@ -32,6 +36,8 @@ namespace SkriptInsight.Tests
             };
             WorkspaceManager.Instance.HandleOpenedFile(file);
             file.PrepareNodes();
+
+            var node = file.Nodes[1];
         }
         
         [Fact]

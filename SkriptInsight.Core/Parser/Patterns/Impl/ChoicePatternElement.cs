@@ -64,6 +64,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
             var oldPos = ctx.CurrentPosition;
 
             var matchedParseMark = 0;
+            ParseResult matchedChoiceResult = null;
             var matchedChoice = Elements.FirstOrDefault(e =>
             {
                 ctx.CurrentPosition = oldPos;
@@ -76,16 +77,22 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                 else
                     ctx.UndoMatch();
 
-                matchedParseMark = result?.ParseMark ?? 0;
+                matchedParseMark = !(result?.IsOptionallyMatched ?? false) ? result?.ParseMark ?? 0 : 0;
                 
                 if (!resultIsSuccess)
                     ctx.CurrentPosition = oldPos;
+                
+                if (resultIsSuccess) matchedChoiceResult = result;
                 return resultIsSuccess;
             });
             if (matchedChoice == null) return ParseResult.Failure(ctx);
 
             var success = ParseResult.Success(ctx);
-            success.ParseMark ^= matchedChoice.ParseMark ^ matchedParseMark;
+            if (!(matchedChoiceResult?.IsOptionallyMatched ?? false))
+            {
+                success.ParseMark ^= matchedChoice.ParseMark ^ matchedParseMark;
+            }
+
             return success;
         }
 

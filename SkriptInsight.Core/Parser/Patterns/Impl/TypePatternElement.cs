@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using SkriptInsight.Core.Files;
@@ -87,8 +88,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                 if (!ctx.ShouldJustCheckExpressionsThatMatchType)
                 {
                     result = skriptTypeDescriptor?.TryParseValue(ctx);
-                }
-                else if (!(typeRaw.Equals("object") || typeRaw.Equals("objects")))
+                } else if (!(typeRaw.Equals("object") || typeRaw.Equals("objects")))
                 {
                     result = skriptTypeDescriptor?.TryParseValue(ctx);
                 }
@@ -157,14 +157,8 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
 
                                                 clone.VisitExpression(skriptType, expression);
 
-                                                // Debug.WriteLine(
-                                                //     $"Trying with (event value) {expression.ClassName} (returning {expression.ReturnType}):");
                                                 for (var index = 0; index < expression.PatternNodes.Length; index++)
                                                 {
-                                                    // Debug.WriteLine(
-                                                    // $"Has visited (event value) {clone.VisitedExpressions.Count} expressions so far.");
-                                                    // Debug.WriteLine(
-                                                    // $"Trying with pattern #{index}: {expression.Patterns[index]}");
                                                     var pattern = expression.PatternNodes[index];
                                                     var resultValue = pattern.Parse(clone);
                                                     if (resultValue.IsSuccess)
@@ -185,7 +179,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                         }
                     }
                     //Temporarily disable
-                    if (false)
+                    if (typeRaw.ToLower() != "object" && typeRaw.ToLower() != "objects")
                     {
                         //Try matching a Skript expression
                         // Time to check all expressions to make sure the user isn't just trying to mix types for whatever reason...
@@ -194,8 +188,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                             : skriptTypesManager.KnownExpressionsFromAddons;
 
                         if (exprFitType != null)
-                            foreach (var expression in exprFitType /*.Where(
-                                c => !clone.HasVisitedExpression(skriptType, c))*/)
+                            foreach (var expression in exprFitType)
                             {
                                 clone.CurrentPosition = currentPos;
 
