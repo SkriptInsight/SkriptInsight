@@ -12,6 +12,7 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using OmniSharp.Extensions.LanguageServer.Server;
 using SkriptInsight.Core;
 using SkriptInsight.Core.Files;
+using SkriptInsight.Core.Inspections;
 using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.Utils;
 using SkriptInsight.Host.Lsp.Handlers;
@@ -34,8 +35,8 @@ namespace SkriptInsight.Host.Lsp
             StartAnalytics();
             AnalyticsApi.UserAgent = EditorName = GetEditorNameByArgs(args);
 
-            AnalyticsApi.TrackEvent("SessionStart", "Session Start", extraValues: new { sc = "start" });
-            AnalyticsApi.TrackEvent("ServerStart", "Started LSP Server", extraValues: new { sc = "start" });
+            AnalyticsApi.TrackEvent("SessionStart", "Session Start", extraValues: new {sc = "start"});
+            AnalyticsApi.TrackEvent("ServerStart", "Started LSP Server", extraValues: new {sc = "start"});
 
             if (args.Any(a => a.ToLower().Equals("-d")))
                 while (!Debugger.IsAttached)
@@ -51,8 +52,10 @@ namespace SkriptInsight.Host.Lsp
                     .WithHandler<TextDocumentHandler>()
                     .WithHandler<TextHoverHandler>();
 
-                options.OnRequest<object, int>("insight/inspectionsCount", _ => Task.FromResult(0));
-                var debouncedParseRange = Debouncer.Debounce<SkriptFile>(file => file.NotifyVisibleNodesRangeChanged(), TimeSpan.FromMilliseconds(500));
+                options.OnRequest<object, int>("insight/inspectionsCount",
+                    _ => Task.FromResult(WorkspaceManager.Instance.InspectionsManager.CodeInspections.Count));
+                var debouncedParseRange = Debouncer.Debounce<SkriptFile>(file => file.NotifyVisibleNodesRangeChanged(),
+                    TimeSpan.FromMilliseconds(500));
 
                 options.OnNotification<ViewportChangedParams>("insight/viewportRangeChanged", e =>
                 {
@@ -67,7 +70,9 @@ namespace SkriptInsight.Host.Lsp
                 {
                     if (WorkspaceManager.CurrentHost == null) return;
 
-                    var sendRequest = WorkspaceManager.CurrentHost.SendRawRequest<ExtendedHostCapabilities>("insight/queryExtendedCapabilities");
+                    var sendRequest =
+                        WorkspaceManager.CurrentHost.SendRawRequest<ExtendedHostCapabilities>(
+                            "insight/queryExtendedCapabilities");
                     if (sendRequest != null)
                     {
                         WorkspaceManager.CurrentHost.ExtendedCapabilities = await sendRequest;
@@ -76,14 +81,17 @@ namespace SkriptInsight.Host.Lsp
             });
 
             WorkspaceManager.CurrentHost = new LspSkriptInsightHost(server);
+            
+            #pragma warning disable 4014
             Task.Run(() => StartDiscordRichPresence(WorkspaceManager.CurrentWorkspace));
+            #pragma warning restore 4014
 
             await server.WaitForExit;
 
             DiscordRpcClient?.Dispose();
             AnalyticsApi.CancellationToken.Cancel();
             AnalyticsApi.TrackEvent("ServerStop", "Stopped LSP Server");
-            AnalyticsApi.TrackEvent("SessionStop", "Session Stop", extraValues: new { sc = "stop" });
+            AnalyticsApi.TrackEvent("SessionStop", "Session Stop", extraValues: new {sc = "stop"});
         }
 
         private static void StartDiscordRichPresence(SkriptWorkspace workspace)

@@ -1,4 +1,6 @@
 using System.Threading;
+using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Files;
 using SkriptInsight.Core.Files.Processes;
 using SkriptInsight.Core.Inspections.Problems;
@@ -43,6 +45,16 @@ namespace SkriptInsight.Core.Inspections.Impl
             StaticProblemsHolder.Value = file.ProblemsHolder;            
             Inspect(file, lineNumber);
             StaticProblemsHolder.Value = null;
+        }
+        
+        protected void AddProblem(DiagnosticSeverity severity, string id, string message, Range range)
+        {
+            ProblemsHolder.Add(new ProblemDefinition(
+                severity,
+                id,
+                message,
+                range.Clone()
+            ));
         }
     }
 }

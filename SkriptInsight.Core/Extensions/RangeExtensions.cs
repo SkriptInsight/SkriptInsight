@@ -7,6 +7,11 @@ namespace SkriptInsight.Core.Extensions
 {
     public static class RangeExtensions
     {
+        public static Range Clone(this Range range)
+        {
+            return From(range.Start.Line, range.Start.Character, range.End.Line, range.End.Character);
+        }
+        
         public static Range From(long startLine, long startCharacter, long endLine, long endCharacter)
         {
             return new Range(new Position(startLine, startCharacter), new Position(endLine, endCharacter));

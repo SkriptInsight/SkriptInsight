@@ -33,7 +33,6 @@
 
     <ItemGroup>
       <Folder Include="Inspections\Impl\Node" />
-      <Folder Include="Inspections\Impl\Syntax" />
     </ItemGroup>
 
 </Project>

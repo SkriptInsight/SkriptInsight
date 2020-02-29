@@ -24,5 +24,7 @@ namespace SkriptInsight.Core.Inspections.Impl
             if (node.MatchedSyntax != null)
                 Inspect(file, line, node, node.MatchedSyntax);
         }
+        
+
     }
 }

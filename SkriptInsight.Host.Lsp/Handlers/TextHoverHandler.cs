@@ -20,7 +20,7 @@ namespace SkriptInsight.Host.Lsp.Handlers
 
             var nodeAtLine = file.Nodes?[(int) request.Position.Line];
 
-            if (nodeAtLine != null)
+            if (true && nodeAtLine != null)
                 return Task.FromResult(new Hover
                 {
                     Range = nodeAtLine.ContentRange,

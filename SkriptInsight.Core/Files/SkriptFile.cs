@@ -26,7 +26,6 @@ namespace SkriptInsight.Core.Files
     {
         private static DocumentSelector _selector;
         private FileProcess _parseProcess;
-        private FileProcess _inspectProcess;
 
         public SkriptFile(Uri url)
         {
@@ -50,11 +49,15 @@ namespace SkriptInsight.Core.Files
             get => _parseProcess ??= ProvideParseProcess();
             set => _parseProcess = value;
         }
-        
+
         [CanBeNull] public List<Range> VisibleRanges { get; set; }
 
         public ProblemsHolder ProblemsHolder { get; } = new ProblemsHolder();
-        
+
+        public bool IsDoingNodesChange { get; set; }
+
+        protected Stack<Action> NodesChangeQueue { get; set; } = new Stack<Action>();
+
         public void HandleChange(TextDocumentContentChangeEvent edit)
         {
             if (edit.Range == null)
@@ -87,8 +90,10 @@ namespace SkriptInsight.Core.Files
                 for (var i = startLine; i <= startLine + linesNumber; i++) Nodes[i] = null;
 
                 var shiftRangeStart = startLine + 1;
+
                 Nodes.ShiftRangeRight(shiftRangeStart, Nodes.Count - shiftRangeStart, linesNumber,
                     n => n.ShiftLineNumber(linesNumber));
+                ProblemsHolder.ShiftLineNumber(linesNumber);
             }
             else if (finalStrings.Count < lineCount)
             {
@@ -99,11 +104,21 @@ namespace SkriptInsight.Core.Files
 
                 Nodes.ShiftRangeLeft(removedLineNumber + amount, Nodes.Count - removedLineNumber, amount,
                     n => n.ShiftLineNumber(-amount));
+                ProblemsHolder.ShiftLineNumber(-amount);
             }
+
+            IsDoingNodesChange = true;
 
             PrepareNodes(startLine, startLine + finalStrings.Count + (finalStrings.Count - lineCount));
 
             Nodes.SkipWhile(kv => kv.Value != null).ToList().ForEach(c => Nodes.Remove(c.Key, out _));
+
+            IsDoingNodesChange = false;
+
+            while (NodesChangeQueue.TryPop(out var action))
+            {
+                action();
+            }
         }
 
         public void RunProcess(FileProcess process, int startLine = -1, int endLine = -1)
@@ -119,8 +134,12 @@ namespace SkriptInsight.Core.Files
 
             var sw = Stopwatch.StartNew();
 
+            var processName = process.GetType().Name;
+            if (process is BaseInspection)
+                processName = $"Inspection {processName.Replace("Inspection", "")}";
+
             WorkspaceManager.CurrentHost.LogInfo(
-                $"Starting {process.GetType().Name} on {endLine - startLine} line(s).");
+                $"Starting {processName} on {endLine - startLine} line(s).");
             Parallel.For(startLine, endLine + 1,
                 new ParallelOptions {MaxDegreeOfParallelism = maxDegreeOfParallelism},
                 line =>
@@ -142,7 +161,7 @@ namespace SkriptInsight.Core.Files
                     }
                 });
 
-            if (process == ParseProcess && GetType() == typeof(SkriptFile))
+            if (GetType() == typeof(SkriptFile))
             {
                 var diags = new List<Diagnostic>();
                 Nodes.GetRange(startLine, endLine + 1).ForEach(node =>
@@ -155,24 +174,14 @@ namespace SkriptInsight.Core.Files
                             Matches: c.MatchAnnotations.Where(match => match.ShouldBeDiagnostic)))
                         .Select(c => c.Matches.Select(match => match.ToDiagnostic(c.Expression)))
                         .SelectMany(diagnostics => diagnostics));
-
-
-                    if (!(node is CommentLineNode) && node.MatchedSyntax == null)
-                        diags.Add(
-                            new Diagnostic
-                            {
-                                Code = "1",
-                                Message = "This node doesn't match any syntax!",
-                                Range = node.ContentRange,
-                                Severity = DiagnosticSeverity.Warning,
-                                Source = "SkriptInsight"
-                            });
                 });
+
+                diags.AddRange(ProblemsHolder.Problems.Select(problem => problem.ToDiagnostic()));
                 WorkspaceManager.CurrentHost.PublishDiagnostics(Url, diags);
             }
 
             WorkspaceManager.CurrentHost.LogInfo(
-                $"Took {sw.ElapsedMilliseconds}ms to run {process.GetType().Name} on {endLine - startLine} line(s) [{startLine}->{endLine}].");
+                $"Took {sw.ElapsedMilliseconds}ms to run {processName} on {endLine - startLine} line(s) [{startLine}->{endLine}].");
         }
 
         protected virtual FileProcess ProvideParseProcess()
@@ -196,6 +205,7 @@ namespace SkriptInsight.Core.Files
 
         protected virtual void RunCodeInspections(int startLine, int endLine)
         {
+            ProblemsHolder.Clear(startLine, endLine);
             foreach (var inspection in WorkspaceManager.Instance.InspectionsManager.CodeInspections.Values)
             {
                 //Run inspections with multi-thread
@@ -229,11 +239,17 @@ namespace SkriptInsight.Core.Files
 
             foreach (var range in VisibleRanges)
             {
-                WorkspaceManager.CurrentHost.LogInfo(
-                    $"Selectively Parsing nodes from {range.Start.Line} to {range.End.Line}.");
-                var (start, end) = Nodes.ExpandRange((int) range.Start.Line, (int) range.End.Line);
-                RunProcess(ParseProcess, start, end);
-                RunCodeInspections(start, end);
+                Action toRun = () =>
+                {
+                    WorkspaceManager.CurrentHost.LogInfo(
+                        $"Selectively Parsing nodes from {range.Start.Line} to {range.End.Line}.");
+                    var (start, end) = Nodes.ExpandRange((int) range.Start.Line, (int) range.End.Line);
+                    RunProcess(ParseProcess, start, end);
+                    RunCodeInspections(start, end);
+                };
+                if (IsDoingNodesChange) NodesChangeQueue.Push(toRun);
+                else toRun();
+
             }
         }
     }

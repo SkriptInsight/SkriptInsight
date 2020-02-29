@@ -14,7 +14,7 @@ namespace SkriptInsight.Core.Extensions
         {
             while (true)
             {
-                if (node.Parent == null) return node;
+                if (node?.Parent == null) return node;
                 node = node.Parent;
             }
         }
@@ -44,18 +44,23 @@ namespace SkriptInsight.Core.Extensions
             switch (node.MatchedSyntax?.Element)
             {
                 case SkriptCondition skriptCondition:
-                    return skriptCondition.ClassName == name;
+                    return GetClassName(skriptCondition.ClassName) == name;
                 case SkriptEffect skriptEffect:
-                    return skriptEffect.ClassName == name;
+                    return GetClassName(skriptEffect.ClassName) == name;
                 case SkriptEvent skriptEvent:
-                    if (skriptEvent.ClassNames.Any(cl => cl == name))
+                    if (skriptEvent.ClassNames.Any(cl => GetClassName(cl) == name))
                         return true;
                     break;
                 case SyntaxSkriptExpression skriptExpression:
-                    return skriptExpression.ClassName == name;
+                    return GetClassName(skriptExpression.ClassName) == name;
             }
-
             return false;
+        }
+
+        private static string GetClassName(string name)
+        {
+            var i = name.LastIndexOf('.');
+            return string.Intern(i > -1 ? name.Substring(i + 1) : name);
         }
 
         private class DynamicNameReturner : DynamicObject
