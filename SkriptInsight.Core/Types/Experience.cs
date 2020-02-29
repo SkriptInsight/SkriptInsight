@@ -34,7 +34,7 @@ namespace SkriptInsight.Core.Types
                 case ExperienceType.Points:
                     return "experience";
                 case ExperienceType.ExperiencePoints:
-                    return $"experience point{(amount != 1 ? "s" : string.Empty)}";
+                    return $"experience point{(Math.Abs(amount - 1) > double.Epsilon ? "s" : string.Empty)}";
                 default:
                     throw new ArgumentOutOfRangeException();
             }

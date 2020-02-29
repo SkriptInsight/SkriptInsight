@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Humanizer;
 using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Parser.Expressions;
 using SkriptInsight.Core.Parser.Patterns;
@@ -102,15 +103,15 @@ namespace SkriptInsight.Core.Parser.Types.Impl
 
             var resultObj = new Experience();
             var number = result.Matches.GetExplicitValue<double?>(0);
-
             resultObj.Type = (ExperienceType) result.ParseMark;
 
+            
             if (number?.GenericValue.HasValue == true)
                 resultObj.Amount = number.GenericValue.Value;
             else
                 matchAnnotationsHolder.Add(new MatchAnnotation(MatchAnnotationSeverity.Error,
                     "ExperienceNumberIsNotIncluded",
-                    $"The amount of {resultObj.Type.ToString().ToLower()} must be included"));
+                    $"The amount of {resultObj.Type.Humanize()} must be included"));
 
             ctx.ReadUntilPosition(clone.CurrentPosition);
             return resultObj;

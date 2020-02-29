@@ -150,7 +150,7 @@ namespace SkriptInsight.Core.Files
                     var matches = node.MatchedSyntax?.Result.Matches;
                     if (matches == null) return;
 
-                    diags.AddRange(matches.OfType<ExpressionParseMatch>().Explode()
+                    diags.AddRange(matches.Explode()
                         .Select(c => (Expression: c,
                             Matches: c.MatchAnnotations.Where(match => match.ShouldBeDiagnostic)))
                         .Select(c => c.Matches.Select(match => match.ToDiagnostic(c.Expression)))
