@@ -61,9 +61,9 @@ namespace SkriptInsight.Tests
             var result = pattern.Parse(input);
 
             Assert.True(result.IsSuccess);
-            Assert.Equal(2, result.Matches.Count);
+            Assert.Equal(input.Contains(" ") ? 3 : 2, result.Matches.Count);
             Assert.Equal("1", result.Matches.ElementAtOrDefault(0)?.RawContent);
-            Assert.Equal("2", result.Matches.ElementAtOrDefault(1)?.RawContent);
+            Assert.Equal("2", result.Matches.ElementAtOrDefault(input.Contains(" ") ? 2 : 1)?.RawContent);
         }
 
         [Theory]
@@ -80,7 +80,7 @@ namespace SkriptInsight.Tests
 
             Assert.Equal(success, result.IsSuccess);
             if (success)
-                Assert.Single(result.Context.Matches);
+                Assert.Single(result.Context.Matches.OfType<ExpressionParseMatch>());
         }
 
         [Theory]
@@ -99,7 +99,7 @@ namespace SkriptInsight.Tests
 
             Assert.Equal(success, result.IsSuccess);
             if (success)
-                Assert.Equal(2, result.Context.Matches.Count);
+                Assert.Equal(input.Contains("println") ? 3 : 2, result.Context.Matches.Count);
         }
 
         [Theory]

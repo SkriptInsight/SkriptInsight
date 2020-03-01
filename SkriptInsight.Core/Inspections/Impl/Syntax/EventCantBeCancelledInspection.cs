@@ -1,8 +1,9 @@
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
-using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Files;
 using SkriptInsight.Core.Files.Nodes;
 using SkriptInsight.Core.SyntaxInfo;
+using SkriptInsight.Core.SyntaxNodes;
+using SkriptInsight.Core.SyntaxNodes.Impl;
 
 namespace SkriptInsight.Core.Inspections.Impl.Syntax
 {
@@ -11,11 +12,12 @@ namespace SkriptInsight.Core.Inspections.Impl.Syntax
     {
         protected override void Inspect(SkriptFile file, int line, AbstractFileNode node, SyntaxMatch match)
         {
-            if (!node.IsMatchOfType(x => x.EffCancelEvent)) return;
-            
+            var cancelEvent = node.GetSyntaxNode<EffCancelEvent>();
+            if (cancelEvent == null) return;
+
             if (node.RootParentSyntax?.Element is SkriptEvent @event && !@event.Cancellable)
             {
-                AddProblem(DiagnosticSeverity.Error, "This event can't be cancelled", node);
+                AddProblem(DiagnosticSeverity.Error, $"This event can't be {(!cancelEvent.ToCancel ? "un-" : "")}cancelled.", node);
             }
         }
     }

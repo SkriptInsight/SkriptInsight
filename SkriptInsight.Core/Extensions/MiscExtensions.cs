@@ -193,7 +193,7 @@ namespace SkriptInsight.Core.Extensions
 
         public static bool IsEmpty(this string value)
         {
-            return string.IsNullOrEmpty(value);
+            return string.IsNullOrEmpty(value) || string.IsNullOrWhiteSpace(value);
         }
 
         public static bool IsEmpty(this StringBuilder value)

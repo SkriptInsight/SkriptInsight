@@ -20,6 +20,10 @@ namespace SkriptInsight.Core.Utils
                     .Select(p => p.ParameterType)
                     .SequenceEqual(args.Select(ccc => ccc.GetType()))
                 );
+            if (ctor == null)
+            {
+                ctor = t.GetConstructor(args.Select(ccc => ccc.GetType()).ToArray());
+            }
 
             if (ctor == null) throw new Exception("Unable to find constructor for these arguments");
 

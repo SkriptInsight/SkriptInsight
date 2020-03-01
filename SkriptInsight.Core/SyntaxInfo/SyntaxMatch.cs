@@ -13,5 +13,7 @@ namespace SkriptInsight.Core.SyntaxInfo
         public AbstractSyntaxElement Element { get; set; }
 
         public ParseResult Result { get; set; }
+
+        public int PatternIndex { get; set; }
     }
 }

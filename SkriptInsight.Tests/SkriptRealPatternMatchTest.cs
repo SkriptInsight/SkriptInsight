@@ -56,9 +56,9 @@ namespace SkriptInsight.Tests
 
 
         [Theory]
-        [InlineData("send \"message\" to player's inventory")]
-        [InlineData("send messages \"message\", \"reeee\" to player")]
-        public void MatchesMessagePlayer(string code)
+        [InlineData("send \"message\" to player's inventory", 4)]
+        [InlineData("send messages \"message\", \"reeee\" to player", 6)]
+        public void MatchesMessagePlayer(string code, int expectedMatches)
         {
             var file = new SkriptFile(new Uri("memory://file"))
             {
@@ -73,7 +73,7 @@ namespace SkriptInsight.Tests
             Assert.NotNull(effMessageNode);
             Assert.NotNull(effMessageNode.MatchedSyntax);
             Assert.True(effMessageNode.MatchedSyntax.Result.IsSuccess);
-            Assert.Equal(3, effMessageNode.MatchedSyntax.Result.Matches.Count);
+            Assert.Equal(expectedMatches, effMessageNode.MatchedSyntax.Result.Matches.Count);
         }
     }
 }

@@ -44,15 +44,15 @@ namespace SkriptInsight.Core.Extensions
             switch (node.MatchedSyntax?.Element)
             {
                 case SkriptCondition skriptCondition:
-                    return GetClassName(skriptCondition.ClassName) == name;
+                    return skriptCondition.ClassName == name || GetClassName(skriptCondition.ClassName) == name;
                 case SkriptEffect skriptEffect:
-                    return GetClassName(skriptEffect.ClassName) == name;
+                    return skriptEffect.ClassName == name || GetClassName(skriptEffect.ClassName) == name;
                 case SkriptEvent skriptEvent:
-                    if (skriptEvent.ClassNames.Any(cl => GetClassName(cl) == name))
+                    if (skriptEvent.ClassNames.Any(cl => cl == name || GetClassName(cl) == name))
                         return true;
                     break;
                 case SyntaxSkriptExpression skriptExpression:
-                    return GetClassName(skriptExpression.ClassName) == name;
+                    return skriptExpression.ClassName == name || GetClassName(skriptExpression.ClassName) == name;
             }
             return false;
         }

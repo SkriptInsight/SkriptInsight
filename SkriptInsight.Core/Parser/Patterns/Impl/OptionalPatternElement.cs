@@ -27,9 +27,16 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
         public override ParseResult Parse(ParseContext ctx)
         {
             var oldPos = ctx.CurrentPosition;
+            ctx.StartMatch();
             var parseResult = Element.Parse(ctx);
 
-            if (parseResult.IsSuccess) return parseResult;
+            if (parseResult.IsSuccess)
+            {
+                ctx.EndMatch(true);
+                return parseResult;
+            }
+
+            ctx.UndoMatch();
             ctx.CurrentPosition = oldPos;
             parseResult.ResultType = ParseResultType.Success;
             parseResult.IsOptionallyMatched = true;

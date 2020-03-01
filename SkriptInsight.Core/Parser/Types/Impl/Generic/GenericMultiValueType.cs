@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.Parser.Expressions;
 using SkriptInsight.Core.Parser.Patterns;
@@ -53,7 +54,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
                 if (expr != null)
                     resultExpression.Values.Add(
                         new MultiValueExpression.ValueDescription(expr,
-                            ourContext.Matches.Skip(1).FirstOrDefault()));
+                            ourContext.Matches.Where(c => c != null && !(c is ExpressionParseMatch)).Where(c => !c.RawContent.IsEmpty()).Skip(1).FirstOrDefault()));
 
                 count++;
             }
