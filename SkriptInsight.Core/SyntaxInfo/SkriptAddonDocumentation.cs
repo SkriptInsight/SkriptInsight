@@ -41,7 +41,7 @@ namespace SkriptInsight.Core.SyntaxInfo
             
             foreach (var expr in InnerExpressions)
             {
-                if (expr.ClassName == Managers.SkriptTypesManager.ExprEntityClassName) continue;
+                if (Managers.SkriptTypesManager.BannedClassNames.Contains(expr.ClassName)) continue;
                 
                 var typeOrdinal = (int) expr.ExpressionType;
                 for (var i = typeOrdinal + 1; i < types.Count; i++)

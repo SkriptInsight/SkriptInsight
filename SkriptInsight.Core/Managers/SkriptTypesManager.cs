@@ -15,6 +15,15 @@ namespace SkriptInsight.Core.Managers
     {
         public const string ExprEntityClassName = "ch.njol.skript.expressions.ExprEntity";
         public const string ExprEntitiesClassName = "ch.njol.skript.expressions.ExprEntities";
+        public const string ExprLoopValueClassName = "ch.njol.skript.expressions.ExprLoopValue";
+
+        public static readonly string[] BannedClassNames =
+        {
+            ExprEntityClassName,
+            ExprEntitiesClassName,
+            ExprLoopValueClassName
+        };
+        
         public IReadOnlyList<SyntaxSkriptExpression> KnownExpressionsFromAddons { get; set; }
 
         public IReadOnlyList<SkriptType> KnownTypesFromAddons { get; set; }
@@ -92,8 +101,7 @@ namespace SkriptInsight.Core.Managers
             }
 
             KnownExpressionsFromAddons = info
-                .Where(c => c.ClassName != ExprEntityClassName)
-                .Where(c => c.ClassName != ExprEntitiesClassName)
+                .Where(c => !BannedClassNames.Contains(c.ClassName))
                 .DistinctBy(c =>
                     c is SyntaxSkriptEventValueExpression eventValueExpression
                         ? (object) (eventValueExpression.Parent, eventValueExpression.RawName)
@@ -126,7 +134,7 @@ namespace SkriptInsight.Core.Managers
             foreach (var (type, expressions) in nonPluralTypes
                 .Select(cc => (Type: cc.Value.ClassName, Expressions: KnownExpressionsFromAddons
                     .Where(c => !(c is SyntaxSkriptEventValueExpression))
-                    .Where(c => c.ClassName != ExprEntityClassName)
+                    .Where(c => !BannedClassNames.Contains(c.ClassName))
                     .Where(c =>
                         c.ReturnType == cc.Value.ClassName ||
                         CheckClassExtendsAnother(c.ReturnType, cc.Value.ClassName)).ToList())))
