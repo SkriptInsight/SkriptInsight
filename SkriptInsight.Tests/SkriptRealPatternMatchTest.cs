@@ -12,21 +12,24 @@ using SkriptInsight.Core.Parser.Patterns;
 using SkriptInsight.Core.Parser.Types.Impl;
 using SkriptInsight.Core.Types;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace SkriptInsight.Tests
 {
     public class SkriptRealPatternMatchTest
     {
-        public SkriptRealPatternMatchTest()
+        private readonly ITestOutputHelper _testOutputHelper;
+
+        public SkriptRealPatternMatchTest(ITestOutputHelper testOutputHelper)
         {
+            _testOutputHelper = testOutputHelper;
             WorkspaceManager.CurrentHost = new TestInsightHost();
         }
 
         [Fact]
         public void EmptyUnitTest()
         {
-            return;
-            Debugger.Break();
+            // Debugger.Break();
             var code = "{_test}.hello().world().bruh()";
             
             var file = new SkriptFile(new Uri("memory://file"))
@@ -38,6 +41,7 @@ namespace SkriptInsight.Tests
             file.PrepareNodes();
 
             var node = file.Nodes[1];
+            _testOutputHelper.WriteLine(node.ToJson());
         }
         
         [Fact]

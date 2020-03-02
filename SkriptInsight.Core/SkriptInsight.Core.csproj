@@ -15,16 +15,16 @@
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="KnownAddonInfo\Skript.json" />
+      <EmbeddedResource Include="Resources\JarMetadataRepo\rt.simeta" />
+      <EmbeddedResource Include="Resources\JarMetadataRepo\skript-mirror.simeta" />
+      <EmbeddedResource Include="Resources\JarMetadataRepo\Skript.simeta" />
+      <EmbeddedResource Include="Resources\JarMetadataRepo\spigot-api-1.14.4.simeta" />
+      <EmbeddedResource Include="Resources\KnownAddonInfo\skript-mirror.json" />
+      <EmbeddedResource Include="Resources\KnownAddonInfo\Skript.json" />
       <None Remove="JarMetadataRepo\Skript.simeta" />
-      <EmbeddedResource Include="JarMetadataRepo\Skript.simeta" />
       <None Remove="JarMetadataRepo\rt.simeta" />
-      <EmbeddedResource Include="JarMetadataRepo\rt.simeta" />
-      <EmbeddedResource Include="JarMetadataRepo\spigot-api-1.14.4.simeta" />
       <None Remove="JarMetadataRepo\skript-mirror.simeta" />
-      <EmbeddedResource Include="JarMetadataRepo\skript-mirror.simeta" />
       <None Remove="KnownAddonInfo\skript-mirror.json" />
-      <EmbeddedResource Include="KnownAddonInfo\skript-mirror.json" />
     </ItemGroup>
 
     <ItemGroup>
@@ -33,6 +33,7 @@
 
     <ItemGroup>
       <Folder Include="Inspections\Impl\Node" />
+      <Folder Include="Resources" />
     </ItemGroup>
 
 </Project>

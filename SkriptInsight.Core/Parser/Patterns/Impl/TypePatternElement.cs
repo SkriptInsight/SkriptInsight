@@ -88,10 +88,10 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                 if (!ctx.ShouldJustCheckExpressionsThatMatchType)
                 {
                     result = skriptTypeDescriptor?.TryParseValue(ctx);
-                } else if (!(typeRaw.Equals("object") || typeRaw.Equals("objects")))
+                }/* else if (!(typeRaw.Equals("object") || typeRaw.Equals("objects")))
                 {
                     result = skriptTypeDescriptor?.TryParseValue(ctx);
-                }
+                }*/
 
                 //This type doesn't have a flag to just match literals So, let's try first matching variables.
                 if (result == null && !Constraint.HasFlagFast(SyntaxValueAcceptanceConstraint.LiteralsOnly))
@@ -179,7 +179,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                         }
                     }
                     //Temporarily disable
-                    if (typeRaw.ToLower() != "object" && typeRaw.ToLower() != "objects")
+                    if (false && typeRaw.ToLower() != "object" && typeRaw.ToLower() != "objects")
                     {
                         //Try matching a Skript expression
                         // Time to check all expressions to make sure the user isn't just trying to mix types for whatever reason...

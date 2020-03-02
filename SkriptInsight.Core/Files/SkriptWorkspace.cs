@@ -43,7 +43,8 @@ namespace SkriptInsight.Core.Files
             {
                 "rt", //Base Java classes
                 "spigot-api-1.14.4", //Spigot API classes
-                "Skript" //Skript classes
+                "skript-mirror", //skript-mirror classes
+                "Skript", //Skript classes
             };
             
             var archives = new List<JarArchive>();
@@ -69,6 +70,7 @@ namespace SkriptInsight.Core.Files
         {
             var knownAddons = new[]
             {
+                "skript-mirror",
                 "Skript"
             };
 
