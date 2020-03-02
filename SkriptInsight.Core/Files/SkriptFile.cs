@@ -10,13 +10,11 @@ using MoreLinq;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Files.Nodes;
-using SkriptInsight.Core.Files.Nodes.Impl;
 using SkriptInsight.Core.Files.Processes;
 using SkriptInsight.Core.Files.Processes.Impl;
 using SkriptInsight.Core.Inspections.Impl;
 using SkriptInsight.Core.Inspections.Problems;
 using SkriptInsight.Core.Managers;
-using SkriptInsight.Core.Parser;
 using static SkriptInsight.Core.Files.Processes.Impl.ProcCreateOrUpdateNodeChildren;
 using Range = OmniSharp.Extensions.LanguageServer.Protocol.Models.Range;
 
@@ -100,7 +98,14 @@ namespace SkriptInsight.Core.Files
                 var amount = Math.Abs(finalStrings.Count - lineCount);
                 var removedLineNumber = startLine + lineCount + (finalStrings.Count - lineCount);
 
-                for (var i = removedLineNumber; i < removedLineNumber + amount; i++) Nodes[i] = null;
+                for (var i = removedLineNumber; i < removedLineNumber + amount; i++)
+                {
+                    // Remove the deleted nodes
+                    Nodes[i] = null;
+                    
+                    // Also remove the problems that were on removed lines 
+                    ProblemsHolder.Clear(i, i);
+                }
 
                 Nodes.ShiftRangeLeft(removedLineNumber + amount, Nodes.Count - removedLineNumber, amount,
                     n => n.ShiftLineNumber(-amount));
