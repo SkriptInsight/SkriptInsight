@@ -17,7 +17,7 @@ namespace SkriptInsight.Core.Inspections.Impl.Syntax
 
             if (node.RootParentSyntax?.Element is SkriptEvent @event && !@event.Cancellable)
             {
-                AddProblem(DiagnosticSeverity.Error, $"This event can't be {(!cancelEvent.ToCancel ? "un-" : "")}cancelled.", node);
+                AddProblem(DiagnosticSeverity.Error, $"This event can't be {(!cancelEvent.ToCancel ? "un" : "")}cancelled.", node);
             }
         }
     }
