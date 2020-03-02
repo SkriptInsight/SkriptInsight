@@ -132,6 +132,13 @@ namespace SkriptInsight.Core.Files
 
             startLine = Math.Max(0, startLine);
             endLine = endLine < 0 ? RawContents.Count : endLine;
+
+            if (startLine > endLine)
+            {
+                //Swap these two variables to make them correct.
+                (startLine, endLine) = (endLine, startLine);
+            }
+            
             var maxDegreeOfParallelism = Environment.ProcessorCount;
             var contexts = new ConcurrentQueue<FileParseContext>(Enumerable
                 .Range(0, (int) Math.Ceiling(maxDegreeOfParallelism * 1.20))
