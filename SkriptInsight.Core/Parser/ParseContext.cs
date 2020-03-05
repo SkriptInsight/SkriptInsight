@@ -337,7 +337,7 @@ namespace SkriptInsight.Core.Parser
             CurrentMatchStack.TryPop(out _);
         }
 
-        public ParseMatch EndMatch(bool save = false)
+        public ParseMatch EndMatch(bool save = false, AbstractSkriptPatternElement t = null)
         {
             var startingPos = CurrentMatchStack.Pop();
             var endingPos = Math.Min(CurrentPosition, Text.Length);
@@ -345,10 +345,14 @@ namespace SkriptInsight.Core.Parser
             {
                 Context = this,
                 Range = new Range(new Position(CurrentLine, startingPos), new Position(CurrentLine, endingPos)),
-                RawContent = Text.SafeSubstring(startingPos, endingPos - startingPos)
+                RawContent = Text.SafeSubstring(startingPos, endingPos - startingPos),
             };
             if (save)
+            {
+                result.ElementInfo = ParseMatch.LoadElementInfo(t);
                 Matches.Add(result);
+            }
+
             return result;
         }
 

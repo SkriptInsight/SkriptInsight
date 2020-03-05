@@ -28,11 +28,12 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
         {
             var oldPos = ctx.CurrentPosition;
             ctx.StartMatch();
+            Element.Parent = this;
             var parseResult = Element.Parse(ctx);
 
             if (parseResult.IsSuccess)
             {
-                ctx.EndMatch(true);
+                ctx.EndMatch(true, this);
                 return parseResult;
             }
 

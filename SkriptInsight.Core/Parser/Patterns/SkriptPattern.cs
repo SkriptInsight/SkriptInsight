@@ -92,6 +92,8 @@ namespace SkriptInsight.Core.Parser.Patterns
             var shouldFastFail = false;
             var results = Children.WithContext().Select(c =>
             {
+                c.Current.Parent = this;
+                
                 //Store old position in case of a rollback needed.
                 var oldPos = ctx.CurrentPosition;
                 //Pass the current element context to the parse context
@@ -99,7 +101,7 @@ namespace SkriptInsight.Core.Parser.Patterns
 
                 //If a match fails and this pattern needs perform a fastfail (optionals), return a failure immediately   
                 if (shouldFastFail && FastFail) return ParseResult.Failure(ctx);
-
+                
                 var parse = c.Current.Parse(ctx);
                 if (!parse.IsSuccess) ctx.CurrentPosition = oldPos;
                 shouldFastFail |= !parse.IsSuccess;

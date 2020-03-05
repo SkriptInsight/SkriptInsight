@@ -73,7 +73,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
 
                 var resultIsSuccess = result?.IsSuccess ?? false;
                 if (resultIsSuccess)
-                    ctx.EndMatch(SaveChoice);
+                    ctx.EndMatch(SaveChoice, this);
                 else
                     ctx.UndoMatch();
 

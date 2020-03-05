@@ -23,6 +23,7 @@ namespace SkriptInsight.Core.Parser
 
             Expression = expression;
             MatchedElement = matchedElement;
+            ElementInfo = LoadElementInfo(matchedElement);
             Range = expression.Range;
             Context = expression.Context;
             

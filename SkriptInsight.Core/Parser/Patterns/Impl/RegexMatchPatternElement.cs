@@ -45,13 +45,15 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
             }
 
             ctx.ReadUntilPosition(ctx.CurrentPosition + match.Index + match.Length);
-            
-            ctx.Matches.Add(new ParseMatch
+
+            var parseMatch = new ParseMatch
             {
                 Context = ctx,
                 Range = ctx.EndRangeMeasure(),
-                RawContent = match.Value
-            });
+                RawContent = match.Value,
+                ElementInfo = ParseMatch.LoadElementInfo(this)
+            };
+            ctx.Matches.Add(parseMatch);
             
             return ParseResult.Success(ctx);
         }
