@@ -178,7 +178,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                     ctx.Matches.Add(match);
                 }
 
-                if (result != null) ParseResult.Success(ctx);
+                return result != null ? ParseResult.Success(ctx) : ParseResult.Failure(ctx);
             }
 
             return ParseResult.Failure(ctx);

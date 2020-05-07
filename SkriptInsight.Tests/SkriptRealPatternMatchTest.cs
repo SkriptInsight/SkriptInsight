@@ -1,15 +1,11 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
-using Newtonsoft.Json;
-using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Files;
 using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.Parser;
-using SkriptInsight.Core.Parser.Expressions;
 using SkriptInsight.Core.Parser.Patterns;
-using SkriptInsight.Core.Parser.Types.Impl;
 using SkriptInsight.Core.Types;
 using Xunit;
 using Xunit.Abstractions;
@@ -29,7 +25,7 @@ namespace SkriptInsight.Tests
         [Fact]
         public void EmptyUnitTest()
         {
-            // Debugger.Break();
+            Debugger.Break();
             var code = "{_test}.hello().world().bruh()";
             
             var file = new SkriptFile(new Uri("memory://file"))
@@ -41,6 +37,7 @@ namespace SkriptInsight.Tests
             file.PrepareNodes();
 
             var node = file.Nodes[1];
+            Debugger.Break();
             _testOutputHelper.WriteLine(node.ToJson());
         }
         

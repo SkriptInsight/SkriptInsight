@@ -62,6 +62,7 @@ namespace SkriptInsight.Core.Files
             archives.ForEach(a => a.LoadDataProperties());
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S2971:\"IEnumerable\" LINQs should be simplified", Justification = "<Pending>")]
         private void LoadAddons()
         {
             var knownAddons = new[]
@@ -86,7 +87,7 @@ namespace SkriptInsight.Core.Files
                 doc.LoadPatterns();
 
                 //Take all singular types and make them plural
-                doc.Types.AddRange(doc.Types.Where(t => !t.IsPlural).Select(t =>
+                doc.Types.AddRange(doc.Types.ToList().Where(t => !t.IsPlural).Select(t =>
                 {
                     var clone = t.Clone();
                     clone.IsPlural = true;
