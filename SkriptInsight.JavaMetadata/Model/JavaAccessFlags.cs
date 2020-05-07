@@ -3,7 +3,7 @@ using System;
 namespace SkriptInsight.JavaMetadata.Model
 {
     [Flags]
-    public enum JavaAccessFlags
+    public enum JavaAccess
     {
         None = 0,
         Public = 0x0001,

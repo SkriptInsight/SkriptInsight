@@ -36,7 +36,7 @@ namespace SkriptInsight.Core.Types
                 case ExperienceType.ExperiencePoints:
                     return $"experience point{(Math.Abs(amount - 1) > double.Epsilon ? "s" : string.Empty)}";
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new Exception("Type is unknown");
             }
         }
     }

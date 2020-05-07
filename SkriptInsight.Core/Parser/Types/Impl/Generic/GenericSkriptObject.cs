@@ -1,11 +1,9 @@
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.Parser.Expressions;
 using SkriptInsight.Core.Parser.Patterns;
 using SkriptInsight.Core.Parser.Patterns.Impl;
-using SkriptInsight.Core.SyntaxInfo;
 
 namespace SkriptInsight.Core.Parser.Types.Impl.Generic
 {
@@ -54,7 +52,6 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
             }
 
 
-            // if (possibleValues.Count <= 0)
             {
                 clone.ShouldJustCheckExpressionsThatMatchType = true;
                 var expressions =

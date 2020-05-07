@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Linq;
 using SkriptInsight.Core.Files.Nodes;
 using SkriptInsight.Core.SyntaxInfo;

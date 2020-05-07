@@ -1,4 +1,3 @@
-using System;
 using SkriptInsight.Core.Parser.Expressions;
 
 namespace SkriptInsight.Core.Parser.Types.Impl.Internal

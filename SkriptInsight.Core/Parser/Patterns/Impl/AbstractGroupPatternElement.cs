@@ -2,11 +2,11 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
 {
     public abstract class AbstractGroupPatternElement : AbstractSkriptPatternElement
     {
-        public AbstractGroupPatternElement()
+        protected AbstractGroupPatternElement()
         {
         }
 
-        public AbstractGroupPatternElement(string contents)
+        protected AbstractGroupPatternElement(string contents)
         {
         }
     }

@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using Humanizer;
 using SkriptInsight.Core.Parser.Patterns;
 
 namespace SkriptInsight.Core.Parser

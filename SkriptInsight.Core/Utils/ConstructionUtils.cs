@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace SkriptInsight.Core.Utils
 {
@@ -25,7 +23,7 @@ namespace SkriptInsight.Core.Utils
                 ctor = t.GetConstructor(args.Select(ccc => ccc.GetType()).ToArray());
             }
 
-            if (ctor == null) throw new Exception("Unable to find constructor for these arguments");
+            if (ctor == null) throw new InvalidOperationException("Unable to find constructor for these arguments");
 
             var argsExprs = Enumerable.Range(0, args.Length)
                 .Select(i => Expression.Parameter(args[i]?.GetType() ?? throw new Exception(), $"arg{i}"))
@@ -35,7 +33,7 @@ namespace SkriptInsight.Core.Utils
             var compiled = Expression.Lambda(Expression.New(ctor, argsExprs), argsExprs).Compile();
 
             if (compiled == null)
-                throw new Exception($"Lambda wasn't compiled correctly! {ctor}({args} on {t})");
+                throw new InvalidOperationException($"Lambda wasn't compiled correctly! {ctor}({args} on {t})");
             
             ConstructorDelegateCache[t] = compiled;
 

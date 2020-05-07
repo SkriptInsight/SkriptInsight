@@ -1,5 +1,3 @@
-using System.Linq;
-using Humanizer;
 using SkriptInsight.Core.Parser.Patterns.Impl;
 using SkriptInsight.Core.SyntaxInfo;
 using static SkriptInsight.Core.Managers.WorkspaceManager;

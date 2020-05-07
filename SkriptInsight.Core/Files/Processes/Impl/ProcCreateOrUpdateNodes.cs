@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Reflection;
 using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Files.Nodes;

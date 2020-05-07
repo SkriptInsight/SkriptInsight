@@ -1,7 +1,4 @@
 using System.Diagnostics;
-using System.Linq;
-using Newtonsoft.Json;
-using SkriptInsight.Core.Parser.Patterns;
 
 namespace SkriptInsight.Core.SyntaxInfo
 {

@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text.Json.Serialization;
 using SkriptInsight.Core.Parser;
-using SkriptInsight.Core.SyntaxInfo;
 
 namespace SkriptInsight.Core.Files
 {
@@ -60,7 +58,6 @@ namespace SkriptInsight.Core.Files
             {
                 //Line has been finished, so move to the next line.
                 CurrentLine += 1;
-                // Debug.WriteLine($"Moved to next line whilst reading {count} chars.");
             }
 
             return next;

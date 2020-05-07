@@ -1,6 +1,5 @@
 using System;
 using SkriptInsight.Core.Parser;
-using SkriptInsight.Core.SyntaxInfo;
 
 namespace SkriptInsight.Core.Types
 {

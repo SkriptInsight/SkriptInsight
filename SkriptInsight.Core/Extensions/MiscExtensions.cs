@@ -6,11 +6,8 @@ using System.Text;
 using Humanizer;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
-using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using SkriptInsight.Core.Files.Nodes;
 using SkriptInsight.Core.Managers;
-using SkriptInsight.Core.Parser.Patterns;
-using SkriptInsight.Core.Parser.Patterns.Impl;
 using SkriptInsight.Core.Types.Attributes;
 
 namespace SkriptInsight.Core.Extensions
@@ -76,7 +73,6 @@ namespace SkriptInsight.Core.Extensions
 
         public static List<T> FastSkip<T>(this List<T> source, int countToSkip, in bool shouldConsumeSource, ref int index)
         {
-//            var skipByConsume = shouldConsumeSource ? index : 0;
             var skipTotal = countToSkip/* + skipByConsume*/;
             return source.Count > countToSkip
                 ? source.GetRange(skipTotal, source.Count - skipTotal)

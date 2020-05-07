@@ -1,7 +1,6 @@
 #nullable enable
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.Parser.Expressions;

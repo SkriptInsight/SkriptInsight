@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using MoreLinq;
 using SkriptInsight.Core.Parser;
 using SkriptInsight.Core.Parser.Expressions;
 using SkriptInsight.Core.Parser.Types.Impl.Generic;
@@ -45,11 +44,6 @@ namespace SkriptInsight.Core.Extensions
             return matches.GetValue<T>(count) as Expression<T>;
         }
 
-        public static IEnumerable<IExpression> GetValues<T>(this IEnumerable<ParseMatch> matches)
-        {
-            return matches.OfType<ExpressionParseMatch>().SelectMany(c => c.Expression.GetValues<T>());
-        }
-
         public static IEnumerable<IExpression> Explode(this IEnumerable<ParseMatch> matches)
         {
             return matches.OfType<ExpressionParseMatch>().SelectMany(c => c.Expression.Explode());
@@ -88,6 +82,11 @@ namespace SkriptInsight.Core.Extensions
 
                 break;
             }
+        }
+
+        public static IEnumerable<IExpression> GetValues<T>(this IEnumerable<ParseMatch> matches)
+        {
+            return matches.OfType<ExpressionParseMatch>().SelectMany(c => c.Expression.GetValues<T>());
         }
 
         public static IEnumerable<IExpression> GetValues<T>(this IExpression expr)

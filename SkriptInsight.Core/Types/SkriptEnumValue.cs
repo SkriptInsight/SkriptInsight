@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using JetBrains.Annotations;
 using SkriptInsight.Core.Extensions;
@@ -19,7 +18,7 @@ namespace SkriptInsight.Core.Types
         static SkriptEnumValue()
         {
             if (!typeof(T).IsSubclassOf(typeof(Enum)))
-                throw new ConstraintException($"Type {typeof(T).Name} is not an Enum!");
+                return;
             
             ValuesMap = Enum.GetValues(typeof(T)).Cast<T>()
                 .Select(c => (c,

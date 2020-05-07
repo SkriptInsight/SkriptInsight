@@ -1,5 +1,3 @@
-using System;
-using System.Diagnostics;
 using System.Linq;
 using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Parser.Expressions;

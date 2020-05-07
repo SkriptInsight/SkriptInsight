@@ -1,9 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Files.Nodes;
 using SkriptInsight.Core.Files.Nodes.Impl;
-using SkriptInsight.Core.Managers;
 
 namespace SkriptInsight.Core.Files.Processes.Impl
 {

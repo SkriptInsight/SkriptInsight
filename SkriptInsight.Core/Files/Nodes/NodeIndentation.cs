@@ -1,7 +1,19 @@
+using System;
+using System.Collections.Generic;
+
 namespace SkriptInsight.Core.Files.Nodes
 {
-    public class NodeIndentation
+    public class NodeIndentation : IEqualityComparer<NodeIndentation>
     {
+        public bool Equals(NodeIndentation x, NodeIndentation y)
+        {
+            if (ReferenceEquals(x, y)) return true;
+            if (ReferenceEquals(x, null)) return false;
+            if (ReferenceEquals(y, null)) return false;
+            if (x.GetType() != y.GetType()) return false;
+            return x.Type == y.Type && x.Count == y.Count;
+        }
+
         public NodeIndentation()
         {
         }
@@ -35,6 +47,11 @@ namespace SkriptInsight.Core.Files.Nodes
             {
                 return ((int) Type * 397) ^ Count;
             }
+        }
+
+        public int GetHashCode(NodeIndentation obj)
+        {
+            return HashCode.Combine((int) obj.Type, obj.Count);
         }
 
         public static NodeIndentation FromCharacter(char c, int count)

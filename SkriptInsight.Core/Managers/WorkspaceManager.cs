@@ -1,11 +1,6 @@
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Files;
 using SkriptInsight.Core.Inspections;
-using SkriptInsight.Core.SyntaxInfo;
 
 namespace SkriptInsight.Core.Managers
 {

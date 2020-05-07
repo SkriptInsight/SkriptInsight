@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Apache.NBCEL;
 using Newtonsoft.Json;
 using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Managers;
@@ -62,8 +60,6 @@ namespace SkriptInsight.Core.Files
                 archives.Add(MetadataIo.ReadArchiveMetadataFromStream(stream).ToDataClass());
             }
             archives.ForEach(a => a.LoadDataProperties());
-            
-            GC.Collect();
         }
 
         private void LoadAddons()
@@ -90,7 +86,7 @@ namespace SkriptInsight.Core.Files
                 doc.LoadPatterns();
 
                 //Take all singular types and make them plural
-                doc.Types.AddRange(doc.Types.ToList().Where(t => !t.IsPlural).Select(t =>
+                doc.Types.AddRange(doc.Types.Where(t => !t.IsPlural).Select(t =>
                 {
                     var clone = t.Clone();
                     clone.IsPlural = true;

@@ -1,5 +1,3 @@
-using SkriptInsight.Core.Parser.Expressions;
-
 namespace SkriptInsight.Core.Types
 {
     public class EntityType

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using SkriptInsight.Core.Parser.Expressions;
-using SkriptInsight.Core.Parser.Types.Impl;
 
 namespace SkriptInsight.Core.Parser.Types
 {

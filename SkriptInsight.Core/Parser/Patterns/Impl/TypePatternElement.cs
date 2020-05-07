@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using SkriptInsight.Core.Files;
@@ -88,10 +86,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                 if (!ctx.ShouldJustCheckExpressionsThatMatchType)
                 {
                     result = skriptTypeDescriptor?.TryParseValue(ctx);
-                }/* else if (!(typeRaw.Equals("object") || typeRaw.Equals("objects")))
-                {
-                    result = skriptTypeDescriptor?.TryParseValue(ctx);
-                }*/
+                }
 
                 //This type doesn't have a flag to just match literals So, let's try first matching variables.
                 if (result == null && !Constraint.HasFlagFast(SyntaxValueAcceptanceConstraint.LiteralsOnly))
@@ -131,53 +126,8 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                     clone.ShouldJustCheckExpressionsThatMatchType = true;
                     var currentPos = clone.CurrentPosition;
 
-                    {
-                        //If we're dealing with a file, try matching event values too
-                        if (ctx is FileParseContext fileParseContext)
-                        {
-                            var currentNode = fileParseContext.File.Nodes[fileParseContext.CurrentLine];
+                    result = TryMatchExpressionOnFile(ctx, skriptTypesManager, clone, currentPos, skriptType);
 
-                            if (currentNode?.RootParentSyntax?.Element is SkriptEvent rootEvent)
-                            {
-                                var typesAndExpressions = skriptTypesManager.GetEventExpressionsForEvent(rootEvent);
-
-                                var exprs = typesAndExpressions;
-
-                                if (exprs != null)
-                                {
-                                    foreach (var (_, expressions) in exprs)
-                                    {
-                                        if (expressions != null)
-                                        {
-                                            foreach (var expression in expressions)
-                                            {
-                                                clone.CurrentPosition = currentPos;
-                                                clone.StartRangeMeasure("Event-Value Expression");
-                                                clone.Matches.Clear();
-
-                                                clone.VisitExpression(skriptType, expression);
-
-                                                for (var index = 0; index < expression.PatternNodes.Length; index++)
-                                                {
-                                                    var pattern = expression.PatternNodes[index];
-                                                    var resultValue = pattern.Parse(clone);
-                                                    if (resultValue.IsSuccess)
-                                                    {
-                                                        var range = clone.EndRangeMeasure("Event-Value Expression");
-                                                        ctx.ReadUntilPosition(clone.CurrentPosition);
-
-                                                        result = new SkriptExpression(expression, range, ctx);
-                                                    }
-                                                }
-
-                                                clone.UndoRangeMeasure();
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
                     //Temporarily disable
                     if (false && typeRaw.ToLower() != "object" && typeRaw.ToLower() != "objects")
                     {
@@ -199,13 +149,8 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
 
                                 clone.VisitExpression(skriptType, expression);
 
-                                // Debug.WriteLine(
-                                // $"Trying with {expression.ClassName} (returning {expression.ReturnType}):");
                                 for (var index = 0; index < expression.PatternNodes.Length; index++)
                                 {
-                                    // Debug.WriteLine(
-                                    // $"Has visited {clone.VisitedExpressions.Count} expressions so far.");
-                                    // Debug.WriteLine($"Trying with pattern #{index}: {expression.Patterns[index]}");
                                     var pattern = expression.PatternNodes[index];
 
                                     var resultValue = pattern.Parse(clone);
@@ -233,10 +178,64 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                     ctx.Matches.Add(match);
                 }
 
-                return result != null ? ParseResult.Success(ctx) : ParseResult.Failure(ctx);
+                if (result != null) ParseResult.Success(ctx);
             }
 
             return ParseResult.Failure(ctx);
+        }
+
+        private static IExpression TryMatchExpressionOnFile(ParseContext ctx, SkriptTypesManager skriptTypesManager,
+            ParseContext clone, int currentPos, SkriptType skriptType)
+        {
+            IExpression result = null;
+
+            //If we're dealing with a file, try matching event values too
+            if (ctx is FileParseContext fileParseContext)
+            {
+                var currentNode = fileParseContext.File.Nodes[fileParseContext.CurrentLine];
+
+                if (currentNode?.RootParentSyntax?.Element is SkriptEvent rootEvent)
+                {
+                    var typesAndExpressions = skriptTypesManager.GetEventExpressionsForEvent(rootEvent);
+
+                    var exprs = typesAndExpressions;
+
+                    if (exprs != null)
+                    {
+                        foreach (var (_, expressions) in exprs)
+                        {
+                            if (expressions != null)
+                            {
+                                foreach (var expression in expressions)
+                                {
+                                    clone.CurrentPosition = currentPos;
+                                    clone.StartRangeMeasure("Event-Value Expression");
+                                    clone.Matches.Clear();
+
+                                    clone.VisitExpression(skriptType, expression);
+
+                                    for (var index = 0; index < expression.PatternNodes.Length; index++)
+                                    {
+                                        var pattern = expression.PatternNodes[index];
+                                        var resultValue = pattern.Parse(clone);
+                                        if (resultValue.IsSuccess)
+                                        {
+                                            var range = clone.EndRangeMeasure("Event-Value Expression");
+                                            ctx.ReadUntilPosition(clone.CurrentPosition);
+
+                                            result = new SkriptExpression(expression, range, ctx);
+                                        }
+                                    }
+
+                                    clone.UndoRangeMeasure();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return result;
         }
 
         public override string RenderPattern()
@@ -256,7 +255,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                 SyntaxValueAcceptanceConstraint.VariablesOnly => "^",
                 SyntaxValueAcceptanceConstraint.NullWhenOmitted => "-",
                 SyntaxValueAcceptanceConstraint.AllowConditionalExpressions => "=",
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(c))
             };
         }
 

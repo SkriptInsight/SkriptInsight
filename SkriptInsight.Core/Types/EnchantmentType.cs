@@ -1,5 +1,3 @@
-using System;
-
 namespace SkriptInsight.Core.Types
 {
     public class EnchantmentType

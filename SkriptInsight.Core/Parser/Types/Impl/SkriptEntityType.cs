@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Parser.Expressions;

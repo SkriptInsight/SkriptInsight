@@ -1,6 +1,5 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using JetBrains.Annotations;
 using MoreLinq;
@@ -63,7 +62,6 @@ namespace SkriptInsight.Core.Managers
         public ConcurrentDictionary<string, IReadOnlyList<SyntaxSkriptExpression>> GetEventExpressionsForEvent(
             SkriptEvent @event)
         {
-            // Debug.WriteLine($"Got query for GetEventExpressionsForEvent({@event.Name})");
             return EventExpressionsForType.GetValue(@event);
         }
 
@@ -168,12 +166,6 @@ namespace SkriptInsight.Core.Managers
 
         private bool CheckClassExtendsAnother(string returnType, string className)
         {
-            /*
-            if ((returnType == "java.lang.Object") &&
-                (returnType.Contains("Player") || className.Contains("Player")))
-                Debugger.Break();
-                */
-
             var returnTypeClass = LoadedClassRepository.Instance[returnType];
             var classNameClass = LoadedClassRepository.Instance[className];
 

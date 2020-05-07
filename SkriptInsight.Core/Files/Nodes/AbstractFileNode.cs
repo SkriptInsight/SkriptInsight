@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using MoreLinq;
 using SkriptInsight.Core.Extensions;
-using SkriptInsight.Core.Inspections.Problems;
 using SkriptInsight.Core.Parser;
 using SkriptInsight.Core.SyntaxInfo;
 using Range = OmniSharp.Extensions.LanguageServer.Protocol.Models.Range;

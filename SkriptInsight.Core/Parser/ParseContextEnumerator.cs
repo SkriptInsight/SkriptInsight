@@ -33,6 +33,7 @@ namespace SkriptInsight.Core.Parser
 
         public void Dispose()
         {
+            //There is nothing to dispose
         }
     }
 }

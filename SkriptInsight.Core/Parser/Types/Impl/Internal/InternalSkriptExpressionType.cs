@@ -9,7 +9,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Internal
         private InternalSkriptExpressionType()
         {
         }
-        public static InternalSkriptExpressionType Instance = new InternalSkriptExpressionType();
+        public static InternalSkriptExpressionType Instance { get; } = new InternalSkriptExpressionType();
         
         public IExpression TryParseValue(ParseContext ctx)
         {
