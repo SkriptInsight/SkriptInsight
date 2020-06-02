@@ -9,6 +9,13 @@ The tooling Skript deserves! A linter for Skript on VSCode and more.
 
 SkriptInsight is an open-source parser and a linter for Skript. It works by reading the code written by a user and analysing it to provide a rich editing experience for Skript users.
 
+
+### JetBrains Open-Source License
+
+This project is currently being reviewed for the eligibility of an Open-Source License from JetBrains.
+
+The Request ID is 12052020/5179569.
+
 ## Features
 
 ### Smart editor
