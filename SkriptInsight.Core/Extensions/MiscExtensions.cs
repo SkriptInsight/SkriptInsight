@@ -126,7 +126,8 @@ namespace SkriptInsight.Core.Extensions
         public static T GetAttributeOfType<T>(this object enumVal) where T : Attribute
         {
             var type = enumVal.GetType();
-            var memInfo = type.GetMember(enumVal.ToString());
+            var memInfo = type.GetMember(enumVal.ToString() ?? throw new InvalidOperationException(
+                $"Parameter {nameof(enumVal)} cannot be null"));
             var attributes = memInfo[0].GetCustomAttributes(typeof(T), false);
             return attributes.Length > 0 ? (T) attributes[0] : null;
         }
