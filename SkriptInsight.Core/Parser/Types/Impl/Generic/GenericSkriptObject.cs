@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.Parser.Expressions;
 using SkriptInsight.Core.Parser.Patterns;
@@ -28,6 +30,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
         protected override WrappedObject TryParse(ParseContext ctx)
         {
             var clone = ctx.Clone();
+            ctx.Properties.WrappedObjectCount++;
 
             var typePattern = new TypePatternElement();
             var possibleValues = new List<(int CurrentPosition, List<ParseMatch> expression, ParseResult result)>();
@@ -35,10 +38,17 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
             var startPos = clone.CurrentPosition;
             foreach (var type in WorkspaceManager.CurrentWorkspace.TypesManager.KnownTypesFromAddons)
             {
+                //Only match once, multiple types are parsed elsewhere
                 if (type.IsPlural) continue;
                 clone.Matches.Clear();
                 clone.CurrentPosition = startPos;
                 typePattern.Type = type.FinalTypeName;
+                if (typePattern.ToString().Contains("%object"))
+                    Debugger.Break();
+
+                if (!RuntimeHelpers.TryEnsureSufficientExecutionStack())
+                    Debugger.Break();
+
                 var result = typePattern.Parse(clone);
 
                 if (result.IsSuccess)
@@ -51,9 +61,8 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
                 }
             }
 
-
             {
-                clone.ShouldJustCheckExpressionsThatMatchType = true;
+                //clone.ShouldJustCheckExpressionsThatMatchType = true;
                 var expressions =
                     WorkspaceManager.CurrentWorkspace.TypesManager.GetExpressionsThatCanFitType(KnownTypesManager
                         .JavaLangObjectClass);
@@ -63,6 +72,8 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
                     {
                         foreach (var pattern in expression.PatternNodes)
                         {
+                            if (pattern.ToString().Contains("ExprJavaCall"))
+                                Debugger.Break();
                             clone.Matches.Clear();
                             clone.CurrentPosition = startPos;
                             clone.StartRangeMeasure();
@@ -96,6 +107,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
                 var (lastPos, matches, _) = possibleValues[0];
 
                 ctx.ReadUntilPosition(lastPos);
+                ctx.Properties.WrappedObjectCount--;
                 return new WrappedObject(matches);
             }
         }

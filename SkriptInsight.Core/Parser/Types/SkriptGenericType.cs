@@ -32,7 +32,7 @@ namespace SkriptInsight.Core.Parser.Types
                     result,
                     ctx.EndRangeMeasure()
                 );
-                if (expression.Type == null)
+                if (expression != null && expression.Type == null)
                     expression.Type = this;
                 
                 expression.MatchAnnotations = matchAnnotations;

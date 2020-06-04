@@ -88,30 +88,39 @@ namespace SkriptInsight.Core.Parser.Patterns
 
         public override ParseResult Parse(ParseContext ctx)
         {
+            var possibleInputs = PatternHelper.GetPossibleInputs(Children, true);
+            var isLeftElementExpression = possibleInputs.Count > 0 && possibleInputs[0] is TypePatternElement;
+            var contextToUse = ctx;
             var shouldFastFail = false;
+            var index = 0;
             var results = Children.WithContext().Select(c =>
             {
+                c.Current.ElementIndex = index++;
                 c.Current.Parent = this;
                 
-                //Store old position in case of a rollback needed.
-                var oldPos = ctx.CurrentPosition;
-                //Pass the current element context to the parse context
-                ctx.ElementContext = c;
+                if (isLeftElementExpression && c.Current.NarrowContextIfPossible(ref contextToUse, out var parseResult)) return parseResult;
 
-                //If a match fails and this pattern needs perform a fastfail (optionals), return a failure immediately   
-                if (shouldFastFail && FastFail) return ParseResult.Failure(ctx);
+                //Store old position in case of a rollback needed.
+                var oldPos = contextToUse.CurrentPosition;
+                //Pass the current element context to the parse context
+                contextToUse.ElementContext = c;
+
+                //If a match fails and this pattern needs to perform a fastfail (optionals), return a failure immediately
+                if (shouldFastFail && FastFail) return ParseResult.Failure(contextToUse);
                 
-                var parse = c.Current.Parse(ctx);
-                if (!parse.IsSuccess) ctx.CurrentPosition = oldPos;
+                var parse = c.Current.Parse(contextToUse);
+                if (!parse.IsSuccess) contextToUse.CurrentPosition = oldPos;
                 shouldFastFail |= !parse.IsSuccess;
 
+                RestoreFromNarrowedContext(ctx, contextToUse);
+                
                 return parse;
             }).ToList();
 
-            ctx.ElementContext = null;
-            if (!results.All(c => c.IsSuccess)) return ParseResult.Failure(ctx);
+            contextToUse.ElementContext = null;
+            if (!results.All(c => c.IsSuccess)) return ParseResult.Failure(contextToUse);
 
-            var finalResult = ParseResult.Success(ctx);
+            var finalResult = ParseResult.Success(contextToUse);
             //Calculate Parse Marks for this final result
             finalResult.ParseMark = results.Select(c => c.IsOptionallyMatched ? 0 : c.ParseMark).Aggregate(0, (left, right) => left ^ right);
             

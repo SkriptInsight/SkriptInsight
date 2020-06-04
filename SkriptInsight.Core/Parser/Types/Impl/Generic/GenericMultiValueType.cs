@@ -1,5 +1,6 @@
 #nullable enable
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Managers;
@@ -40,6 +41,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
             while (isValid)
             {
                 ourContext.Matches.Clear();
+                ourContext.RemoveNarrowLimit();
 
                 var result = NextValuePattern.Parse(ourContext);
                 isValid = result.IsSuccess;

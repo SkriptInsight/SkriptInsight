@@ -119,7 +119,6 @@ namespace SkriptInsight.Tests
             //function retarded_func(b: strings = "thing","", c: integer) :: string
             var ctx = ParseContext.FromCode(
                 "function retarded_func(b: strings = \"thing\",\"\", c: integer) :: string");
-
             var signature = FunctionSignature.TryParse(ctx);
 
             Assert.NotNull(signature);

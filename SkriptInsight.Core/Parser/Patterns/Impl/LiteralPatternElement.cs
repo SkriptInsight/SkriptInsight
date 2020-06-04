@@ -12,18 +12,18 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
 
         public string Value { get; set; }
 
-        public override ParseResult Parse(ParseContext ctx)
+        public override ParseResult Parse(ParseContext contextToUse)
         {
             var shouldSkipWhitespaces =
-                (string.IsNullOrWhiteSpace(ctx.PeekPrevious(1)) || ctx.HasFinishedLine) &&
+                (string.IsNullOrWhiteSpace(contextToUse.PeekPrevious(1)) || contextToUse.HasFinishedLine) &&
                 string.IsNullOrWhiteSpace(Value);
 
             if (shouldSkipWhitespaces)
-                return ParseResult.OptionalSuccess(ctx);
+                return ParseResult.OptionalSuccess(contextToUse);
 
-            return ctx.ReadNext(Value.Length).EqualsIgnoreCase(Value)
-                ? ParseResult.Success(ctx)
-                : ParseResult.Failure(ctx);
+            return contextToUse.ReadNext(Value.Length).EqualsIgnoreCase(Value)
+                ? ParseResult.Success(contextToUse)
+                : ParseResult.Failure(contextToUse);
         }
 
         

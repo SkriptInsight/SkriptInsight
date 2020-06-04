@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Humanizer;
 using JetBrains.Annotations;
@@ -34,6 +37,10 @@ namespace SkriptInsight.Core.Extensions
         public static string SafeSubstring(this string value, int startIndex, int length)
         {
             return new string((value ?? string.Empty).Skip(startIndex).Take(length).ToArray());
+        }
+        public static string SafeSubstring(this string value, int startIndex)
+        {
+            return new string((value ?? string.Empty).Skip(startIndex).ToArray());
         }
 
         public static List<string> SplitOnNewLines(this string str)
@@ -70,6 +77,12 @@ namespace SkriptInsight.Core.Extensions
             return source.Count > 0 ? source[0] : default;
         }
 
+
+        public static List<T> FastSkip<T>(this List<T> source, int countToSkip)
+        {
+            var index = 0;
+            return FastSkip(source, countToSkip, false, ref index);
+        }
 
         public static List<T> FastSkip<T>(this List<T> source, int countToSkip, in bool shouldConsumeSource, ref int index)
         {
@@ -196,5 +209,17 @@ namespace SkriptInsight.Core.Extensions
         {
             return value.Length == 0;
         }
+        
+        public static string GetDescription<T>([NotNull] this T source)
+        {
+            var fi = source.GetType().GetField(source.ToString() ?? throw new InvalidOperationException());
+
+            Debug.Assert(fi != null, nameof(fi) + " != null");
+            var attributes = (DescriptionAttribute[])fi.GetCustomAttributes(
+                typeof(DescriptionAttribute), false);
+
+            return attributes.Length > 0 ? attributes[0].Description : $"Message missing for code <{source}>";
+        }
+
     }
 }

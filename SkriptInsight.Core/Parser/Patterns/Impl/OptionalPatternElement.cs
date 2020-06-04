@@ -28,6 +28,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
         {
             var oldPos = ctx.CurrentPosition;
             ctx.StartMatch();
+            Element.ElementIndex = ElementIndex;
             Element.Parent = this;
             var parseResult = Element.Parse(ctx);
 

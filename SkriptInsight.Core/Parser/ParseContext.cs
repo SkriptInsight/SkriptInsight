@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
@@ -17,8 +18,16 @@ namespace SkriptInsight.Core.Parser
     /// The base context for parsing a line of code
     /// </summary>
     [JsonObject]
+    [DebuggerDisplay("{" + nameof(Text) + "}")]
     public class ParseContext : IEnumerable<char>
     {
+        public class ParseProperties
+        {
+            public int WrappedObjectCount { get; set; }
+        }
+
+        public ParseProperties Properties { get; set; } = new ParseProperties();
+
         private int _indentationChars;
 
         public ParseContext()
@@ -32,9 +41,13 @@ namespace SkriptInsight.Core.Parser
 
         public int CurrentPosition { get; set; }
 
-        public bool HasFinishedLine => CurrentPosition >= Text.Length;
+        public bool HasFinishedLine => CurrentPosition >= MaxLength;
 
-        public bool HasReachedEndOfEnumerator => CurrentPosition > Text.Length;
+        private int MaxLength => MaxLengthOverride > -1 ? MaxLengthOverride : Text.Length;
+
+        public int MaxLengthOverride { get; set; } = -1;
+
+        public bool HasReachedEndOfEnumerator => CurrentPosition > MaxLength;
 
         public ContextualElement<AbstractSkriptPatternElement> ElementContext { get; set; }
 
@@ -75,9 +88,9 @@ namespace SkriptInsight.Core.Parser
 
         public string PeekPrevious(int count)
         {
-            return CurrentPosition - count < 0 || CurrentPosition > Text.Length
+            return CurrentPosition - count < 0 || CurrentPosition > MaxLength
                 ? ""
-                : Text.Substring(Math.Clamp(CurrentPosition - count, 0, Text.Length), count);
+                : Text.Substring(Math.Clamp(CurrentPosition - count, 0, MaxLength), count);
         }
 
         public virtual string ReadNext(int count)
@@ -95,15 +108,21 @@ namespace SkriptInsight.Core.Parser
         public string ReadUntilEnd()
         {
             var result = PeekUntilEnd();
-            CurrentPosition = Text.Length;
+            CurrentPosition = MaxLength;
             return result;
         }
 
         public string PeekUntilEnd()
         {
-            var result = PeekNext(Text.Length - CurrentPosition);
+            var result = PeekNext(MaxLength - CurrentPosition);
             return result;
         }
+
+        public string PeekUntilPosition(int pos)
+        {
+            return PeekNext(pos - CurrentPosition);
+        }
+
 
         [Pure]
         public virtual ParseContext Clone(bool includeMatches = true)
@@ -115,18 +134,25 @@ namespace SkriptInsight.Core.Parser
                 CurrentLine = CurrentLine,
                 CurrentPosition = CurrentPosition,
                 ElementContext = ElementContext,
+                MaxLengthOverride = MaxLengthOverride,
                 CurrentMatchStack = new Stack<int>(CurrentMatchStack.Reverse()),
                 TemporaryRangeStack = new Stack<int>(TemporaryRangeStack.Reverse()),
                 VisitedExpressions = VisitedExpressions,
                 ForkCount = ForkCount + 1,
-                ShouldJustCheckExpressionsThatMatchType = ShouldJustCheckExpressionsThatMatchType
+                ShouldJustCheckExpressionsThatMatchType = ShouldJustCheckExpressionsThatMatchType,
+                Properties = Properties
             };
         }
 
+        public void RemoveNarrowLimit()
+        {
+            MaxLengthOverride = -1;
+        }
 
         public int FindNextCharNotInsideNormalBracket(char ch, bool returnLengthOnFail = false,
-            bool returnOnUnopenedBrackets = true)
+            bool returnOnUnopenedBrackets = true, bool forceEntireText = false)
         {
+            var length = forceEntireText ? Text.Length : MaxLength;
             var openCloseStack = new KeyedStack<char, int>();
             var posStack = new Stack<int>();
             (char Opening, char Closing, bool DoubleEscape)[] brackets =
@@ -207,7 +233,7 @@ namespace SkriptInsight.Core.Parser
                     return i;
             }
 
-            return returnLengthOnFail ? Text.Length : -1;
+            return returnLengthOnFail ? length : -1;
         }
 
         public int FindNextBracket(char bracket, (char, char)[] matchExclusions = null)
@@ -339,7 +365,7 @@ namespace SkriptInsight.Core.Parser
         public ParseMatch EndMatch(bool save = false, AbstractSkriptPatternElement t = null)
         {
             var startingPos = CurrentMatchStack.Pop();
-            var endingPos = Math.Min(CurrentPosition, Text.Length);
+            var endingPos = Math.Min(CurrentPosition, MaxLength);
             var result = new ParseMatch
             {
                 Context = this,

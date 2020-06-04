@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using System.Reflection;
 using SkriptInsight.Core.Files;
 using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.Parser.Expressions;
@@ -44,20 +44,30 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
             .Where(c => Constraint.HasFlagFast(c))
             .Select(RenderConstraint));
 
-        public override ParseResult Parse(ParseContext ctx)
+        public override ParseResult Parse(ParseContext contextToUse)
         {
+            return NarrowedParse(contextToUse, true);
+        }
+
+        public ParseResult NarrowedParse(ParseContext ctx, bool tryNarrowContext = false)
+        {
+            var contextToUse = ctx;
+
+            if (tryNarrowContext && NarrowContextIfPossible(ref contextToUse, out var parseResult)) return parseResult;
+
             var skriptTypesManager = WorkspaceManager.CurrentWorkspace.TypesManager;
 
             //Split the types (if any)
             foreach (var typeRaw in Type.Split("/"))
             {
+                var isObjectType = typeRaw.ToLower() == "object" || typeRaw.ToLower() == "objects";
                 var skriptType = skriptTypesManager.GetType(typeRaw);
                 //Try to get a known type literal provider for that type
                 var type = WorkspaceManager.Instance.KnownTypesManager.GetTypeByName(typeRaw);
                 ISkriptType skriptTypeDescriptor = null;
 
-                if (!RuntimeHelpers.TryEnsureSufficientExecutionStack())
-                    return ParseResult.Failure(ctx);
+                /*if (!RuntimeHelpers.TryEnsureSufficientExecutionStack())
+                    return ParseResult.Failure(ctx);*/
 
                 //Check if this type requires more than one variable
                 var isMultipleValues = typeRaw.EndsWith("s");
@@ -81,11 +91,17 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                 }
 
                 IExpression result = null;
-                var oldPos = ctx.CurrentPosition;
+                var oldPos = contextToUse.CurrentPosition;
 
-                if (!ctx.ShouldJustCheckExpressionsThatMatchType)
+                //In case it isn't for an object, always try matching type
+                //if (!isObjectType && (!ctx.Properties.WrappedObjectCount) && !contextToUse.ShouldJustCheckExpressionsThatMatchType)
+                if (isObjectType && ctx.Properties.WrappedObjectCount < 2 ||
+                    !isObjectType && !contextToUse.ShouldJustCheckExpressionsThatMatchType)
                 {
-                    result = skriptTypeDescriptor?.TryParseValue(ctx);
+                    result = skriptTypeDescriptor?.TryParseValue(contextToUse);
+                    if (result?.Type.GetType().GetCustomAttribute<InternalTypeAttribute>() != null)
+                        result.MatchAnnotations.Add(new MatchAnnotation(MatchAnnotationSeverity.Error,
+                            MatchAnnotationCode.CodeUsesInternalType));
                 }
 
                 //This type doesn't have a flag to just match literals So, let's try first matching variables.
@@ -93,7 +109,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                 {
                     //Try parsing a variable
                     var reference = new SkriptVariableReferenceType();
-                    var ctxClone = ctx.Clone();
+                    var ctxClone = contextToUse.Clone();
                     try
                     {
                         result = reference.TryParseValue(ctxClone);
@@ -103,7 +119,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                         // ignored
                     }
 
-                    if (result != null) ctx.ReadUntilPosition(ctxClone.CurrentPosition);
+                    if (result != null) contextToUse.ReadUntilPosition(ctxClone.CurrentPosition);
                 }
 
 
@@ -111,29 +127,29 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                 if (result == null && !SkipParenthesis)
                 {
                     // Type descriptor wasn't able to parse the literal. Push back and try with parentheses.
-                    ctx.CurrentPosition = oldPos;
+                    contextToUse.CurrentPosition = oldPos;
 
                     //Try parsing with parentheses first
                     var parenthesesType = new GenericParenthesesType(typeRaw);
-                    result = parenthesesType.TryParseValue(ctx);
+                    result = parenthesesType.TryParseValue(contextToUse);
                 }
 
                 //If we didn't match any literal for this type, try to match an expression for this type
                 if (skriptType != null && result == null &&
                     !Constraint.HasFlagFast(SyntaxValueAcceptanceConstraint.LiteralsOnly))
                 {
-                    var clone = ctx.Clone(false);
+                    var clone = contextToUse.Clone(false);
                     clone.ShouldJustCheckExpressionsThatMatchType = true;
                     var currentPos = clone.CurrentPosition;
 
-                    result = TryMatchExpressionOnFile(ctx, skriptTypesManager, clone, currentPos, skriptType);
+                    result = TryMatchExpressionOnFile(contextToUse, skriptTypesManager, clone, currentPos, skriptType);
 
                     //Temporarily disable
-                    if (false && typeRaw.ToLower() != "object" && typeRaw.ToLower() != "objects")
+                    if (false && isObjectType)
                     {
                         //Try matching a Skript expression
                         // Time to check all expressions to make sure the user isn't just trying to mix types for whatever reason...
-                        var exprFitType = ctx.ShouldJustCheckExpressionsThatMatchType
+                        var exprFitType = contextToUse.ShouldJustCheckExpressionsThatMatchType
                             ? skriptTypesManager.GetExpressionsThatCanFitType(skriptType)
                             : skriptTypesManager.KnownExpressionsFromAddons;
 
@@ -154,12 +170,12 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                                     var pattern = expression.PatternNodes[index];
 
                                     var resultValue = pattern.Parse(clone);
-                                    if (resultValue.IsSuccess && clone.CurrentPosition >= ctx.CurrentPosition)
+                                    if (resultValue.IsSuccess && clone.CurrentPosition >= contextToUse.CurrentPosition)
                                     {
                                         var range = clone.EndRangeMeasure("Expression");
-                                        ctx.ReadUntilPosition(clone.CurrentPosition);
+                                        contextToUse.ReadUntilPosition(clone.CurrentPosition);
 
-                                        result = new SkriptExpression(expression, range, ctx);
+                                        result = new SkriptExpression(expression, range, contextToUse);
                                     }
                                 }
 
@@ -172,16 +188,17 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                 if (result != null)
                 {
                     if (result.Type == null) result.Type = skriptTypeDescriptor;
-                    result.Context = ctx;
+                    result.Context = contextToUse;
                     var match = new ExpressionParseMatch(result, this);
 
-                    ctx.Matches.Add(match);
+                    contextToUse.Matches.Add(match);
                 }
 
+                RestoreFromNarrowedContext(ctx, contextToUse);
                 return result != null ? ParseResult.Success(ctx) : ParseResult.Failure(ctx);
             }
 
-            return ParseResult.Failure(ctx);
+            return ParseResult.Failure(contextToUse);
         }
 
         private static IExpression TryMatchExpressionOnFile(ParseContext ctx, SkriptTypesManager skriptTypesManager,
@@ -201,11 +218,8 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                     var exprs = typesAndExpressions;
 
                     if (exprs != null)
-                    {
                         foreach (var (_, expressions) in exprs)
-                        {
                             if (expressions != null)
-                            {
                                 foreach (var expression in expressions)
                                 {
                                     clone.CurrentPosition = currentPos;
@@ -229,9 +243,6 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
 
                                     clone.UndoRangeMeasure();
                                 }
-                            }
-                        }
-                    }
                 }
             }
 
