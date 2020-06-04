@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.Json.Serialization;
 using SkriptInsight.Core.Parser;
@@ -9,6 +10,8 @@ namespace SkriptInsight.Core.Files
     /// <summary>
     /// Parse context used to parse an entire file
     /// </summary>
+    /// 
+    [DebuggerDisplay("{" + nameof(Text) + "}")]
     public class FileParseContext : ParseContext
     {
         private int _currentLine;
@@ -43,11 +46,13 @@ namespace SkriptInsight.Core.Files
                 _currentLine = _currentLine,
                 CurrentPosition = CurrentPosition,
                 ElementContext = ElementContext,
+                MaxLengthOverride = MaxLengthOverride,
                 CurrentMatchStack = new Stack<int>(CurrentMatchStack.Reverse()),
                 TemporaryRangeStack = new Stack<int>(TemporaryRangeStack.Reverse()),
                 VisitedExpressions = VisitedExpressions,
                 ForkCount = ForkCount + 1,
-                ShouldJustCheckExpressionsThatMatchType = ShouldJustCheckExpressionsThatMatchType
+                ShouldJustCheckExpressionsThatMatchType = ShouldJustCheckExpressionsThatMatchType,
+                Properties = Properties
             };
         }
 
