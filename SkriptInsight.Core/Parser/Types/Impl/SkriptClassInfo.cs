@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using SkriptInsight.Core.Parser.Expressions;
 using SkriptInsight.Core.Parser.Patterns.Impl;
 using SkriptInsight.Core.SyntaxInfo;
 using static SkriptInsight.Core.Managers.WorkspaceManager;
@@ -7,7 +9,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl
     [TypeDescription("classinfo")]
     public class SkriptClassInfo : SkriptGenericType<SkriptType>
     {
-        protected override SkriptType TryParse(ParseContext ctx)
+        protected override SkriptType TryParse(ParseContext ctx, List<MatchAnnotation> matchAnnotationsHolder)
         {
             var litElement = new LiteralPatternElement("");
             var startPos = ctx.CurrentPosition;
@@ -42,6 +44,11 @@ namespace SkriptInsight.Core.Parser.Types.Impl
                     continue;
                 }
 
+                if (CurrentWorkspace.WorkspaceManager.KnownTypesManager.GetTypeByName(type.TypeName) != null)
+                {
+                    matchAnnotationsHolder.Add(new MatchAnnotation(MatchAnnotationSeverity.Error, MatchAnnotationCode.CodeUsesInternalType));
+                }
+                
                 ctx.CurrentPosition = clone.CurrentPosition;
                 return type;
             }

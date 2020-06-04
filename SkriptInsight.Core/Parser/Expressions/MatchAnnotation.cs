@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using SkriptInsight.Core.Extensions;
 
 namespace SkriptInsight.Core.Parser.Expressions
 {
@@ -15,6 +16,12 @@ namespace SkriptInsight.Core.Parser.Expressions
             Code = code;
             Message = message;
         }
+        
+        public MatchAnnotation(MatchAnnotationSeverity severity, MatchAnnotationCode code, string message) : this(severity, code.ToString(), message)
+        { }
+        
+        public MatchAnnotation(MatchAnnotationSeverity severity, MatchAnnotationCode code) : this(severity, code.ToString(), code.GetDescription())
+        { }
 
         public MatchAnnotationSeverity Severity { get; set; }
 
