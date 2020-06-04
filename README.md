@@ -12,9 +12,11 @@ SkriptInsight is an open-source parser and a linter for Skript. It works by read
 
 ### JetBrains Open-Source License
 
-This project is currently being reviewed for the eligibility of an Open-Source License from JetBrains.
+The developers of this project make use of an Open-Source License from JetBrains.
 
-The Request ID is 12052020/5179569.
+<a href="https://www.jetbrains.com/?from=SkriptInsight"><img alt="Jetbrains Logo" src="https://raw.githubusercontent.com/SkriptInsight/SkriptInsight/master/assets/jetbrains.png" height=120></img></a>
+[JetBrains](https://www.jetbrains.com/?from=SkriptInsight) is a cutting-edge software vendor specializing in the creation of intelligent development tools, including IntelliJ IDEA – the leading Java IDE, and the Kotlin programming language.
+
 
 ## Features
 
