@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
+using OmniSharp.Extensions.LanguageServer.Protocol.Document;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
-using OmniSharp.Extensions.LanguageServer.Protocol.Server;
+using OmniSharp.Extensions.LanguageServer.Protocol.Window;
 using SkriptInsight.Core;
 using SkriptInsight.Core.Utils;
-using ILanguageServer = OmniSharp.Extensions.LanguageServer.Server.ILanguageServer;
+using ILanguageServer = OmniSharp.Extensions.LanguageServer.Protocol.Server.ILanguageServer;
 
 namespace SkriptInsight.Host.Lsp
 {
@@ -27,7 +27,7 @@ namespace SkriptInsight.Host.Lsp
 
         public void PublishDiagnostics(Uri url, List<Diagnostic> diagnostics)
         {
-            Server.Document.PublishDiagnostics(new PublishDiagnosticsParams
+            Server.TextDocument.PublishDiagnostics(new PublishDiagnosticsParams
             {
                 Uri = url,
                 Diagnostics = diagnostics
@@ -48,12 +48,12 @@ namespace SkriptInsight.Host.Lsp
 
         public Task<TResponse> SendRawRequest<T, TResponse>(string method, T @params)
         {
-            return Server.SendRequest<T, TResponse>(method, @params);
+            return Server.SendRequest<T>(method, @params).Returning<TResponse>(CancellationToken.None);
         }
 
         public Task<TResponse> SendRawRequest<TResponse>(string method)
         {
-            return Server.SendRequest<TResponse>(method);
+            return Server.SendRequest(method).Returning<TResponse>(CancellationToken.None);
         }
 
         public bool SupportsExtendedCapabilities => ExtendedCapabilities != null;

@@ -16,7 +16,7 @@
 
     <ItemGroup>
       <PackageReference Include="Apache.NBCEL" Version="1.0.9" />
-      <PackageReference Include="CommandLineParser" Version="2.7.82" />
+      <PackageReference Include="CommandLineParser" Version="2.8.0" />
     </ItemGroup>
 
 </Project>

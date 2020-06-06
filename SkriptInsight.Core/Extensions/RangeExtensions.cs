@@ -12,11 +12,11 @@ namespace SkriptInsight.Core.Extensions
             return From(range.Start.Line, range.Start.Character, range.End.Line, range.End.Character);
         }
         
-        public static Range From(long startLine, long startCharacter, long endLine, long endCharacter)
+        public static Range From(int startLine, int startCharacter, int endLine, int endCharacter)
         {
             return new Range(new Position(startLine, startCharacter), new Position(endLine, endCharacter));
         }
-        public static Range From(long line, long startCharacter, long endCharacter)
+        public static Range From(int line, int startCharacter, int endCharacter)
         {
             return From(line, startCharacter, line, endCharacter);
         }

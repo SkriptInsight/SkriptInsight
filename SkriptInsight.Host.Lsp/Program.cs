@@ -17,7 +17,7 @@ using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.Utils;
 using SkriptInsight.Host.Lsp.Handlers;
 using ThrottleDebounce;
-using ILanguageServer = OmniSharp.Extensions.LanguageServer.Server.ILanguageServer;
+using ILanguageServer = OmniSharp.Extensions.LanguageServer.Protocol.Server.ILanguageServer;
 
 namespace SkriptInsight.Host.Lsp
 {
@@ -48,7 +48,7 @@ namespace SkriptInsight.Host.Lsp
                 options
                     .WithInput(Console.OpenStandardInput())
                     .WithOutput(Console.OpenStandardOutput())
-                    .ConfigureLogging(c => c.AddLanguageServer())
+                    .ConfigureLogging(c => c.AddLanguageProtocolLogging())
                     .WithHandler<TextDocumentHandler>()
                     .WithHandler<TextHoverHandler>();
 
@@ -59,7 +59,7 @@ namespace SkriptInsight.Host.Lsp
 
                 options.OnNotification<ViewportChangedParams>("insight/viewportRangeChanged", e =>
                 {
-                    var file = WorkspaceManager.CurrentWorkspace.Files[e.Uri];
+                    var file = WorkspaceManager.CurrentWorkspace.Files[e.Uri.ToUri()];
                     if (file == null) return;
 
                     file.VisibleRanges = e.Ranges;

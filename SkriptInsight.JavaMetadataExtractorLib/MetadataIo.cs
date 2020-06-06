@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Apache.NBCEL.Java.IO;
-using PeterO.Cbor;
 using SkriptInsight.JavaMetadata.Model;
 using SkriptInsight.JavaMetadataExtractorLib.Serialization;
 

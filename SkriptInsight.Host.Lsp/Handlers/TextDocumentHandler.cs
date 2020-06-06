@@ -1,12 +1,10 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml;
 using MediatR;
 using OmniSharp.Extensions.LanguageServer.Protocol;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
+using OmniSharp.Extensions.LanguageServer.Protocol.Document;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
-using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server.Capabilities;
 using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Files;
@@ -39,7 +37,7 @@ namespace SkriptInsight.Host.Lsp.Handlers
             };
         }
 
-        public TextDocumentAttributes GetTextDocumentAttributes(Uri uri) =>
+        public TextDocumentAttributes GetTextDocumentAttributes(DocumentUri uri) =>
             new TextDocumentAttributes(uri, "skriptlang");
 
         public async Task<Unit> Handle(DidChangeTextDocumentParams request, CancellationToken cancellationToken)
@@ -48,7 +46,7 @@ namespace SkriptInsight.Host.Lsp.Handlers
 
             await Task.Run(() =>
             {
-                var file = WorkspaceManager.Instance.GetOrCreateByUri(request.TextDocument.Uri);
+                var file = WorkspaceManager.Instance.GetOrCreateByUri(request.TextDocument.Uri.ToUri());
                 foreach (var change in request.ContentChanges) file.HandleChange(change);
             }, cancellationToken);
 
@@ -67,7 +65,7 @@ namespace SkriptInsight.Host.Lsp.Handlers
             await Task.Run(
                 () =>
                 {
-                    var file = WorkspaceManager.Instance.GetOrCreateByUri(request.TextDocument.Uri);
+                    var file = WorkspaceManager.Instance.GetOrCreateByUri(request.TextDocument.Uri.ToUri());
                     WorkspaceManager.Instance.HandleOpenedFile(file);
                     file.RawContents.AddRange(request.TextDocument.Text.SplitOnNewLines());
                     file.PrepareNodes();
@@ -84,7 +82,7 @@ namespace SkriptInsight.Host.Lsp.Handlers
 
             await Task.Run(
                 () => WorkspaceManager.Instance.HandleClosedFile(
-                    WorkspaceManager.Instance.GetOrCreateByUri(request.TextDocument.Uri)), cancellationToken);
+                    WorkspaceManager.Instance.GetOrCreateByUri(request.TextDocument.Uri.ToUri())), cancellationToken);
 
             return Unit.Value;
         }

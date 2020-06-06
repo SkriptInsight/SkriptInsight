@@ -7,9 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="DiscordRichPresence" Version="1.0.147" />
+        <PackageReference Include="DiscordRichPresence" Version="1.0.150" />
         <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-        <PackageReference Include="OmniSharp.Extensions.LanguageServer" Version="0.15.0-alpha0027" />
+        <PackageReference Include="OmniSharp.Extensions.LanguageServer" Version="0.17.2-alpha0001" />
     </ItemGroup>
 
     <ItemGroup>

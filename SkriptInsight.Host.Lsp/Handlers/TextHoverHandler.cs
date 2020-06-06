@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
+using OmniSharp.Extensions.LanguageServer.Protocol.Document;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using SkriptInsight.Core.Files;
@@ -16,7 +17,7 @@ namespace SkriptInsight.Host.Lsp.Handlers
     {
         public Task<Hover> Handle(HoverParams request, CancellationToken cancellationToken)
         {
-            var file = WorkspaceManager.Instance.GetOrCreateByUri(request.TextDocument.Uri);
+            var file = WorkspaceManager.Instance.GetOrCreateByUri(request.TextDocument.Uri.ToUri());
 
             var nodeAtLine = file.Nodes?[(int) request.Position.Line];
 
@@ -41,9 +42,9 @@ namespace SkriptInsight.Host.Lsp.Handlers
             return Task.FromResult(new Hover());
         }
 
-        public TextDocumentRegistrationOptions GetRegistrationOptions()
+        public HoverRegistrationOptions GetRegistrationOptions()
         {
-            return new TextDocumentRegistrationOptions
+            return new HoverRegistrationOptions
             {
                 DocumentSelector = SkriptFile.Selector
             };
