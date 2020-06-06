@@ -99,9 +99,6 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                     !isObjectType && !contextToUse.ShouldJustCheckExpressionsThatMatchType)
                 {
                     result = skriptTypeDescriptor?.TryParseValue(contextToUse);
-                    if (result?.Type.GetType().GetCustomAttribute<InternalTypeAttribute>() != null)
-                        result.MatchAnnotations.Add(new MatchAnnotation(MatchAnnotationSeverity.Error,
-                            MatchAnnotationCode.CodeUsesInternalType));
                 }
 
                 //This type doesn't have a flag to just match literals So, let's try first matching variables.
