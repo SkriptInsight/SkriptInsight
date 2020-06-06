@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkriptInsight.JavaMetadataE
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkriptInsight.JavaReader", "SkriptInsight.JavaReader\SkriptInsight.JavaReader.csproj", "{127F3D25-434C-4DA3-A8DF-93CEE1B8F9E8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkriptInsight.SkriptDoc.Annotations", "SkriptInsight.SkriptDoc.Annotations\SkriptInsight.SkriptDoc.Annotations.csproj", "{DC1A5EC1-3150-47E9-8698-95660361DE52}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{127F3D25-434C-4DA3-A8DF-93CEE1B8F9E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{127F3D25-434C-4DA3-A8DF-93CEE1B8F9E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{127F3D25-434C-4DA3-A8DF-93CEE1B8F9E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC1A5EC1-3150-47E9-8698-95660361DE52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC1A5EC1-3150-47E9-8698-95660361DE52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC1A5EC1-3150-47E9-8698-95660361DE52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC1A5EC1-3150-47E9-8698-95660361DE52}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
