@@ -1,8 +1,10 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 
 namespace SkriptInsight.SkriptDoc.Annotations
 {
-    public abstract class Annotation
+    [AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
+    public abstract class Annotation : Attribute
     {
     }
 }
