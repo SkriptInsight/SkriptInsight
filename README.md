@@ -56,4 +56,5 @@ SkriptInsight highlights important parts of documentation comments, so they neve
 
 ## Project delays
 
-Since this project is being worked on my free-time and only being powered by my motivation, it will obviously take a while. Even more so because #13 is a block issue that causes an unrecoverable crash.
+Since this project is being worked on my free-time and only being powered by my motivation, it will obviously take a while.
+Even more so because issue #16 is a block issue that causes an unrecoverable crash.
