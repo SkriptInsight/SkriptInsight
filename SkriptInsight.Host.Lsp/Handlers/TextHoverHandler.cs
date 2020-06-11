@@ -18,10 +18,10 @@ namespace SkriptInsight.Host.Lsp.Handlers
         public Task<Hover> Handle(HoverParams request, CancellationToken cancellationToken)
         {
             var file = WorkspaceManager.Instance.GetOrCreateByUri(request.TextDocument.Uri.ToUri());
-
+ 
             var nodeAtLine = file.Nodes?[(int) request.Position.Line];
 
-            if (false && nodeAtLine != null)
+            if (nodeAtLine != null)
                 return Task.FromResult(new Hover
                 {
                     Range = nodeAtLine.ContentRange,
