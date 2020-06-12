@@ -6,7 +6,7 @@ namespace SkriptInsight.Core.SyntaxNodes
     public abstract class BaseSyntaxNode
     {
         public AbstractFileNode Node { get; }
-        
+
         public SyntaxMatch Match { get; }
 
         public BaseSyntaxNode(AbstractFileNode node, SyntaxMatch match)

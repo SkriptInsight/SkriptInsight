@@ -72,10 +72,10 @@ namespace SkriptInsight.Core.Parser.Types.Impl
                             negative = true;
                         else
                             isValid = false;
-                        
+
                         continue;
                     }
-                    
+
                     sb.Append(parseResult.Matches.Last().RawContent);
                 }
                 else isValid = false;
@@ -84,7 +84,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl
             if (!double.TryParse(sb.ToString(), out var result)) return null;
 
             ctx.ReadUntilPosition(ctxClone.CurrentPosition);
-            
+
             return Math.Abs(result) * (negative ? -1 : 1);
         }
 

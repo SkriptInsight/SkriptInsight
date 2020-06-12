@@ -14,14 +14,14 @@ namespace SkriptInsight.Core.Parser.Types.Impl
                 var result = SkriptVariable.TryParse(clone);
 
                 if (result != null) ctx.ReadUntilPosition(clone.CurrentPosition);
-                
+
                 if (ctx.ReadNext(1) == "}")
                     return result;
             }
-            
+
             return null;
         }
- 
+
         public override string AsString(SkriptVariable obj)
         {
             return string.Join("", obj.Contents.Select(c => c.RenderContent()));

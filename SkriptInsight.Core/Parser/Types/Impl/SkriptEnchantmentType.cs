@@ -49,11 +49,13 @@ namespace SkriptInsight.Core.Parser.Types.Impl
                 var expressions = result.Matches.OfType<ExpressionParseMatch>().Select(c => c.Expression).ToList();
 
                 var enchantment = expressions.SelectMany(e => e.GetEnumValues<Enchantment>()).FirstOrDefault();
-                var level = expressions.SelectMany(e => e.GetValues<double>()).Cast<Expression<double?>>().Select(c => c.GenericValue ?? 1d)
+                var level = expressions.SelectMany(e => e.GetValues<double>()).Cast<Expression<double?>>()
+                    .Select(c => c.GenericValue ?? 1d)
                     .DefaultIfEmpty(1).FirstOrDefault();
 
                 ctx.ReadUntilPosition(clone.CurrentPosition);
-                return new EnchantmentType(enchantment, expressions.SelectMany(e => e.GetValues<double>()).Any(), level);
+                return new EnchantmentType(enchantment, expressions.SelectMany(e => e.GetValues<double>()).Any(),
+                    level);
             }
 
 

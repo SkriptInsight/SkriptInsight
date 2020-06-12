@@ -18,7 +18,7 @@ namespace SkriptInsight.Core.Parser.Expressions
             public IExpression Expression { get; set; }
 
             public string Splitter => RawSplitter?.RawContent.Trim() ?? "";
-            
+
             public ParseMatch RawSplitter { get; set; }
 
             public override string ToString()

@@ -22,7 +22,7 @@ namespace SkriptInsight.Core.Files
         public ISkriptInsightHost Host => WorkspaceManager.CurrentHost;
 
         public SkriptTypesManager TypesManager { get; set; }
-        
+
         public SkriptWorkspace(WorkspaceManager manager = null)
         {
             WorkspaceManager = manager ?? WorkspaceManager.Instance;
@@ -44,7 +44,7 @@ namespace SkriptInsight.Core.Files
                 "skript-mirror", //skript-mirror classes
                 "Skript", //Skript classes
             };
-            
+
             var archives = new List<JarArchive>();
             foreach (var metaName in knownMetadata)
             {
@@ -52,17 +52,19 @@ namespace SkriptInsight.Core.Files
                 var resourceName = assembly.GetManifestResourceNames()
                     .SingleOrDefault(str => str.EndsWith($"{metaName}.simeta"));
                 if (resourceName == null) continue;
-                
+
                 using var stream = assembly.GetManifestResourceStream(resourceName);
                 if (stream == null) continue;
-                
+
                 //Load metadata
                 archives.Add(MetadataIo.ReadArchiveMetadataFromStream(stream).ToDataClass());
             }
+
             archives.ForEach(a => a.LoadDataProperties());
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S2971:\"IEnumerable\" LINQs should be simplified", Justification = "<Pending>")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell",
+            "S2971:\"IEnumerable\" LINQs should be simplified", Justification = "<Pending>")]
         private void LoadAddons()
         {
             var knownAddons = new[]
@@ -93,7 +95,7 @@ namespace SkriptInsight.Core.Files
                     clone.IsPlural = true;
                     return clone;
                 }));
-                
+
                 //Sort the types by their position on the list and plural version first
 
                 doc.Types = doc.Types

@@ -76,6 +76,7 @@ namespace SkriptInsight.Core.Extensions
                                     yield return expressionParse.Expression;
                             break;
                         }
+
                         yield return expr;
                         break;
                 }

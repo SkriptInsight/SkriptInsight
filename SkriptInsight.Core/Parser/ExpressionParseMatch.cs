@@ -25,7 +25,7 @@ namespace SkriptInsight.Core.Parser
             ElementInfo = LoadElementInfo(matchedElement);
             Range = expression.Range;
             Context = expression.Context;
-            
+
             var lines = expression.Context.Text.SplitOnNewLines();
             var startPos = ResolveFor(Range.Start, Range.End, lines);
             var endPos = ResolveFor(Range.End, Range.Start, lines);
@@ -33,9 +33,9 @@ namespace SkriptInsight.Core.Parser
         }
 
         public IExpression Expression { get; set; }
-        
+
         public TypePatternElement MatchedElement { get; set; }
-        
+
         public override string ToString()
         {
             return Expression.AsString();

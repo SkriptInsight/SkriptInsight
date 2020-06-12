@@ -10,7 +10,7 @@ namespace SkriptInsight.Core.Managers
     public class NodeSignaturesManager
     {
         public static NodeSignaturesManager Instance { get; } = new NodeSignaturesManager();
-        
+
         private NodeSignaturesManager()
         {
             LoadSignatureTypes();

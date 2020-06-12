@@ -26,8 +26,9 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                 : ParseResult.Failure(contextToUse);
         }
 
-        
+
         private static readonly Regex LiteralRegexReplacement = new Regex("([\\(\\)\\[\\]])", RegexOptions.Compiled);
+
         public override string RenderPattern()
         {
             return LiteralRegexReplacement.Replace(Value, "\\$1");

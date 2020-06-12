@@ -52,12 +52,13 @@ namespace SkriptInsight.Core.Parser.Types.Impl
             {
                 var expressions = result.Matches.OfType<ExpressionParseMatch>().Select(c => c.Expression).ToList();
 
-                var entityData = expressions.SelectMany(e => e.GetValues<EntityData>()).FirstOrDefault()?.Value as EntityData;
+                var entityData =
+                    expressions.SelectMany(e => e.GetValues<EntityData>()).FirstOrDefault()?.Value as EntityData;
                 var amount = expressions.SelectMany(e => e.GetValues<double>()).Cast<Expression<double?>>()
                     .Select(c => c.GenericValue ?? 1d)
                     .DefaultIfEmpty(1).FirstOrDefault();
                 if (entityData == null) return null;
-                
+
                 ctx.CurrentPosition = clone.CurrentPosition;
                 return new EntityType(amount, expressions.SelectMany(e => e.GetValues<double>()).Any(), entityData);
             }

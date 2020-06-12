@@ -55,14 +55,14 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
                 if (expr != null)
                     resultExpression.Values.Add(
                         new MultiValueExpression.ValueDescription(expr,
-                            ourContext.Matches.Where(c => c != null && !(c is ExpressionParseMatch)).Where(c => !c.RawContent.IsEmpty()).Skip(1).FirstOrDefault()));
+                            ourContext.Matches.Where(c => c != null && !(c is ExpressionParseMatch))
+                                .Where(c => !c.RawContent.IsEmpty()).Skip(1).FirstOrDefault()));
 
                 count++;
             }
 
             if (count > 0)
             {
-                
                 //Remove last splitter
                 var lastVal = resultExpression.Values?.Last();
                 if (lastVal != null)

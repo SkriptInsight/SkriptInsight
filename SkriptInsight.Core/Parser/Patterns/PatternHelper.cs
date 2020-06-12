@@ -44,7 +44,8 @@ namespace SkriptInsight.Core.Parser.Patterns
 
                 if (element is ChoicePatternElement choicePatternElement)
                 {
-                    foreach (var possibleInputs in choicePatternElement.Elements.Select(choice => GetPossibleInputs(Flatten(choice.Element))))
+                    foreach (var possibleInputs in choicePatternElement.Elements.Select(choice =>
+                        GetPossibleInputs(Flatten(choice.Element))))
                     {
                         ((List<AbstractSkriptPatternElement>) possibilities).AddRange(possibleInputs);
                     }

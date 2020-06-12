@@ -12,14 +12,14 @@ namespace SkriptInsight.Core.Types
     public class SkriptEnumValue<T>
     {
         private T _value;
-        
+
         private static Dictionary<T, SkriptPattern> ValuesMap { get; }
 
         static SkriptEnumValue()
         {
             if (!typeof(T).IsSubclassOf(typeof(Enum)))
                 return;
-            
+
             ValuesMap = Enum.GetValues(typeof(T)).Cast<T>()
                 .Select(c => (c,
                     new SkriptPattern
@@ -28,7 +28,7 @@ namespace SkriptInsight.Core.Types
                         {
                             new ChoicePatternElement
                             {
-                                Elements = c.GetAliases().Concat(new []{c.ToString().ToLower()}).Select(a =>
+                                Elements = c.GetAliases().Concat(new[] {c.ToString().ToLower()}).Select(a =>
                                     new ChoicePatternElement.ChoiceGroupElement(new LiteralPatternElement(a))).ToList()
                             }
                         }
@@ -44,7 +44,7 @@ namespace SkriptInsight.Core.Types
             {
                 var result = skriptPattern.Parse(clone);
                 if (!result.IsSuccess) continue;
-                
+
                 ctx.ReadUntilPosition(clone.CurrentPosition);
                 return new SkriptEnumValue<T>(color, result.Matches.Last().RawContent);
             }
@@ -79,7 +79,7 @@ namespace SkriptInsight.Core.Types
         }
 
         public string UsedAlias { get; set; }
-        
+
         public override string ToString()
         {
             return UsedAlias;

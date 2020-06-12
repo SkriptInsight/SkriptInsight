@@ -29,7 +29,7 @@ namespace SkriptInsight.Core.Inspections.Problems
         public void ShiftLineNumber(in int amount)
         {
             var values = Problems;
-            
+
             foreach (var def in values)
             {
                 def.Range.ShiftLineNumber(amount);

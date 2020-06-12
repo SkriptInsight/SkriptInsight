@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 using SkriptInsight.Core.Extensions;
-  
+
 namespace SkriptInsight.Core.Parser.Patterns.Impl
 {
     [GroupPatternElementInfo('<', '>')]
@@ -37,7 +37,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
             var text = limit > -1 ? untilEnd.SafeSubstring(0, limit) : untilEnd;
             ctx.StartRangeMeasure();
             var match = ExpressionRegex.Match(text);
-            
+
             if (!match.Success)
             {
                 ctx.UndoRangeMeasure();
@@ -54,7 +54,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                 ElementInfo = ParseMatch.LoadElementInfo(this)
             };
             ctx.Matches.Add(parseMatch);
-            
+
             return ParseResult.Success(ctx);
         }
 

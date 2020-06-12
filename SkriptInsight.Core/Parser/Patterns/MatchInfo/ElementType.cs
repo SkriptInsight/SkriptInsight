@@ -30,7 +30,7 @@ namespace SkriptInsight.Core.Parser.Patterns.MatchInfo
                     return typeof(AbstractSkriptPatternElement);
             }
         }
-        
+
         public static ElementType ToElementType(this AbstractSkriptPatternElement value)
         {
             switch (value)

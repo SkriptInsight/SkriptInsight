@@ -54,6 +54,7 @@ namespace SkriptInsight.Core.Extensions
                 case SyntaxSkriptExpression skriptExpression:
                     return skriptExpression.ClassName == name || GetClassName(skriptExpression.ClassName) == name;
             }
+
             return false;
         }
 

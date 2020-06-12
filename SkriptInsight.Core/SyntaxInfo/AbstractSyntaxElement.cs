@@ -19,7 +19,7 @@ namespace SkriptInsight.Core.SyntaxInfo
             Name = "EmptyLine",
             ClassNames = new[] {"EmptyLine"}
         };
-        
+
         public static readonly AbstractSyntaxElement FunctionSignature = new SkriptEvent
         {
             AddonName = "Skript",

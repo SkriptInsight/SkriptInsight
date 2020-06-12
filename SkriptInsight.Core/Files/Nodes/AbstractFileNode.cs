@@ -101,14 +101,10 @@ namespace SkriptInsight.Core.Files.Nodes
                 else
                     m.Range.ShiftLineNumber(amount);
             });
-            
-            
         }
 
-        [JsonIgnore]
-        public AbstractFileNode RootParent => this.FindRootParent();
+        [JsonIgnore] public AbstractFileNode RootParent => this.FindRootParent();
 
-        [CanBeNull]
-        public SyntaxMatch RootParentSyntax => RootParent?.MatchedSyntax;
+        [CanBeNull] public SyntaxMatch RootParentSyntax => RootParent?.MatchedSyntax;
     }
 }

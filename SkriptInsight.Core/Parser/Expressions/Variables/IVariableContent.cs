@@ -6,6 +6,7 @@ namespace SkriptInsight.Core.Parser.Expressions.Variables
         {
             RawContent = content;
         }
+
         public string RawContent { get; }
 
         public abstract string RenderContent();

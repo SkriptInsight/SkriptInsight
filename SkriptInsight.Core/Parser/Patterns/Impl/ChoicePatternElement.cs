@@ -35,7 +35,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
             public AbstractSkriptPatternElement Element { get; }
 
             public int ParseMark { get; }
-            
+
             public override string ToString() => $"{(ParseMark > 0 ? $"{ParseMark}¦" : "")}{Element.RenderPattern()}";
 
             public static implicit operator ChoiceGroupElement(AbstractSkriptPatternElement e)
@@ -78,10 +78,10 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                     ctx.UndoMatch();
 
                 matchedParseMark = !(result?.IsOptionallyMatched ?? false) ? result?.ParseMark ?? 0 : 0;
-                
+
                 if (!resultIsSuccess)
                     ctx.CurrentPosition = oldPos;
-                
+
                 if (resultIsSuccess) matchedChoiceResult = result;
                 return resultIsSuccess;
             });

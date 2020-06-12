@@ -264,7 +264,7 @@ namespace SkriptInsight.Core.Parser
                 {
                     //TODO: Check if match exclusions are matched by pair
                     if (matchExclusions?.Any(c =>
-                            ch == c.Item1 || c.Item1 == c.Item2 && openedBracketStack.Count % 2 == 0) ?? false)
+                        ch == c.Item1 || c.Item1 == c.Item2 && openedBracketStack.Count % 2 == 0) ?? false)
                         exclusionStack.Push(i);
                     else if (matchExclusions?.Any(c =>
                                  ch == c.Item2 || c.Item1 == c.Item2 && openedBracketStack.Count % 2 != 0 &&
@@ -280,7 +280,7 @@ namespace SkriptInsight.Core.Parser
                             i++;
                             continue;
                         }
-                        
+
                         if (!escapeByDouble && escapeWithBackSlash && Text.ElementAtOrDefault(i - 1) == '\\')
                         {
                             // Found a backslash escape. Ignore and skip.

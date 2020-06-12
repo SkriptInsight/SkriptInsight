@@ -13,7 +13,7 @@ namespace SkriptInsight.Core.Parser.Expressions
         }
 
         public IExpression InnerExpression { get; set; }
-        
+
         public object Value
         {
             get => InnerExpression;
@@ -21,11 +21,11 @@ namespace SkriptInsight.Core.Parser.Expressions
         }
 
         public ISkriptType Type { get; set; }
-        
+
         public Range Range { get; set; }
-        
+
         public ParseContext Context { get; set; }
-        
+
         public string AsString()
         {
             return $"({InnerExpression?.AsString() ?? "<none>"})";

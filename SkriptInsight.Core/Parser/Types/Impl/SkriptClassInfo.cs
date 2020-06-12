@@ -15,7 +15,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl
             var startPos = ctx.CurrentPosition;
             var clone = ctx.Clone();
             (int finalPos, SkriptType finalType)? regexMatch = null;
-            
+
             foreach (var type in CurrentWorkspace.TypesManager.KnownTypesFromAddons)
             {
                 clone.CurrentPosition = startPos;
@@ -46,13 +46,14 @@ namespace SkriptInsight.Core.Parser.Types.Impl
 
                 if (CurrentWorkspace.WorkspaceManager.KnownTypesManager.GetTypeByName(type.TypeName) != null)
                 {
-                    matchAnnotationsHolder.Add(new MatchAnnotation(MatchAnnotationSeverity.Error, MatchAnnotationCode.CodeUsesInternalType));
+                    matchAnnotationsHolder.Add(new MatchAnnotation(MatchAnnotationSeverity.Error,
+                        MatchAnnotationCode.CodeUsesInternalType));
                 }
-                
+
                 ctx.CurrentPosition = clone.CurrentPosition;
                 return type;
             }
-            
+
             if (regexMatch != null)
             {
                 ctx.CurrentPosition = regexMatch.Value.finalPos;

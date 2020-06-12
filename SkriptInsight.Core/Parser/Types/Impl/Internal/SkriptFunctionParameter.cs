@@ -20,7 +20,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Internal
         {
             return new SkriptPattern
             {
-                Children = 
+                Children =
                 {
                     new LiteralPatternElement(" "),
                     new LiteralPatternElement("="),

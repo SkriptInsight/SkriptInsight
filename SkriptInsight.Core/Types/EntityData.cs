@@ -6,7 +6,7 @@ namespace SkriptInsight.Core.Types
     public class EntityData
     {
         public Noun UsedNoun { get; set; }
-        
+
         public EntityTypeUsedValues UsedValues { get; set; }
 
         [Flags]

@@ -10,7 +10,8 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Internal
         protected override string TryParse(ParseContext ctx)
         {
             var sb = new StringBuilder();
-            var currArg = ctx.PeekNext(ctx.FindNextCharNotInsideNormalBracket(',', true, forceEntireText: true) - ctx.CurrentPosition);
+            var currArg = ctx.PeekNext(ctx.FindNextCharNotInsideNormalBracket(',', true, forceEntireText: true) -
+                                       ctx.CurrentPosition);
 
             for (var i = 0; i < currArg.Length; i++)
             {

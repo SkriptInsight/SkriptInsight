@@ -20,7 +20,7 @@ namespace SkriptInsight.Core.Parser.Expressions
 
         string AsString();
 
-        
+
         /// <summary>
         /// The match annotations on this expression.
         /// </summary>

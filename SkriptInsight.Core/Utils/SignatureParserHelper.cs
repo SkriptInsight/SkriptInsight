@@ -19,7 +19,7 @@ namespace SkriptInsight.Core.Utils
             var del = GetTryParseDelegateForType(t);
             return del.DynamicInvoke(ctx);
         }
-        
+
         [CanBeNull]
         public static T TryParse<T>(ParseContext ctx)
         {

@@ -7,12 +7,13 @@ namespace SkriptInsight.Core.Utils
 {
     public static class ConstructionUtils
     {
-        private static ConcurrentDictionary<Type, Delegate> ConstructorDelegateCache { get; } = new ConcurrentDictionary<Type, Delegate>();
+        private static ConcurrentDictionary<Type, Delegate> ConstructorDelegateCache { get; } =
+            new ConcurrentDictionary<Type, Delegate>();
 
         public static object NewInstance(this Type t, params object[] args)
         {
             if (ConstructorDelegateCache.ContainsKey(t)) return ConstructorDelegateCache[t].DynamicInvoke(args);
-            
+
             var ctor = t.GetConstructors()
                 .FirstOrDefault(c => c.GetParameters()
                     .Select(p => p.ParameterType)
@@ -34,7 +35,7 @@ namespace SkriptInsight.Core.Utils
 
             if (compiled == null)
                 throw new InvalidOperationException($"Lambda wasn't compiled correctly! {ctor}({args} on {t})");
-            
+
             ConstructorDelegateCache[t] = compiled;
 
             return compiled.DynamicInvoke(args);

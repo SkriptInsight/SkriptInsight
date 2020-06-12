@@ -18,7 +18,7 @@ namespace SkriptInsight.Core.Inspections
                     .Select(c => (Type: c, Description: c.GetCustomAttribute<InspectionDescriptionAttribute>()))
                     .Where(c => c.Description != null)
                     .ToDictionary(c => c.Description, c => Activator.CreateInstance(c.Type) as BaseInspection)
-                );
+            );
         }
 
         public ConcurrentDictionary<InspectionDescriptionAttribute, BaseInspection> CodeInspections { get; }

@@ -12,5 +12,4 @@ namespace SkriptInsight.Core.Extensions
             set => base[key] = value;
         }
     }
-
 }

@@ -11,16 +11,17 @@ namespace SkriptInsight.Core.Extensions
         {
             return From(range.Start.Line, range.Start.Character, range.End.Line, range.End.Character);
         }
-        
+
         public static Range From(int startLine, int startCharacter, int endLine, int endCharacter)
         {
             return new Range(new Position(startLine, startCharacter), new Position(endLine, endCharacter));
         }
+
         public static Range From(int line, int startCharacter, int endCharacter)
         {
             return From(line, startCharacter, line, endCharacter);
         }
-        
+
         public static Range ModifyPositions(this Range range, Action<Position> action)
         {
             var startPos = new Position(range.Start.Line, range.Start.Character);
@@ -49,20 +50,20 @@ namespace SkriptInsight.Core.Extensions
         {
             pos.Line += amount;
         }
-        
+
 
         public static void ShiftLineNumber(this Range range, int amount)
         {
             range.Start.ShiftLineNumber(amount);
             range.End.ShiftLineNumber(amount);
         }
-        
+
         public static int ResolveFor(this Position pos, List<string> str)
         {
             var targetLine = pos.Line;
             if (str.Count < targetLine)
                 targetLine = str.Count - 1;
-            
+
             var lineBreakSize = Environment.NewLine.Length;
             var charsUntilLine = 0;
             for (var index = 0; index < str.Count; index++)

@@ -8,6 +8,7 @@ namespace SkriptInsight.Core.Annotations.Impl
     public class DocumentationAnnotation : Annotation
     {
         [Description("The description of this element")]
-        [Parameter] public string Description { get; set; } = "";
+        [Parameter]
+        public string Description { get; set; } = "";
     }
 }

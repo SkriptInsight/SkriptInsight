@@ -5,6 +5,5 @@ namespace SkriptInsight.Core.Files.Nodes.Impl
     [DebuggerDisplay("{" + nameof(RawComment) + "}")]
     public class CommentLineNode : AbstractFileNode
     {
-        
     }
 }

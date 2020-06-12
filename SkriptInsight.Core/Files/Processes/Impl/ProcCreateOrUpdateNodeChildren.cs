@@ -21,7 +21,8 @@ namespace SkriptInsight.Core.Files.Processes.Impl
 
             if (node != null && node.IsSectionNode && IsCurrentNodeOnSameIndentLevel(node.Indentations))
             {
-                for (var i = lineNumber + 1; i < nodes.Count && IsChildrenAccordingToIndent(nodes[i], CurrentLevel);
+                for (var i = lineNumber + 1;
+                    i < nodes.Count && IsChildrenAccordingToIndent(nodes[i], CurrentLevel);
                     i++)
                 {
                     var nextNode = nodes[i];

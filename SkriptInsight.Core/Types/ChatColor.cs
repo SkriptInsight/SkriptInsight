@@ -10,7 +10,8 @@ namespace SkriptInsight.Core.Types
     [Flags]
     public enum ChatColor
     {
-        [PatternAlias("light cyan", "light aqua", "turquoise", "turquois", "light blue")] [ChatColorInfo('b', "#55FFFF")]
+        [PatternAlias("light cyan", "light aqua", "turquoise", "turquois", "light blue")]
+        [ChatColorInfo('b', "#55FFFF")]
         Aqua = 1,
 
         [PatternAlias("black")] [ChatColorInfo('0', "#000000")]
@@ -37,10 +38,10 @@ namespace SkriptInsight.Core.Types
 
         [PatternAlias("red", "dark red")] [ChatColorInfo('4', "#AA0000")]
         DarkRed = 1 << 8,
-        
+
         [PatternAlias("gold", "orange", "dark yellow")] [ChatColorInfo('6', "#FFAA00")]
         Gold = 1 << 9,
-        
+
         [PatternAlias("grey", "gray", "light grey", "light gray", "silver")] [ChatColorInfo('7', "#AAAAAA")]
         Gray = 1 << 10,
 

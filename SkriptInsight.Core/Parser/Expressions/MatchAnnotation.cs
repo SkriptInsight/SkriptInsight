@@ -16,12 +16,16 @@ namespace SkriptInsight.Core.Parser.Expressions
             Code = code;
             Message = message;
         }
-        
-        public MatchAnnotation(MatchAnnotationSeverity severity, MatchAnnotationCode code, string message) : this(severity, code.ToString(), message)
-        { }
-        
-        public MatchAnnotation(MatchAnnotationSeverity severity, MatchAnnotationCode code) : this(severity, code.ToString(), code.GetDescription())
-        { }
+
+        public MatchAnnotation(MatchAnnotationSeverity severity, MatchAnnotationCode code, string message) : this(
+            severity, code.ToString(), message)
+        {
+        }
+
+        public MatchAnnotation(MatchAnnotationSeverity severity, MatchAnnotationCode code) : this(severity,
+            code.ToString(), code.GetDescription())
+        {
+        }
 
         public MatchAnnotationSeverity Severity { get; set; }
 
@@ -44,7 +48,7 @@ namespace SkriptInsight.Core.Parser.Expressions
                     Range = expr.Range,
                     Source = "SkriptInsight"
                 };
-            
+
             return null;
         }
     }

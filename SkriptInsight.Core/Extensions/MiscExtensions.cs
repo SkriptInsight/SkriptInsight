@@ -38,6 +38,7 @@ namespace SkriptInsight.Core.Extensions
         {
             return new string((value ?? string.Empty).Skip(startIndex).Take(length).ToArray());
         }
+
         public static string SafeSubstring(this string value, int startIndex)
         {
             return new string((value ?? string.Empty).Skip(startIndex).ToArray());
@@ -84,9 +85,10 @@ namespace SkriptInsight.Core.Extensions
             return FastSkip(source, countToSkip, false, ref index);
         }
 
-        public static List<T> FastSkip<T>(this List<T> source, int countToSkip, in bool shouldConsumeSource, ref int index)
+        public static List<T> FastSkip<T>(this List<T> source, int countToSkip, in bool shouldConsumeSource,
+            ref int index)
         {
-            var skipTotal = countToSkip/* + skipByConsume*/;
+            var skipTotal = countToSkip /* + skipByConsume*/;
             return source.Count > countToSkip
                 ? source.GetRange(skipTotal, source.Count - skipTotal)
                 : new List<T>();
@@ -210,17 +212,16 @@ namespace SkriptInsight.Core.Extensions
         {
             return value.Length == 0;
         }
-        
+
         public static string GetDescription<T>([NotNull] this T source)
         {
             var fi = source.GetType().GetField(source.ToString() ?? throw new InvalidOperationException());
 
             Debug.Assert(fi != null, nameof(fi) + " != null");
-            var attributes = (DescriptionAttribute[])fi.GetCustomAttributes(
+            var attributes = (DescriptionAttribute[]) fi.GetCustomAttributes(
                 typeof(DescriptionAttribute), false);
 
             return attributes.Length > 0 ? attributes[0].Description : $"Message missing for code <{source}>";
         }
-
     }
 }

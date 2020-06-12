@@ -14,7 +14,7 @@ namespace SkriptInsight.Core.Extensions
                 if (val != null) yield return val;
             }
         }
-        
+
         public new AbstractFileNode this[int key]
         {
             get => this.GetValue(key);
@@ -25,7 +25,7 @@ namespace SkriptInsight.Core.Extensions
         {
             var topMostParent = this[startLine].FindRootParent();
             var bottomMostChild = this[endLine].FindBottomRootChildNode();
-            
+
             return (topMostParent.LineNumber, bottomMostChild.LineNumber);
         }
     }

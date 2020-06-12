@@ -24,19 +24,19 @@ namespace SkriptInsight.Core
         /// <param name="url">The URL of this file</param>
         /// <param name="diagnostics">The diagnostics to show</param>
         void PublishDiagnostics(Uri url, List<Diagnostic> diagnostics);
-     
+
         /// <summary>
         /// Whether this host support raw LSP requests
         /// </summary>
         bool SupportsRawRequests { get; }
-        
-        
+
+
         /// <summary>
         /// Send raw notification to LSP host
         /// </summary>
         /// <param name="name">The name of the method for this notification</param>
         void SendRawNotification(string name);
-        
+
         /// <summary>
         /// Send raw notification with parameters to LSP host 
         /// </summary>
@@ -44,7 +44,7 @@ namespace SkriptInsight.Core
         /// <param name="params">The parameter object for this notification</param>
         /// <typeparam name="T">The type of the parameter</typeparam>
         void SendRawNotification<T>(string name, T @params);
-        
+
         /// <summary>
         /// Send a raw request with parameters
         /// </summary>
@@ -54,7 +54,7 @@ namespace SkriptInsight.Core
         /// <typeparam name="TResponse">The type of the request response</typeparam>
         /// <returns>The response given from the LSP host</returns>
         Task<TResponse> SendRawRequest<T, TResponse>(string method, T @params);
-        
+
         /// <summary>
         /// Send a raw request with parameters
         /// </summary>
@@ -67,7 +67,7 @@ namespace SkriptInsight.Core
         /// Whether this host supports extended capabilities
         /// </summary>
         public bool SupportsExtendedCapabilities { get; }
-        
+
         /// <summary>
         /// The extended capabilities of this Host
         /// </summary>

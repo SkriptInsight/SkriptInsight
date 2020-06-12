@@ -24,7 +24,7 @@ namespace SkriptInsight.Core.Inspections.Impl
 
             if (node != null) Inspect(file, line, node);
         }
-        
+
         protected void AddProblem(DiagnosticSeverity severity, string message, AbstractFileNode node)
         {
             AddProblem(severity, message, node.ContentRange);

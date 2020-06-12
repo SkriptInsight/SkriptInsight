@@ -7,7 +7,6 @@ using SkriptInsight.Core.Parser.Patterns.MatchInfo;
 
 namespace SkriptInsight.Core.Parser
 {
-    
     /// <summary>
     /// Represents a parse match.
     /// </summary>
@@ -15,18 +14,16 @@ namespace SkriptInsight.Core.Parser
     {
         public ParseMatch()
         {
-            
         }
-        
+
         [JsonIgnore] public ParseContext Context { get; set; }
 
         public Range Range { get; set; }
 
         public string RawContent { get; set; }
 
-        [CanBeNull]
-        public MatchElementInfo ElementInfo { get; set; }
-        
+        [CanBeNull] public MatchElementInfo ElementInfo { get; set; }
+
         public override string ToString()
         {
             return RawContent;
@@ -41,13 +38,14 @@ namespace SkriptInsight.Core.Parser
                 case null:
                     return new MatchElementInfo {Index = -1, Type = ElementType.None};
                 case SkriptPattern skP:
-                    index = skP.Children.Where(c => patternElement.GetType().IsInstanceOfType(c)).ToList().IndexOf(patternElement);
+                    index = skP.Children.Where(c => patternElement.GetType().IsInstanceOfType(c)).ToList()
+                        .IndexOf(patternElement);
                     break;
                 default:
                     return LoadElementInfo(patternElement.Parent);
             }
 
-            return new MatchElementInfo {Type = type, Index = index};         
+            return new MatchElementInfo {Type = type, Index = index};
         }
     }
 }

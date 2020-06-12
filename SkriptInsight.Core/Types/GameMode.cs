@@ -4,13 +4,9 @@ namespace SkriptInsight.Core.Types
 {
     public enum GameMode
     {
-        [PatternAlias("survival")]
-        Survival,
-        [PatternAlias("creative")]
-        Creative,
-        [PatternAlias("adventure")]
-        Adventure,
-        [PatternAlias("spectator")]
-        Spectator
+        [PatternAlias("survival")] Survival,
+        [PatternAlias("creative")] Creative,
+        [PatternAlias("adventure")] Adventure,
+        [PatternAlias("spectator")] Spectator
     }
 }

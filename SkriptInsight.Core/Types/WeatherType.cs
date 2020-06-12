@@ -6,8 +6,10 @@ namespace SkriptInsight.Core.Types
     {
         [PatternAlias("sunny", "clear", "sun")]
         Clear,
+
         [PatternAlias("raining", "rainy", "rain")]
         Rain,
+
         [PatternAlias("thunderstorm", "thundering", "thunder")]
         Thunder
     }

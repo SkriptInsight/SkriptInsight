@@ -27,7 +27,7 @@ namespace SkriptInsight.Core.SyntaxInfo
         public void LoadPatterns()
         {
             Events.ForEach(e => e.LoadPatterns());
-            
+
             var optionalOn = new OptionalPatternElement {Element = new LiteralPatternElement("on ")};
             Events.ForEach(e =>
             {
@@ -37,11 +37,11 @@ namespace SkriptInsight.Core.SyntaxInfo
             Types.ForEach(e => e.LoadPatterns());
             Effects.ForEach(e => e.LoadPatterns());
             var types = Enum.GetValues(typeof(ExpressionType)).Cast<ExpressionType>().ToList();
-            
+
             foreach (var expr in InnerExpressions)
             {
                 if (Managers.SkriptTypesManager.BannedClassNames.Contains(expr.ClassName)) continue;
-                
+
                 var typeOrdinal = (int) expr.ExpressionType;
                 for (var i = typeOrdinal + 1; i < types.Count; i++)
                 {
@@ -50,7 +50,7 @@ namespace SkriptInsight.Core.SyntaxInfo
 
                 Expressions.Insert(_expressionTypesStartIndices[typeOrdinal], expr);
             }
-            
+
             Expressions.ForEach(e => e.LoadPatterns());
         }
     }

@@ -14,7 +14,7 @@ namespace SkriptInsight.Core.Parser.Patterns
         public int ElementIndex { get; set; } = -1;
 
         public AbstractSkriptPatternElement Parent { get; set; }
-        
+
         public abstract ParseResult Parse(ParseContext contextToUse);
 
         public abstract string RenderPattern();
@@ -61,7 +61,7 @@ namespace SkriptInsight.Core.Parser.Patterns
 
                 parentElements = PatternHelper.Flatten(parent).ToList();
             }
-        
+
             //if (parent != null && parent.ToString().Contains("%object"))
             //    Debugger.Break();
 
@@ -75,7 +75,7 @@ namespace SkriptInsight.Core.Parser.Patterns
             {
                 //Debugger.Break();
             }
-            
+
             var possibleInputs =
                 PatternHelper.GetPossibleInputs(parentElements.SubList(fromIndex, parentElements.Count));
 
@@ -86,8 +86,9 @@ namespace SkriptInsight.Core.Parser.Patterns
                 switch (element)
                 {
                     case LiteralPatternElement literal:
-                        var index = ctx.Text.SafeSubstring(ctx.CurrentPosition).IndexOf(literal.Value, StringComparison.InvariantCultureIgnoreCase);
-                        
+                        var index = ctx.Text.SafeSubstring(ctx.CurrentPosition)
+                            .IndexOf(literal.Value, StringComparison.InvariantCultureIgnoreCase);
+
                         if (index > -1)
                         {
                             var clone = ctx;
@@ -95,14 +96,15 @@ namespace SkriptInsight.Core.Parser.Patterns
                             ctx = clone;
                             anyMatch = true;
                         }
-                        
+
                         break;
                 }
             }
+
             //TODO: Return true if anyMatch is true
             return true;
         }
-        
+
         protected static void RestoreFromNarrowedContext(ParseContext ctx, ParseContext narrowedContext)
         {
             narrowedContext.MaxLengthOverride = -1;
@@ -120,6 +122,5 @@ namespace SkriptInsight.Core.Parser.Patterns
                 }));
             }
         }
-
     }
 }

@@ -12,7 +12,8 @@ namespace SkriptInsight.Core.Parser.Types.Impl
             var clone = ctx.Clone(false);
             var pos = clone.CurrentPosition;
 
-            foreach (var type in WorkspaceManager.CurrentWorkspace.WorkspaceManager.Current.TypesManager.KnownTypesFromAddons
+            foreach (var type in WorkspaceManager.CurrentWorkspace.WorkspaceManager.Current.TypesManager
+                .KnownTypesFromAddons
                 .Where(c => c.PossibleValuesAsNouns != null))
             foreach (var noun in type.PossibleValuesAsNouns)
             {

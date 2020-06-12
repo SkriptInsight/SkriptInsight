@@ -57,7 +57,8 @@ namespace SkriptInsight.Core.Parser.Types.Impl
                                                                 Children =
                                                                 {
                                                                     new LiteralPatternElement("point"),
-                                                                    new OptionalPatternElement {Element = new LiteralPatternElement("s")}
+                                                                    new OptionalPatternElement
+                                                                        {Element = new LiteralPatternElement("s")}
                                                                 }
                                                             }, 5)
                                                     }
@@ -104,7 +105,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl
             var number = result.Matches.GetExplicitValue<double?>(0);
             resultObj.Type = (ExperienceType) result.ParseMark;
 
-            
+
             if (number?.GenericValue.HasValue == true)
                 resultObj.Amount = number.GenericValue.Value;
             else

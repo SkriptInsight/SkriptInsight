@@ -10,13 +10,12 @@ namespace SkriptInsight.Core.SyntaxInfo
     {
         private JavaClass _returnType;
         public SkriptEvent Parent { get; }
-        
+
         public override string ClassName => ReturnType;
-        
+
         public SkriptPattern NamePattern { get; set; }
 
-        [JsonIgnore]
-        public JavaClass JavaReturnType => _returnType ??= LoadedClassRepository.Instance[ReturnType];
+        [JsonIgnore] public JavaClass JavaReturnType => _returnType ??= LoadedClassRepository.Instance[ReturnType];
 
         public string RawName { get; set; }
 
@@ -27,7 +26,7 @@ namespace SkriptInsight.Core.SyntaxInfo
             Parent = parent;
             RawName = valueInfo.ValueName;
             InitializeNamePattern(valueInfo);
-           
+
             PatternNodes = new[] {NamePattern};
             ReturnType = valueInfo.ValueClass;
         }

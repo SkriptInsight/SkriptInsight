@@ -45,7 +45,7 @@ namespace SkriptInsight.Core.Parser.Patterns
                     isNextCharEscaped = true;
                     continue;
                 }
-                
+
                 var (type, info) = GroupTypes
                     .Select(cc => (Type: cc, Info: cc.GetCustomAttribute<GroupPatternElementInfoAttribute>()))
                     .FirstOrDefault(cc => cc.Item2.OpeningBracket == c);
@@ -78,8 +78,10 @@ namespace SkriptInsight.Core.Parser.Patterns
                     else
                         literalBuilder.Append(c);
                 }
+
                 isNextCharEscaped = false;
             }
+
             AddLiteralIfExists();
 
             pattern.FastFail = fastFail;
@@ -97,8 +99,9 @@ namespace SkriptInsight.Core.Parser.Patterns
             {
                 c.Current.ElementIndex = index++;
                 c.Current.Parent = this;
-                
-                if (isLeftElementExpression && c.Current.NarrowContextIfPossible(ref contextToUse, out var parseResult)) return parseResult;
+
+                if (isLeftElementExpression && c.Current.NarrowContextIfPossible(ref contextToUse, out var parseResult))
+                    return parseResult;
 
                 //Store old position in case of a rollback needed.
                 var oldPos = contextToUse.CurrentPosition;
@@ -107,13 +110,13 @@ namespace SkriptInsight.Core.Parser.Patterns
 
                 //If a match fails and this pattern needs to perform a fastfail (optionals), return a failure immediately
                 if (shouldFastFail && FastFail) return ParseResult.Failure(contextToUse);
-                
+
                 var parse = c.Current.Parse(contextToUse);
                 if (!parse.IsSuccess) contextToUse.CurrentPosition = oldPos;
                 shouldFastFail |= !parse.IsSuccess;
 
                 RestoreFromNarrowedContext(ctx, contextToUse);
-                
+
                 return parse;
             }).ToList();
 
@@ -122,8 +125,9 @@ namespace SkriptInsight.Core.Parser.Patterns
 
             var finalResult = ParseResult.Success(contextToUse);
             //Calculate Parse Marks for this final result
-            finalResult.ParseMark = results.Select(c => c.IsOptionallyMatched ? 0 : c.ParseMark).Aggregate(0, (left, right) => left ^ right);
-            
+            finalResult.ParseMark = results.Select(c => c.IsOptionallyMatched ? 0 : c.ParseMark)
+                .Aggregate(0, (left, right) => left ^ right);
+
             return finalResult;
         }
 

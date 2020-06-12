@@ -21,7 +21,7 @@ namespace SkriptInsight.Core.Inspections.Impl
         /// The problems holder for this inspection to use.
         /// </summary>
         public ProblemsHolder ProblemsHolder => StaticProblemsHolder.Value;
-        
+
         /// <summary>
         /// A simple check performed to see if a certain line of a file can be inspected by the current inspection.
         /// </summary>
@@ -41,12 +41,12 @@ namespace SkriptInsight.Core.Inspections.Impl
         public sealed override void DoWork(SkriptFile file, int lineNumber, string rawContent, FileParseContext context)
         {
             if (!CanInspect(file, lineNumber)) return;
-            
-            StaticProblemsHolder.Value = file.ProblemsHolder;            
+
+            StaticProblemsHolder.Value = file.ProblemsHolder;
             Inspect(file, lineNumber);
             StaticProblemsHolder.Value = null;
         }
-        
+
         protected void AddProblem(DiagnosticSeverity severity, string id, string message, Range range)
         {
             ProblemsHolder.Add(new ProblemDefinition(

@@ -14,7 +14,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Internal
             var conditionForMatch =
                 new Func<char, bool>(c => sb.IsEmpty() ? char.IsLetter(c) : char.IsLetterOrDigit(c) || c == '_');
             var clone = ctx.Clone();
-            
+
             foreach (var c in clone)
             {
                 if (!conditionForMatch(c)) break;
@@ -22,7 +22,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Internal
             }
 
             if (!sb.IsEmpty()) ctx.ReadUntilPosition(clone.CurrentPosition - 1);
-            
+
 
             return sb.ToString().IsEmpty() ? null : sb.ToString();
         }

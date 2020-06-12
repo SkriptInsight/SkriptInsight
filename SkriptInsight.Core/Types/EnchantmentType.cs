@@ -14,13 +14,12 @@ namespace SkriptInsight.Core.Types
         public double Level { get; set; }
 
         public bool HasExplicitLevel { get; set; }
-        
+
         public bool ShouldRenderLevel => HasExplicitLevel || Level > 1;
-        
+
         public override string ToString()
         {
             return $"{Enchantment}{(ShouldRenderLevel ? $" {Level}" : "")}";
         }
-
     }
 }

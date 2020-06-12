@@ -26,10 +26,10 @@ namespace SkriptInsight.Core.Files.Processes.Impl
 
                         if (effect is SyntaxSkriptExpression expression2)
                             Debug.WriteLine(expression2.ClassName);
-                       /* 
-                        if (effect is SyntaxSkriptExpression expression && expression.ClassName.Contains("JavaCall"))
-                            Debugger.Break();
-                        */
+                        /* 
+                         if (effect is SyntaxSkriptExpression expression && expression.ClassName.Contains("JavaCall"))
+                             Debugger.Break();
+                         */
                         context.Matches = new List<ParseMatch>();
                         context.CurrentLine = lineNumber;
                         var result = effectPattern.Parse(context);

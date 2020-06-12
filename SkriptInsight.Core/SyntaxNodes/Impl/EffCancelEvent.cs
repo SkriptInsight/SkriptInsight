@@ -8,9 +8,9 @@ namespace SkriptInsight.Core.SyntaxNodes.Impl
     public class EffCancelEvent : BaseSyntaxNode
     {
         public bool ToCancel { get; set; }
-        
+
         public bool ContainsDefiniteArticle { get; set; }
-        
+
         public EffCancelEvent(AbstractFileNode node, SyntaxMatch match) : base(node, match)
         {
             ToCancel = match.PatternIndex == 0;

@@ -28,6 +28,5 @@ namespace SkriptInsight.Core.SyntaxInfo
         public string[] ClassNames { get; set; }
 
         public bool Cancellable { get; set; }
-
     }
 }

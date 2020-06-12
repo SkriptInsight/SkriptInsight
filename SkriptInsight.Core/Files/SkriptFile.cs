@@ -102,7 +102,7 @@ namespace SkriptInsight.Core.Files
                 {
                     // Remove the deleted nodes
                     Nodes[i] = null;
-                    
+
                     // Also remove the problems that were on removed lines 
                     ProblemsHolder.Clear(i, i);
                 }
@@ -138,7 +138,7 @@ namespace SkriptInsight.Core.Files
                 //Swap these two variables to make them correct.
                 (startLine, endLine) = (endLine, startLine);
             }
-            
+
             var maxDegreeOfParallelism = Environment.ProcessorCount;
             var contexts = new ConcurrentQueue<FileParseContext>(Enumerable
                 .Range(0, (int) Math.Ceiling(maxDegreeOfParallelism * 1.20))
@@ -261,7 +261,6 @@ namespace SkriptInsight.Core.Files
                 };
                 if (IsDoingNodesChange) NodesChangeQueue.Push(toRun);
                 else toRun();
-
             }
         }
     }

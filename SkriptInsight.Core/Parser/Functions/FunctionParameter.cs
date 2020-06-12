@@ -10,17 +10,17 @@ namespace SkriptInsight.Core.Parser.Functions
             get => NameExpr.GenericValue;
             set => NameExpr.GenericValue = value;
         }
-        
+
         public SkriptType Type
         {
             get => TypeExpr.GenericValue;
             set => TypeExpr.GenericValue = value;
         }
-        
+
         public Expression<string> NameExpr { get; set; }
 
         public Expression<SkriptType> TypeExpr { get; set; }
-        
+
         public IExpression DefaultValue { get; set; }
 
         public override string ToString()

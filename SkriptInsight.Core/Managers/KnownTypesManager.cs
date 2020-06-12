@@ -15,7 +15,7 @@ namespace SkriptInsight.Core.Managers
     public class KnownTypesManager
     {
         public const string JavaLangObjectClass = "java.lang.Object";
-        
+
         public WorkspaceManager WorkspaceManager { get; }
 
         internal KnownTypesManager(WorkspaceManager workspaceManager)

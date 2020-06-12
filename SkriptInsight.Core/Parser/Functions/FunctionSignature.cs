@@ -61,13 +61,13 @@ namespace SkriptInsight.Core.Parser.Functions
             get => NameExpr.GenericValue;
             set => NameExpr.GenericValue = value;
         }
-        
+
         public SkriptType ReturnType => ReturnTypeExpr.GenericValue;
 
         public List<FunctionParameter> Parameters => ParametersExpr.Select(c => c.GenericValue).ToList();
 
         public ParseResult ParseResult { get; set; }
-        
+
         private static SkriptPattern FunctionSignaturePattern { get; }
 
         [CanBeNull]
@@ -78,7 +78,7 @@ namespace SkriptInsight.Core.Parser.Functions
             var result = FunctionSignaturePattern.Parse(clone);
 
             if (!result.IsSuccess) return null;
-            
+
             ctx.ReadUntilPosition(clone.CurrentPosition);
             return new FunctionSignature
             {
@@ -92,7 +92,8 @@ namespace SkriptInsight.Core.Parser.Functions
 
         public override string ToString()
         {
-            return $"function {Name}({string.Join(", ", Parameters)}){(ReturnTypeExpr?.GenericValue != SkriptType.Void ? $" :: {ReturnTypeExpr?.GenericValue?.FinalTypeName}" : "")}";
+            return
+                $"function {Name}({string.Join(", ", Parameters)}){(ReturnTypeExpr?.GenericValue != SkriptType.Void ? $" :: {ReturnTypeExpr?.GenericValue?.FinalTypeName}" : "")}";
         }
     }
 }

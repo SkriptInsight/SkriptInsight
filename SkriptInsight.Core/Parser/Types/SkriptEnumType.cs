@@ -3,7 +3,7 @@ using SkriptInsight.Core.Types;
 
 namespace SkriptInsight.Core.Parser.Types
 {
-    public class SkriptEnumType<T> : SkriptGenericType<SkriptEnumValue<T>> where T: Enum
+    public class SkriptEnumType<T> : SkriptGenericType<SkriptEnumValue<T>> where T : Enum
     {
         protected override SkriptEnumValue<T> TryParse(ParseContext ctx)
         {

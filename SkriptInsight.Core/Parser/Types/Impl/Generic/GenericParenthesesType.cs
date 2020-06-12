@@ -60,6 +60,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
                     ctx.CurrentPosition = oldPos;
                 }
             }
+
             ctx.UndoRangeMeasure();
             return null;
         }
@@ -70,12 +71,11 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
         }
 
         public object Value { get; set; }
-        
+
         public ISkriptType Type { get; set; }
-        
+
         public Range Range { get; set; }
-        
+
         public ParseContext Context { get; set; }
-        
     }
 }

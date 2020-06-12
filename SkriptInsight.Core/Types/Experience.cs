@@ -53,12 +53,12 @@ namespace SkriptInsight.Core.Types
     {
         public static bool IsXp(this ExperienceType value)
         {
-            return value == ExperienceType.Exp || value == ExperienceType.Xp; 
+            return value == ExperienceType.Exp || value == ExperienceType.Xp;
         }
-        
+
         public static bool IsPoints(this ExperienceType value)
         {
-            return value == ExperienceType.Points || value == ExperienceType.ExperiencePoints; 
+            return value == ExperienceType.Points || value == ExperienceType.ExperiencePoints;
         }
     }
 }

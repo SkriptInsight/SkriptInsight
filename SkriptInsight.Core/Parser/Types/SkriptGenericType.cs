@@ -15,14 +15,14 @@ namespace SkriptInsight.Core.Parser.Types
         {
             return default;
         }
-        
-        
+
+
         public abstract string AsString(T obj);
 
         public IExpression TryParseValue(ParseContext ctx)
         {
             var matchAnnotations = new List<MatchAnnotation>();
-            
+
             ctx.StartRangeMeasure("Generic Type");
             var result = TryParse(ctx, matchAnnotations) ?? TryParse(ctx);
             if (result != null)
@@ -34,7 +34,7 @@ namespace SkriptInsight.Core.Parser.Types
                 );
                 if (expression != null && expression.Type == null)
                     expression.Type = this;
-                
+
                 expression.MatchAnnotations = matchAnnotations;
                 return expression;
             }

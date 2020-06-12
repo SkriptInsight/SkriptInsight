@@ -16,19 +16,22 @@ namespace SkriptInsight.Core.Files.Processes.Impl
         {
             AbstractFileNode resultNode = new BaseFileNode();
             NodeContentHelper.ApplyBasicNodeInfoToNode(rawContent, lineNumber, file, ref resultNode);
-            
+
             if (resultNode.NodeContent.IsEmpty() && !resultNode.RawComment.IsEmpty())
             {
                 AbstractFileNode commentNode = new CommentLineNode();
                 NodeContentHelper.ApplyBasicNodeInfoToOtherNode(resultNode, ref commentNode);
                 resultNode = commentNode;
-            } else if (resultNode.NodeContent.IsEmpty() && resultNode.RawComment.IsEmpty())
+            }
+            else if (resultNode.NodeContent.IsEmpty() && resultNode.RawComment.IsEmpty())
             {
                 AbstractFileNode emptyLineNode = new EmptyLineNode();
-                emptyLineNode.MatchedSyntax = new SyntaxMatch(AbstractSyntaxElement.EmptyLine, ParseResult.Success(context));
+                emptyLineNode.MatchedSyntax =
+                    new SyntaxMatch(AbstractSyntaxElement.EmptyLine, ParseResult.Success(context));
                 NodeContentHelper.ApplyBasicNodeInfoToOtherNode(resultNode, ref emptyLineNode);
                 resultNode = emptyLineNode;
-            } else
+            }
+            else
             {
                 var ctx = ParseContext.FromCode(rawContent);
                 //Try to match to one of our known signatures
@@ -36,9 +39,10 @@ namespace SkriptInsight.Core.Files.Processes.Impl
                 {
                     ctx.Matches.Clear();
                     ctx.CurrentPosition = 0;
-                    
-                    if (resultNode.IsSectionNode != (signatureNodeType.GetCustomAttribute<SectionNodeAttribute>() != null)) continue;
-                    
+
+                    if (resultNode.IsSectionNode !=
+                        (signatureNodeType.GetCustomAttribute<SectionNodeAttribute>() != null)) continue;
+
                     var tryParseResult = signatureDelegate.DynamicInvoke(ctx);
 
                     // We matched one signature
@@ -56,7 +60,7 @@ namespace SkriptInsight.Core.Files.Processes.Impl
                     }
                 }
             }
-            
+
             file.Nodes[lineNumber] = resultNode;
         }
     }

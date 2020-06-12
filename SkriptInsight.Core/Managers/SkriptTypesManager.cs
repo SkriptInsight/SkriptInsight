@@ -22,7 +22,7 @@ namespace SkriptInsight.Core.Managers
             ExprEntitiesClassName,
             ExprLoopValueClassName
         };
-        
+
         public IReadOnlyList<SyntaxSkriptExpression> KnownExpressionsFromAddons { get; set; }
 
         public IReadOnlyList<SkriptType> KnownTypesFromAddons { get; set; }
@@ -153,7 +153,7 @@ namespace SkriptInsight.Core.Managers
                         .OfType<SyntaxSkriptEventValueExpression>()
                         .Where(c => c.Parent == skriptEvent)
                         .Where(c => c.ReturnType == cc.Value.ClassName || CheckClassExtendsAnother(c.ReturnType,
-                                        cc.Value.ClassName)).ToList()))
+                            cc.Value.ClassName)).ToList()))
                     .Where(c => c.Expressions.Count > 0)
                     .Select(c =>
                         new KeyValuePair<string, IReadOnlyList<SyntaxSkriptExpression>>(c.Type, c.Expressions))
