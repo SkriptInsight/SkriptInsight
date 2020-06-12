@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace SkriptInsight.SkriptDoc.Annotations.Parameters.Readers
+namespace SkriptInsight.Core.Annotations.Parameters.Readers
 {
     public class DelegateReader : IParameterReader
     {

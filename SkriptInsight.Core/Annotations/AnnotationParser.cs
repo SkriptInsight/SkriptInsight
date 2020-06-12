@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using SkriptInsight.SkriptDoc.Annotations.Parameters;
-using SkriptInsight.SkriptDoc.Annotations.Parameters.Readers;
+using SkriptInsight.Core.Annotations.Parameters;
+using SkriptInsight.Core.Annotations.Parameters.Readers;
 
-namespace SkriptInsight.SkriptDoc.Annotations
+namespace SkriptInsight.Core.Annotations
 {
     public class AnnotationParser
     {

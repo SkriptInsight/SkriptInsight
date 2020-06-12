@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace SkriptInsight.SkriptDoc.Annotations.Parameters
+namespace SkriptInsight.Core.Annotations.Parameters
 {
     public abstract class GenericParameterReader<T> : IParameterReader
     {

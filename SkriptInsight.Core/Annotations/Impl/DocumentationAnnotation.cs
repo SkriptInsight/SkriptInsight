@@ -1,7 +1,7 @@
 using System.ComponentModel;
-using SkriptInsight.SkriptDoc.Annotations.Parameters;
+using SkriptInsight.Core.Annotations.Parameters;
 
-namespace SkriptInsight.SkriptDoc.Annotations.Impl
+namespace SkriptInsight.Core.Annotations.Impl
 {
     [Alias("doc")]
     [Description("Annotation used to document this element")]

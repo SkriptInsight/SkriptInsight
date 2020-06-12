@@ -1,7 +1,7 @@
 using System;
 using JetBrains.Annotations;
 
-namespace SkriptInsight.SkriptDoc.Annotations
+namespace SkriptInsight.Core.Annotations
 {
     [MeansImplicitUse(ImplicitUseKindFlags.InstantiatedWithFixedConstructorSignature, ImplicitUseTargetFlags.Itself | ImplicitUseTargetFlags.WithMembers)]
     [AttributeUsage(AttributeTargets.Class)]
