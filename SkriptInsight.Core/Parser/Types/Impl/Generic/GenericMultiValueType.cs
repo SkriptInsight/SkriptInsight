@@ -96,7 +96,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Generic
             return string.Empty;
         }
 
-        private static SkriptPattern CreateNextValuePatternForType(string typeName,
+        private static SkriptPattern CreateNextValuePatternForType(string? typeName,
             SyntaxValueAcceptanceConstraint constraint, bool isListValue)
         {
             //%type%[[ ](,|or|and)[ ]]
