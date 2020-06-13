@@ -114,7 +114,7 @@ namespace SkriptInsight.Core.Files
 
             IsDoingNodesChange = true;
 
-            PrepareNodes(startLine, startLine + finalStrings.Count + (finalStrings.Count - lineCount));
+            PrepareNodes(startLine, startLine + finalStrings.Count + (finalStrings.Count - lineCount), true);
 
             Nodes.SkipWhile(kv => kv.Value != null).ToList().ForEach(c => Nodes.Remove(c.Key, out _));
 
@@ -210,7 +210,7 @@ namespace SkriptInsight.Core.Files
             if (forceParse || (!((WorkspaceManager.CurrentHost?.SupportsExtendedCapabilities ?? false) &&
                              (WorkspaceManager.CurrentHost?.ExtendedCapabilities?.SupportsViewportReporting ?? false))))
             {
-                RunProcess(ParseProcess);
+                RunProcess(ParseProcess, startLine, endLine);
                 RunCodeInspections(startLine, endLine);
             }
         }
