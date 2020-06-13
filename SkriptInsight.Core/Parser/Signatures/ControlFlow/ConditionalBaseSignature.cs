@@ -59,20 +59,20 @@ namespace SkriptInsight.Core.Parser.Signatures.ControlFlow
                     Expression<SkriptBoolean.SkriptRepresentation?>;
 
             //Check if literal
+            T expression = null;
+
             if (literalExpression?.GenericValue != null)
             {
-                var expression = new T
+                expression = new T
                 {
                     Literal = literalExpression
                 };
-
-                return expression;
             }
 
             //No literal found. Attempt to get a conditional expression
             if (parseResult.Matches.GetValue<ConditionalExpression>(0) is ConditionalExpression conditionalExpression)
             {
-                return new T
+                expression = new T
                 {
                     Condition = conditionalExpression
                 };
@@ -81,13 +81,18 @@ namespace SkriptInsight.Core.Parser.Signatures.ControlFlow
             //Users can also use expressions that return a boolean. Try that
             if (parseResult.Matches.GetValue<SkriptExpression>(0) is SkriptExpression skriptExpression)
             {
-                return new T
+                expression = new T
                 {
                     Expression = skriptExpression
                 };
             }
 
-            return null;
+            if (expression != null)
+            {
+                ctx.ReadUntilPosition(parseContext.CurrentPosition);
+            }
+            
+            return expression;
         }
 
         protected ConditionalBaseSignature(T signature) : base(signature)

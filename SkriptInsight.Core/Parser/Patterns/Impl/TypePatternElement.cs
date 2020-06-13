@@ -119,6 +119,8 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
 
                             if (conditionResult.IsSuccess)
                             {
+                                //Read on real context until our current position on cloned ctx
+                                contextToUse.ReadUntilPosition(clone.CurrentPosition);
                                 result = new ConditionalExpression(condition, clone.Matches, index, clone.EndRangeMeasure(), contextToUse);
                             }
 

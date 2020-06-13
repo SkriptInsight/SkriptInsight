@@ -39,13 +39,18 @@ namespace SkriptInsight.Core.Parser.Expressions
         [ContractAnnotation("expr:null => null")]
         public Diagnostic ToDiagnostic([CanBeNull] IExpression expr)
         {
-            if (expr != null && ShouldBeDiagnostic)
+            return ToDiagnostic(expr?.Range);
+        }
+        
+        public Diagnostic ToDiagnostic([CanBeNull] Range range)
+        {
+            if (range != null && ShouldBeDiagnostic)
                 return new Diagnostic
                 {
                     Severity = (DiagnosticSeverity) Severity,
                     Code = Code,
                     Message = Message,
-                    Range = expr.Range,
+                    Range = range,
                     Source = "SkriptInsight"
                 };
 

@@ -33,7 +33,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Inspections\Impl\Node" />
         <Folder Include="Resources" />
     </ItemGroup>
 

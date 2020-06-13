@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -21,7 +22,7 @@ namespace SkriptInsight.Host.Lsp.Handlers
  
             var nodeAtLine = file.Nodes?[(int) request.Position.Line];
 
-            if (nodeAtLine != null)
+            if (Debugger.IsAttached && nodeAtLine != null)
                 return Task.FromResult(new Hover
                 {
                     Range = nodeAtLine.ContentRange,

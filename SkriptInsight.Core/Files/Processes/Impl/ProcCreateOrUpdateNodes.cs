@@ -5,6 +5,7 @@ using SkriptInsight.Core.Files.Nodes.Impl;
 using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.Parser;
 using SkriptInsight.Core.Parser.Patterns;
+using SkriptInsight.Core.Parser.Patterns.Impl;
 using SkriptInsight.Core.SyntaxInfo;
 using SkriptInsight.Core.Utils;
 
@@ -12,6 +13,10 @@ namespace SkriptInsight.Core.Files.Processes.Impl
 {
     public class ProcCreateOrUpdateNodes : FileProcess
     {
+        private static readonly OptionalPatternElement SectionPattern = new OptionalPatternElement
+        {
+            Element = new LiteralPatternElement(":")
+        };
         public override void DoWork(SkriptFile file, int lineNumber, string rawContent, FileParseContext context)
         {
             AbstractFileNode resultNode = new BaseFileNode();
@@ -39,14 +44,17 @@ namespace SkriptInsight.Core.Files.Processes.Impl
                 {
                     ctx.Matches.Clear();
                     ctx.CurrentPosition = context.IndentationChars;
-
-                    if (resultNode.IsSectionNode !=
-                        (signatureNodeType.GetCustomAttribute<SectionNodeAttribute>() != null)) continue;
-
+                    
                     var tryParseResult = signatureDelegate.DynamicInvoke(ctx);
 
-                    // We matched one signature
                     if (tryParseResult != null)
+                    {
+                        //Try to match the section colon so that we reach the end of the line
+                        SectionPattern.Parse(ctx);
+                    }
+                    
+                    // We matched one signature
+                    if (tryParseResult != null && ctx.HasFinishedLine)
                     {
                         var instance = signatureNodeType.NewInstance(tryParseResult);
 
