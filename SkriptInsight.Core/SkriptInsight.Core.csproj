@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
-        <LangVersion>9</LangVersion>
+        <LangVersion>preview</LangVersion>
         <Nullable>disable</Nullable>
     </PropertyGroup>
 
@@ -29,8 +29,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference
-            Include="..\SkriptInsight.JavaMetadataExtractorLib\SkriptInsight.JavaMetadataExtractorLib.csproj" />
+        <ProjectReference Include="..\SkriptInsight.JavaMetadataExtractorLib\SkriptInsight.JavaMetadataExtractorLib.csproj" />
     </ItemGroup>
 
     <ItemGroup>
