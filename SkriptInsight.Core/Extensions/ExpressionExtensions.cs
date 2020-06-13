@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SkriptInsight.Core.Parser;
 using SkriptInsight.Core.Parser.Expressions;
+using SkriptInsight.Core.Parser.Signatures.ControlFlow;
 using SkriptInsight.Core.Parser.Types.Impl.Generic;
 using SkriptInsight.Core.Types;
 
@@ -55,6 +56,9 @@ namespace SkriptInsight.Core.Extensions
             {
                 switch (expr)
                 {
+                    case IConditionalBaseSignature ifExpression:
+                        yield return ifExpression.ConditionExpression;
+                        break;
                     case MultiValueExpression multiVal:
                         foreach (var expr2 in multiVal.Values.SelectMany(expression => expression.Expression.Explode()))
                         {
@@ -104,6 +108,12 @@ namespace SkriptInsight.Core.Extensions
 
             switch (expr)
             {
+                case IConditionalBaseSignature ifExpression:
+                    yield return ifExpression.ConditionExpression;
+                    break;
+                case ConditionalExpression conditionalExpr:
+                    yield return conditionalExpr;
+                    break;
                 case Expression<T> genExpr:
                     yield return genExpr;
                     break;

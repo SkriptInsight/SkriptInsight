@@ -341,7 +341,7 @@ namespace SkriptInsight.Tests
             var pattern = SkriptPattern.ParsePattern("(message|send [message[s]]) %strings% [to %commandsenders%]");
 
             var result = pattern.Parse("send \"hi\" to all players");
-            
+
             Assert.True(result.IsSuccess);
         }
 

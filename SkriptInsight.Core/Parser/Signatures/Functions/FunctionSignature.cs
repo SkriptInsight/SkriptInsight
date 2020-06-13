@@ -7,7 +7,7 @@ using SkriptInsight.Core.Parser.Patterns;
 using SkriptInsight.Core.Parser.Patterns.Impl;
 using SkriptInsight.Core.SyntaxInfo;
 
-namespace SkriptInsight.Core.Parser.Functions
+namespace SkriptInsight.Core.Parser.Signatures.Functions
 {
     public class FunctionSignature
     {

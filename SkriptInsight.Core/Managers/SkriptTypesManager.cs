@@ -15,12 +15,14 @@ namespace SkriptInsight.Core.Managers
         public const string ExprEntityClassName = "ch.njol.skript.expressions.ExprEntity";
         public const string ExprEntitiesClassName = "ch.njol.skript.expressions.ExprEntities";
         public const string ExprLoopValueClassName = "ch.njol.skript.expressions.ExprLoopValue";
+        public const string CondExpressionStatementClassName = "com.btk5h.skriptmirror.skript.CondExpressionStatement";
 
         public static readonly string[] BannedClassNames =
         {
             ExprEntityClassName,
             ExprEntitiesClassName,
-            ExprLoopValueClassName
+            ExprLoopValueClassName,
+            CondExpressionStatementClassName
         };
 
         public IReadOnlyList<SyntaxSkriptExpression> KnownExpressionsFromAddons { get; set; }
@@ -107,6 +109,15 @@ namespace SkriptInsight.Core.Managers
                         ? (object) (eventValueExpression.Parent, eventValueExpression.RawName)
                         : c)
                 .ToList();
+
+        }
+
+        private void LoadConditionsFromAddons()
+        {
+            KnownConditionsFromAddons = Workspace.AddonDocumentations
+                .SelectMany(a => a.Conditions)
+                .Where(a => !BannedClassNames.Contains(a.ClassName))
+                .ToList();
         }
 
         private void MapExpressionsForSkriptTypes()
@@ -188,6 +199,7 @@ namespace SkriptInsight.Core.Managers
         {
             LoadExpressionsFromAddons();
             MapExpressionsForSkriptTypes();
+            LoadConditionsFromAddons();
         }
     }
 }

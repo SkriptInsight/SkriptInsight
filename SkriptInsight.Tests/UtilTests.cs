@@ -1,5 +1,5 @@
 using SkriptInsight.Core.Files.Nodes.Impl;
-using SkriptInsight.Core.Parser.Functions;
+using SkriptInsight.Core.Parser.Signatures.Functions;
 using SkriptInsight.Core.Utils;
 using Xunit;
 
