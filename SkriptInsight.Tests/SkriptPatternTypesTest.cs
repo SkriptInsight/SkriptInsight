@@ -268,6 +268,25 @@ namespace SkriptInsight.Tests
             }
         }
 
+        [Theory]
+        [InlineData("\"abc\" is alphanumeric")]
+        public void ConditionalTypeMatchingWorks(string code)
+        {
+            var pattern = new SkriptPattern
+            {
+                Children =
+                {
+                    new TypePatternElement
+                    {
+                        Constraint = AllowConditionalExpressions,
+                        Type = "boolean"
+                    }
+                }
+            };
+            
+            Assert.True(pattern.Parse(code).IsSuccess, "pattern.Parse(code).IsSuccess");
+        }
+
         [Fact]
         public void AllColorsCanBeParsedCorrectly()
         {

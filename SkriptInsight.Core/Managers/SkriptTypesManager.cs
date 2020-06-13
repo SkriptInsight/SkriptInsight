@@ -24,6 +24,8 @@ namespace SkriptInsight.Core.Managers
         };
 
         public IReadOnlyList<SyntaxSkriptExpression> KnownExpressionsFromAddons { get; set; }
+        
+        public IReadOnlyList<SkriptCondition> KnownConditionsFromAddons { get; set; }
 
         public IReadOnlyList<SkriptType> KnownTypesFromAddons { get; set; }
 

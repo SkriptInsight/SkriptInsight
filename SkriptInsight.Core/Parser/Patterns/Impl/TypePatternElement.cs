@@ -1,6 +1,6 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using SkriptInsight.Core.Files;
 using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.Parser.Expressions;
@@ -100,6 +100,35 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                 {
                     result = skriptTypeDescriptor?.TryParseValue(contextToUse);
                 }
+                
+
+                //This type has a flag to attempt to match conditionals. So, let's try do just that.
+                if (result == null &&
+                    Constraint.HasFlagFast(SyntaxValueAcceptanceConstraint.AllowConditionalExpressions))
+                {
+                    foreach (var condition in skriptTypesManager.KnownConditionsFromAddons)
+                    {
+                        if (condition.ClassName.Contains("IsSet")) Debugger.Break();
+                        var clone = contextToUse.Clone();
+
+                        for (var index = 0; index < condition.PatternNodes.Length; index++)
+                        {
+                            var conditionPatternNode = condition.PatternNodes[index];
+                            clone.CurrentPosition = contextToUse.CurrentPosition;
+                            clone.StartRangeMeasure("Condition");
+                            var conditionResult = conditionPatternNode.Parse(clone);
+
+                            if (conditionResult.IsSuccess)
+                            {
+                                result = new ConditionalExpression(condition, index, clone.EndRangeMeasure(), contextToUse);
+                            }
+
+                            clone.UndoRangeMeasure();
+                        }
+                    }
+                }
+                
+                
 
                 //This type doesn't have a flag to just match literals So, let's try first matching variables.
                 if (result == null && !Constraint.HasFlagFast(SyntaxValueAcceptanceConstraint.LiteralsOnly))
