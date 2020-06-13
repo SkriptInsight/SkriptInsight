@@ -27,7 +27,7 @@ namespace SkriptInsight.Core.Files.Processes.Impl
             {
                 AbstractFileNode emptyLineNode = new EmptyLineNode();
                 emptyLineNode.MatchedSyntax =
-                    new SyntaxMatch(AbstractSyntaxElement.EmptyLine, ParseResult.Success(context));
+                    new SyntaxMatch(SignatureElements.EmptyLine, ParseResult.Success(context));
                 NodeContentHelper.ApplyBasicNodeInfoToOtherNode(resultNode, ref emptyLineNode);
                 resultNode = emptyLineNode;
             }
@@ -38,7 +38,7 @@ namespace SkriptInsight.Core.Files.Processes.Impl
                 foreach (var (signatureNodeType, signatureDelegate) in NodeSignaturesManager.Instance.SignatureTypes)
                 {
                     ctx.Matches.Clear();
-                    ctx.CurrentPosition = 0;
+                    ctx.CurrentPosition = context.IndentationChars;
 
                     if (resultNode.IsSectionNode !=
                         (signatureNodeType.GetCustomAttribute<SectionNodeAttribute>() != null)) continue;

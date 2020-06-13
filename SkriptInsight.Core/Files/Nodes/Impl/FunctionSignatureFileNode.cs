@@ -1,4 +1,4 @@
-using SkriptInsight.Core.Parser.Functions;
+using SkriptInsight.Core.Parser.Signatures.Functions;
 using SkriptInsight.Core.SyntaxInfo;
 
 namespace SkriptInsight.Core.Files.Nodes.Impl
@@ -8,7 +8,7 @@ namespace SkriptInsight.Core.Files.Nodes.Impl
     {
         public FunctionSignatureFileNode(FunctionSignature signature) : base(signature)
         {
-            MatchedSyntax = new SyntaxMatch(AbstractSyntaxElement.FunctionSignature, signature.ParseResult);
+            MatchedSyntax = new SyntaxMatch(SignatureElements.FunctionSignature, signature.ParseResult);
         }
     }
 }
