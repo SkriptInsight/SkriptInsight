@@ -201,14 +201,14 @@ namespace SkriptInsight.Core.Files
             return new ProcTryParseEffects();
         }
 
-        public void PrepareNodes(int startLine = -1, int endLine = -1)
+        public void PrepareNodes(int startLine = -1, int endLine = -1, bool forceParse = false)
         {
             startLine = Math.Max(0, startLine);
             endLine = endLine < 0 ? RawContents.Count : endLine;
             RunProcess(new ProcCreateOrUpdateNodes(), startLine, endLine);
             ProcessNodeIndentation(startLine);
-            if (!((WorkspaceManager.CurrentHost?.SupportsExtendedCapabilities ?? false) &&
-                  (WorkspaceManager.CurrentHost?.ExtendedCapabilities?.SupportsViewportReporting ?? false)))
+            if (forceParse || (!((WorkspaceManager.CurrentHost?.SupportsExtendedCapabilities ?? false) &&
+                             (WorkspaceManager.CurrentHost?.ExtendedCapabilities?.SupportsViewportReporting ?? false))))
             {
                 RunProcess(ParseProcess);
                 RunCodeInspections(startLine, endLine);
