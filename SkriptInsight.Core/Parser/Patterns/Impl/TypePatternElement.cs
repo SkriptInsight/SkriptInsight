@@ -108,8 +108,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                 {
                     foreach (var condition in skriptTypesManager.KnownConditionsFromAddons)
                     {
-                        if (condition.ClassName.Contains("IsSet")) Debugger.Break();
-                        var clone = contextToUse.Clone();
+                        var clone = contextToUse.Clone(false);
 
                         for (var index = 0; index < condition.PatternNodes.Length; index++)
                         {
@@ -120,7 +119,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
 
                             if (conditionResult.IsSuccess)
                             {
-                                result = new ConditionalExpression(condition, index, clone.EndRangeMeasure(), contextToUse);
+                                result = new ConditionalExpression(condition, clone.Matches, index, clone.EndRangeMeasure(), contextToUse);
                             }
 
                             clone.UndoRangeMeasure();
