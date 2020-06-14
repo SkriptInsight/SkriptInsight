@@ -44,9 +44,11 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
             .Where(c => Constraint.HasFlagFast(c))
             .Select(RenderConstraint));
 
+        public bool NarrowMatch { get; set; } = true;
+        
         public override ParseResult Parse(ParseContext contextToUse)
         {
-            return NarrowedParse(contextToUse, true);
+            return NarrowedParse(contextToUse, NarrowMatch);
         }
 
         public ParseResult NarrowedParse(ParseContext ctx, bool tryNarrowContext = false)
