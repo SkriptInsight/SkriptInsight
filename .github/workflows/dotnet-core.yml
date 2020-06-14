@@ -26,7 +26,7 @@ jobs:
       - name: Install dependencies for NBCEL
         run: dotnet restore nbcel
       - name: Build NBCEL
-        run: dotnet pack --configuration Release --no-restore nbcel
+        run: dotnet build --configuration Release --no-restore nbcel
       - name: Add NBCEL to local NuGet repos
         run: dotnet nuget add source nbcel\NBCEL\bin\Release\
 
