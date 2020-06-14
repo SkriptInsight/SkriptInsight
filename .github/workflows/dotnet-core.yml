@@ -2,24 +2,37 @@ name: .NET Core
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '5.0.100-preview.5.20279.10'
-    - name: Install dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
-    - name: Test
-      run: dotnet test --no-restore --verbosity normal
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "5.0.100-preview.5.20279.10"
+
+      - name: Checkout NBCEL
+        uses: actions/checkout@v2.2.0
+        with:
+          repository: "SkriptInsight/Apache.NBCEL"
+          path: nbcel
+
+      - name: Install dependencies for NBCEL
+        run: dotnet restore nbcel
+      - name: Build NBCEL
+        run: dotnet pack --configuration Release --no-restore nbcel
+      - name: Add NBCEL to local NuGet repos
+        run: dotnet nuget add source nbcel\NBCEL\bin\Release\
+
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+      - name: Test
+        run: dotnet test --no-restore --verbosity normal
