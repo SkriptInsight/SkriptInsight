@@ -48,6 +48,19 @@ namespace SkriptInsight.Core.Files
             set => _parseProcess = value;
         }
 
+        public bool IsNodeVisible(AbstractFileNode node)
+        {
+            //This node is not on this file
+            if (node.File != this)
+                return false;
+
+            //All nodes are visible when viewport reporting isn't enabled
+            if (VisibleRanges == null)
+                return true;
+
+            return VisibleRanges.Any(c => node.LineNumber >= c.Start.Line && node.LineNumber <= c.End.Line);
+        }
+
         [CanBeNull] public List<Range> VisibleRanges { get; set; }
 
         public ProblemsHolder ProblemsHolder { get; } = new ProblemsHolder();
@@ -255,9 +268,11 @@ namespace SkriptInsight.Core.Files
                 {
                     WorkspaceManager.CurrentHost.LogInfo(
                         $"Selectively Parsing nodes from {range.Start.Line} to {range.End.Line}.");
-                    var (start, end) = Nodes.ExpandRange((int) range.Start.Line, (int) range.End.Line);
-                    RunProcess(ParseProcess, start, end);
-                    RunCodeInspections(start, end);
+                    var (start, end) = Nodes.ExpandRange(range.Start.Line, range.End.Line);
+
+                    //Do not attempt to prepare the nodes (aka parse or run inspections) when nodes don't exist
+                    if (start == null || end == null) return;
+                    PrepareNodes(start.Value, end.Value, true);
                 };
                 if (IsDoingNodesChange) NodesChangeQueue.Push(toRun);
                 else toRun();

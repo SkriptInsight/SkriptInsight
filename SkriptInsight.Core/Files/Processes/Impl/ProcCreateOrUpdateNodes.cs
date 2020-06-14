@@ -38,33 +38,49 @@ namespace SkriptInsight.Core.Files.Processes.Impl
             }
             else
             {
-                var ctx = ParseContext.FromCode(rawContent);
-                //Try to match to one of our known signatures
-                foreach (var (signatureNodeType, signatureDelegate) in NodeSignaturesManager.Instance.SignatureTypes)
+                if (file.IsNodeVisible(resultNode))
                 {
-                    ctx.Matches.Clear();
-                    ctx.CurrentPosition = context.IndentationChars;
+                    var ctx = ParseContext.FromCode(rawContent);
                     
-                    var tryParseResult = signatureDelegate.DynamicInvoke(ctx);
-
-                    if (tryParseResult != null)
+                    var signatureMatches = new List<(bool isSectionMismatch, AbstractFileNode node)>();
+                    //Try to match to one of our known signatures
+                    foreach (var (signatureNodeType, signatureDelegate) in NodeSignaturesManager.Instance.SignatureTypes)
                     {
-                        //Try to match the section colon so that we reach the end of the line
-                        SectionPattern.Parse(ctx);
-                    }
+                        ctx.Matches.Clear();
+                        ctx.CurrentPosition = context.IndentationChars;
                     
-                    // We matched one signature
-                    if (tryParseResult != null && ctx.HasFinishedLine)
-                    {
-                        var instance = signatureNodeType.NewInstance(tryParseResult);
+                        var isSectionTypeMismatch = resultNode.IsSectionNode !=
+                                                    (signatureNodeType.GetCustomAttribute<SectionNodeAttribute>() != null);
 
-                        if (instance is AbstractFileNode fileNode)
+
+                        var tryParseResult = signatureDelegate.DynamicInvoke(ctx);
+
+                        if (tryParseResult != null)
                         {
-                            NodeContentHelper.ApplyBasicNodeInfoToOtherNode(resultNode, ref fileNode);
-                            resultNode = fileNode;
+                            //Try to match the section colon so that we reach the end of the line
+                            SectionPattern.Parse(ctx);
                         }
+                    
+                        // We matched one signature
+                        if (tryParseResult != null && ctx.HasFinishedLine)
+                        {
+                            var instance = signatureNodeType.NewInstance(tryParseResult);
 
-                        break;
+                            if (instance is AbstractFileNode fileNode)
+                            {
+                                NodeContentHelper.ApplyBasicNodeInfoToOtherNode(resultNode, ref fileNode);
+                                signatureMatches.Add((isSectionTypeMismatch, fileNode));
+                            }
+
+                            if (!isSectionTypeMismatch)
+                                break;
+                        }
+                    }
+
+                    var resultingNode = signatureMatches.FirstOrDefault(x => !x.isSectionMismatch).node;
+                    if (resultingNode != null)
+                    {
+                        resultNode = resultingNode;
                     }
                 }
             }

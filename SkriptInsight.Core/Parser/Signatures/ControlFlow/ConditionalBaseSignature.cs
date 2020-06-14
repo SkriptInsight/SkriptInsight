@@ -22,16 +22,27 @@ namespace SkriptInsight.Core.Parser.Signatures.ControlFlow
         static ConditionalBaseSignature()
         {
             ExpressionPattern = new SkriptPattern();
-            var prefix = typeof(T).GetCustomAttribute<ConditionalBasePrefixAttribute>()?.Prefix;
+            var conditionalBasePrefixAttribute = typeof(T).GetCustomAttribute<ConditionalBasePrefixAttribute>();
+            var prefix = conditionalBasePrefixAttribute?.Prefix;
             if (!prefix.IsEmpty())
             {
-                ExpressionPattern.Children.Add(new LiteralPatternElement(prefix));
-                ExpressionPattern.Children.Add(new LiteralPatternElement(" "));
+                var pattern = new SkriptPattern
+                {
+                    Children =
+                    {
+                        new LiteralPatternElement(prefix),
+                        new LiteralPatternElement(" ")
+                    }
+                };
+                ExpressionPattern.Children.Add(conditionalBasePrefixAttribute?.IsOptional == true
+                    ? (AbstractSkriptPatternElement) new OptionalPatternElement {Element = pattern}
+                    : pattern);
             }
 
             ExpressionPattern.Children.Add(new TypePatternElement
             {
                 Type = "boolean",
+                NarrowMatch = false,
                 Constraint = SyntaxValueAcceptanceConstraint.AllowConditionalExpressions
             });
         }
