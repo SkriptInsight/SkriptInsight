@@ -28,7 +28,7 @@ jobs:
       - name: Build NBCEL
         run: dotnet build --configuration Release --no-restore nbcel
       - name: Add NBCEL to local NuGet repos
-        run: dotnet nuget add source $GITHUB_WORKSPACE\\nbcel\\NBCEL\\bin\\Release\
+        run: dotnet nuget add source $GITHUB_WORKSPACE/nbcel/NBCEL/bin/Release/
 
       - name: Install dependencies
         run: dotnet restore
