@@ -17,7 +17,7 @@ namespace SkriptInsight.Core.Annotations
 
         public static AnnotationParser Instance => _instance ??= new AnnotationParser();
 
-        private Dictionary<Type, IParameterReader> TypeReaders { get; set; } = new Dictionary<Type, IParameterReader>();
+        private Dictionary<Type, IParameterReader> TypeReaders { get; } = new Dictionary<Type, IParameterReader>();
 
         #region Registry
 
