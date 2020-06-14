@@ -62,19 +62,11 @@ namespace SkriptInsight.Core.Parser.Patterns
                 parentElements = PatternHelper.Flatten(parent).ToList();
             }
 
-            //if (parent != null && parent.ToString().Contains("%object"))
-            //    Debugger.Break();
-
             var indexOfThis = ElementIndex;
             if (indexOfThis == -1) return true;
 
             var fromIndex = indexOfThis + 1;
             if (fromIndex > parentElements.Count) return true;
-
-            if (parent.ToString().Contains("exp"))
-            {
-                //Debugger.Break();
-            }
 
             var possibleInputs =
                 PatternHelper.GetPossibleInputs(parentElements.SubList(fromIndex, parentElements.Count));
