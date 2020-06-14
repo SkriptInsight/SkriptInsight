@@ -43,6 +43,26 @@ namespace SkriptInsight.Core.Files.Nodes.Impl.Signatures.ControlFlow
                 NarrowMatch = false,
                 Constraint = SyntaxValueAcceptanceConstraint.AllowConditionalExpressions
             });
+            
+            AddSectionEnding();
+        }
+
+        private static void AddSectionEnding()
+        {
+            var sectionNodeAttribute = typeof(T).GetCustomAttribute<SectionNodeAttribute>();
+            if (sectionNodeAttribute != null)
+            {
+                AbstractSkriptPatternElement section = new LiteralPatternElement(":");
+                if (sectionNodeAttribute.Optional)
+                {
+                    section = new OptionalPatternElement
+                    {
+                        Element = section
+                    };
+                }
+
+                ExpressionPattern.Children.Add(section);
+            }
         }
 
         private static SkriptPattern ExpressionPattern { get; set; }

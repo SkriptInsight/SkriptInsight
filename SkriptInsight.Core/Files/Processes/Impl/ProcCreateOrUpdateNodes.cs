@@ -8,7 +8,6 @@ using SkriptInsight.Core.Files.Nodes.Impl;
 using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.Parser;
 using SkriptInsight.Core.Parser.Patterns;
-using SkriptInsight.Core.Parser.Patterns.Impl;
 using SkriptInsight.Core.SyntaxInfo;
 using SkriptInsight.Core.Utils;
 
@@ -20,10 +19,6 @@ namespace SkriptInsight.Core.Files.Processes.Impl
         public override string ReportProgressTitle => this.GetClassDescription();
         public override string ReportProgressMessage => "Structurally parsing code";
 
-        private static readonly OptionalPatternElement SectionPattern = new OptionalPatternElement
-        {
-            Element = new LiteralPatternElement(":")
-        };
         public override void DoWork(SkriptFile file, int lineNumber, string rawContent, FileParseContext context)
         {
             AbstractFileNode resultNode = new BaseFileNode();
@@ -62,12 +57,6 @@ namespace SkriptInsight.Core.Files.Processes.Impl
 
                         var tryParseResult = signatureDelegate.DynamicInvoke(ctx);
 
-                        if (tryParseResult != null)
-                        {
-                            //Try to match the section colon so that we reach the end of the line
-                            SectionPattern.Parse(ctx);
-                        }
-                    
                         // We matched one signature
                         if (tryParseResult != null && ctx.HasFinishedLine)
                         {
