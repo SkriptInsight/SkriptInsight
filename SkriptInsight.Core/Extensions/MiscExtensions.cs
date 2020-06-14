@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Humanizer;
 using JetBrains.Annotations;
@@ -221,6 +222,14 @@ namespace SkriptInsight.Core.Extensions
                 typeof(DescriptionAttribute), false);
 
             return attributes.Length > 0 ? attributes[0].Description : $"Message missing for code <{source}>";
+        }
+
+        [CanBeNull]
+        public static string GetClassDescription<T>([NotNull] this T source)
+        {
+            var attribute = source.GetType().GetCustomAttribute<DescriptionAttribute>();
+
+            return attribute?.Description;
         }
     }
 }
