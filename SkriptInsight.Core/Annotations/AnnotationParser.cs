@@ -15,12 +15,12 @@ namespace SkriptInsight.Core.Annotations
 
         #region Registry
 
-        public void RegisterInlineGenericParameterReader<T>(Type type, Func<Stack<string>, T> reader)
+        public void RegisterInlineGenericParameterReader<T>(Type type, Func<Stack<string>, ParameterContext, T> reader)
         {
-            RegisterParameterReader(type, new DelegateReader(stack => reader(stack)));
+            RegisterParameterReader(type, new DelegateReader((stack, context) => reader(stack, context)));
         }
 
-        public void RegisterInlineParameterReader(Type type, Func<Stack<string>, object> reader)
+        public void RegisterInlineParameterReader(Type type, Func<Stack<string>, ParameterContext, object> reader)
         {
             RegisterParameterReader(type, new DelegateReader(reader));
         }

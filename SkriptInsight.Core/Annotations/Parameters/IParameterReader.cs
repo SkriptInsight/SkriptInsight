@@ -5,6 +5,6 @@ namespace SkriptInsight.Core.Annotations.Parameters
 {
     public interface IParameterReader
     {
-        [CanBeNull] object TryParse(Stack<string> args);
+        [CanBeNull] object TryParse(Stack<string> args, ParameterContext context);
     }
 }

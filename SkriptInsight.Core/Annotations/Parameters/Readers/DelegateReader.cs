@@ -6,16 +6,16 @@ namespace SkriptInsight.Core.Annotations.Parameters.Readers
 {
     public class DelegateReader : IParameterReader
     {
-        public DelegateReader(Func<Stack<string>, object> reader)
+        public DelegateReader(Func<Stack<string>, ParameterContext, object> reader)
         {
             Reader = reader;
         }
 
-        private Func<Stack<string>, object> Reader { get; }
+        private Func<Stack<string>, ParameterContext, object> Reader { get; }
 
-        public object TryParse(Stack<string> args)
+        public object TryParse(Stack<string> args, ParameterContext context)
         {
-            return Reader(args);
+            return Reader(args, context);
         }
     }
 }
