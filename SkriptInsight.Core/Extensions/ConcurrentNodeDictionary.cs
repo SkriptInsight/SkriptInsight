@@ -21,12 +21,12 @@ namespace SkriptInsight.Core.Extensions
             set => base[key] = value;
         }
 
-        public (int start, int end) ExpandRange(int startLine, int endLine)
+        public (int? start, int? end) ExpandRange(int startLine, int endLine)
         {
-            var topMostParent = this[startLine].FindRootParent();
-            var bottomMostChild = this[endLine].FindBottomRootChildNode();
+            var topMostParent = this[startLine]?.FindRootParent();
+            var bottomMostChild = this[endLine]?.FindBottomRootChildNode();
 
-            return (topMostParent.LineNumber, bottomMostChild.LineNumber);
+            return (topMostParent?.LineNumber, bottomMostChild?.LineNumber);
         }
     }
 }
