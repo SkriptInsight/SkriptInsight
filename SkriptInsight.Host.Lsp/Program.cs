@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -52,7 +52,7 @@ namespace SkriptInsight.Host.Lsp
 
                 options.OnNotification<ViewportChangedParams>("insight/viewportRangeChanged", e =>
                 {
-                    var file = WorkspaceManager.CurrentWorkspace.Files[e.Uri.ToUri()];
+                    var file = WorkspaceManager.CurrentWorkspace.WorkspaceManager.GetOrCreateByUri(e.Uri.ToUri());
                     if (file == null) return;
 
                     file.VisibleRanges = e.Ranges;
