@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using OmniSharp.Extensions.LanguageServer.Protocol;
 using OmniSharp.Extensions.LanguageServer.Protocol.Document;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using OmniSharp.Extensions.LanguageServer.Protocol.Progress;
+using OmniSharp.Extensions.LanguageServer.Protocol.Server.WorkDone;
 using OmniSharp.Extensions.LanguageServer.Protocol.Window;
 using SkriptInsight.Core;
 using SkriptInsight.Core.Utils;
@@ -59,5 +62,9 @@ namespace SkriptInsight.Host.Lsp
         public bool SupportsExtendedCapabilities => ExtendedCapabilities != null;
 
         public ExtendedHostCapabilities ExtendedCapabilities { get; set; }
+        
+        public IProgressManager ProgressManager => Server.Client.ProgressManager;
+        
+        public IServerWorkDoneManager WorkDoneManager => Server.WorkDoneManager;
     }
 }

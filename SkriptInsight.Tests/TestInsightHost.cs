@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using OmniSharp.Extensions.LanguageServer.Protocol.Progress;
+using OmniSharp.Extensions.LanguageServer.Protocol.Server.WorkDone;
 using SkriptInsight.Core;
 using SkriptInsight.Core.Utils;
 using Xunit.Sdk;
@@ -45,5 +47,9 @@ namespace SkriptInsight.Tests
         public bool SupportsExtendedCapabilities => false;
 
         public ExtendedHostCapabilities ExtendedCapabilities { get; set; }
+
+        public IProgressManager ProgressManager { get; } = null;
+        
+        public IServerWorkDoneManager WorkDoneManager { get; } = null;
     }
 }
