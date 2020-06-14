@@ -172,12 +172,12 @@ namespace SkriptInsight.Core.Files
             IWorkDoneObserver workObserver = null;
             if (workManager != null && process.ReportProgress)
             {
-                workObserver = Task.Run(async () => await workManager.Create(new WorkDoneProgressBegin
+                workObserver = TaskEx.Run(async () => await workManager.Create(new WorkDoneProgressBegin
                 {
                     Message = process.ReportProgressMessage,
                     Percentage = 0,
                     Title = process.ReportProgressTitle
-                })).Result;
+                }))?.Result;
             }
             
             WorkspaceManager.CurrentHost.LogInfo(
@@ -243,10 +243,10 @@ namespace SkriptInsight.Core.Files
 
         public void PrepareNodes(int startLine = -1, int endLine = -1, bool forceParse = false)
         {
-            var workObserver = Task.Run(() => WorkspaceManager.CurrentHost.WorkDoneManager?.Create(new WorkDoneProgressBegin
+            var workObserver = TaskEx.Run(() => WorkspaceManager.CurrentHost.WorkDoneManager?.Create(new WorkDoneProgressBegin
             {
                 Title = "Parsing code"
-            })).Result;
+            }))?.Result;
             
             startLine = Math.Max(0, startLine);
             endLine = endLine < 0 ? RawContents.Count : endLine;
@@ -259,7 +259,7 @@ namespace SkriptInsight.Core.Files
                 RunProcess(ParseProcess, startLine, endLine);
                 RunCodeInspections(startLine, endLine);
             }
-            workObserver.OnCompleted();
+            workObserver?.OnCompleted();
         }
 
         protected virtual void RunCodeInspections(int startLine, int endLine)
@@ -289,12 +289,12 @@ namespace SkriptInsight.Core.Files
                         .Select(c => c.Key)
                 ).ToList();
             
-            var workObserver = Task.Run(() => WorkspaceManager.CurrentHost.WorkDoneManager?.Create(new WorkDoneProgressBegin
+            var workObserver = TaskEx.Run(() => WorkspaceManager.CurrentHost.WorkDoneManager?.Create(new WorkDoneProgressBegin
             {
                 Title = "Structurally parsing code",
                 Message = "Analysing indentations for entire file",
                 Percentage = 0
-            })).Result;
+            }))?.Result;
 
             for (var index = 0; index < indentLevels.Count; index++)
             {
