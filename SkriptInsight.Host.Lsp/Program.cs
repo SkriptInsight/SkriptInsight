@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -74,6 +74,7 @@ namespace SkriptInsight.Host.Lsp
             });
 
             WorkspaceManager.CurrentHost = new LspSkriptInsightHost(server);
+            WorkspaceManager.CurrentHost.LogInfo("SkriptInsight loaded successfully.");
             
             #pragma warning disable 4014
             Task.Run(() => StartDiscordRichPresence(WorkspaceManager.CurrentWorkspace));
