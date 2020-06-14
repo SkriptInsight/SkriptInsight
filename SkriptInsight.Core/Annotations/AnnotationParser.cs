@@ -9,6 +9,12 @@ namespace SkriptInsight.Core.Annotations
     public class AnnotationParser
     {
         [CanBeNull] private static AnnotationParser _instance;
+
+        public AnnotationParser()
+        {
+            RegisterParameterReader(new StringReader());
+        }
+
         public static AnnotationParser Instance => _instance ??= new AnnotationParser();
 
         private Dictionary<Type, IParameterReader> TypeReaders { get; set; } = new Dictionary<Type, IParameterReader>();
