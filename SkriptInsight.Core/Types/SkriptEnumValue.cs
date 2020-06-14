@@ -28,7 +28,7 @@ namespace SkriptInsight.Core.Types
                         {
                             new ChoicePatternElement
                             {
-                                Elements = c.GetAliases().Concat(new[] {c.ToString().ToLower()}).Select(a =>
+                                Elements = c.GetPatternAliases().Concat(new[] {c.ToString().ToLower()}).Select(a =>
                                     new ChoicePatternElement.ChoiceGroupElement(new LiteralPatternElement(a))).ToList()
                             }
                         }
@@ -62,7 +62,7 @@ namespace SkriptInsight.Core.Types
         {
             UsedAlias = alias;
             Value = Enum.GetValues(typeof(T)).Cast<T>()
-                .Where(ex => ex.GetAliases().Contains(alias.ToLower())).DefaultIfEmpty(def)
+                .Where(ex => ex.GetPatternAliases().Contains(alias.ToLower())).DefaultIfEmpty(def)
                 .FirstOrDefault();
         }
 
@@ -74,7 +74,7 @@ namespace SkriptInsight.Core.Types
             {
                 _value = value;
                 if (string.IsNullOrEmpty(UsedAlias))
-                    UsedAlias = value.GetAliases().First();
+                    UsedAlias = value.GetPatternAliases().First();
             }
         }
 
