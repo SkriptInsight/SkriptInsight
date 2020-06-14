@@ -1,6 +1,6 @@
 using SkriptInsight.Core.Parser.Expressions;
 
-namespace SkriptInsight.Core.Parser.Signatures.ControlFlow
+namespace SkriptInsight.Core.Files.Nodes.Impl.Signatures.ControlFlow
 {
     public interface IConditionalBaseSignature
     {

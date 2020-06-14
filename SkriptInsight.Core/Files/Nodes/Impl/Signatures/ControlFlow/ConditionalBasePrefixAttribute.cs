@@ -1,7 +1,7 @@
 using System;
 using JetBrains.Annotations;
 
-namespace SkriptInsight.Core.Parser.Signatures.ControlFlow
+namespace SkriptInsight.Core.Files.Nodes.Impl.Signatures.ControlFlow
 {
     [MeansImplicitUse(ImplicitUseTargetFlags.WithMembers)]
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]

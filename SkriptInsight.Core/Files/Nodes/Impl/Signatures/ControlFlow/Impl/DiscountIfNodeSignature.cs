@@ -1,6 +1,4 @@
-using SkriptInsight.Core.Files.Nodes;
-
-namespace SkriptInsight.Core.Parser.Signatures.ControlFlow.Impl
+namespace SkriptInsight.Core.Files.Nodes.Impl.Signatures.ControlFlow.Impl
 {
     [SectionNode, ConditionalBasePrefix("")]
     public class DiscountIfNodeSignature : ConditionalBaseSignature<DiscountIfNodeSignature>

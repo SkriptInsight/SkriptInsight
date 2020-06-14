@@ -1,7 +1,7 @@
 using SkriptInsight.Core.Parser.Expressions;
 using SkriptInsight.Core.SyntaxInfo;
 
-namespace SkriptInsight.Core.Parser.Signatures.Functions
+namespace SkriptInsight.Core.Files.Nodes.Impl.Signatures.Functions
 {
     public class FunctionParameter
     {

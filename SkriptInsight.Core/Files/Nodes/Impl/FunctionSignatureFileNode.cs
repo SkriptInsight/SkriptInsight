@@ -1,4 +1,4 @@
-using SkriptInsight.Core.Parser.Signatures.Functions;
+using SkriptInsight.Core.Files.Nodes.Impl.Signatures.Functions;
 using SkriptInsight.Core.SyntaxInfo;
 
 namespace SkriptInsight.Core.Files.Nodes.Impl

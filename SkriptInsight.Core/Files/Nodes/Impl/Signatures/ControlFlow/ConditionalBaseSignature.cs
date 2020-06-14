@@ -1,15 +1,13 @@
-using System;
 using System.Reflection;
 using JetBrains.Annotations;
 using SkriptInsight.Core.Extensions;
-using SkriptInsight.Core.Files.Nodes;
+using SkriptInsight.Core.Parser;
 using SkriptInsight.Core.Parser.Expressions;
 using SkriptInsight.Core.Parser.Patterns;
 using SkriptInsight.Core.Parser.Patterns.Impl;
 using SkriptInsight.Core.Parser.Types.Impl;
-using SkriptInsight.Core.SyntaxInfo;
 
-namespace SkriptInsight.Core.Parser.Signatures.ControlFlow
+namespace SkriptInsight.Core.Files.Nodes.Impl.Signatures.ControlFlow
 {
     [SectionNode]
     public abstract class ConditionalBaseSignature<T> : SignatureFileNode<T>, IConditionalBaseSignature

@@ -1,9 +1,9 @@
 using System.Linq;
 using SkriptInsight.Core.Extensions;
+using SkriptInsight.Core.Files.Nodes.Impl.Signatures.Functions;
 using SkriptInsight.Core.Parser.Expressions;
 using SkriptInsight.Core.Parser.Patterns;
 using SkriptInsight.Core.Parser.Patterns.Impl;
-using SkriptInsight.Core.Parser.Signatures.Functions;
 using SkriptInsight.Core.SyntaxInfo;
 
 namespace SkriptInsight.Core.Parser.Types.Impl.Internal

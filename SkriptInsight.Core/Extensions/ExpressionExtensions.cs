@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SkriptInsight.Core.Files.Nodes.Impl.Signatures.ControlFlow;
 using SkriptInsight.Core.Parser;
 using SkriptInsight.Core.Parser.Expressions;
-using SkriptInsight.Core.Parser.Signatures.ControlFlow;
 using SkriptInsight.Core.Parser.Types.Impl.Generic;
 using SkriptInsight.Core.Types;
 

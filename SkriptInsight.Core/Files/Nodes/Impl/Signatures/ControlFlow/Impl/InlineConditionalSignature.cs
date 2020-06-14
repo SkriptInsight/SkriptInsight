@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace SkriptInsight.Core.Parser.Signatures.ControlFlow.Impl
+namespace SkriptInsight.Core.Files.Nodes.Impl.Signatures.ControlFlow.Impl
 {
     [ConditionalBasePrefix("")]
     [DebuggerDisplay("Inline Conditional; {RawText}")]

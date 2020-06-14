@@ -1,8 +1,8 @@
 using System.Linq;
 using SkriptInsight.Core.Extensions;
+using SkriptInsight.Core.Files.Nodes.Impl.Signatures.Functions;
 using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.Parser;
-using SkriptInsight.Core.Parser.Signatures.Functions;
 using SkriptInsight.Core.Parser.Types.Impl.Internal;
 using SkriptInsight.Core.Utils;
 using Xunit;

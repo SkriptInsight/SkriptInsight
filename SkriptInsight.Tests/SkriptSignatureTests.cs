@@ -1,6 +1,5 @@
+using SkriptInsight.Core.Files.Nodes.Impl.Signatures.ControlFlow.Impl;
 using SkriptInsight.Core.Managers;
-using SkriptInsight.Core.Parser.Signatures.ControlFlow;
-using SkriptInsight.Core.Parser.Signatures.ControlFlow.Impl;
 using Xunit;
 
 namespace SkriptInsight.Tests
