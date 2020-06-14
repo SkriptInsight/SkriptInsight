@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using MoreLinq;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using OmniSharp.Extensions.LanguageServer.Protocol.Server.WorkDone;
 using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Files.Nodes;
 using SkriptInsight.Core.Files.Processes;
@@ -163,8 +165,23 @@ namespace SkriptInsight.Core.Files
             if (process is BaseInspection)
                 processName = $"Inspection {processName.Replace("Inspection", "")}";
 
+            var progress = 0;
+            var lineCount = endLine - startLine;
+
+            var workManager = WorkspaceManager.CurrentHost.WorkDoneManager;
+            IWorkDoneObserver workObserver = null;
+            if (workManager != null && process.ReportProgress)
+            {
+                workObserver = Task.Run(async () => await workManager.Create(new WorkDoneProgressBegin
+                {
+                    Message = process.ReportProgressMessage,
+                    Percentage = 0,
+                    Title = process.ReportProgressTitle
+                })).Result;
+            }
+            
             WorkspaceManager.CurrentHost.LogInfo(
-                $"Starting {processName} on {endLine - startLine} line(s).");
+                $"Starting {processName} on {lineCount} line(s).");
             Parallel.For(startLine, endLine + 1,
                 new ParallelOptions {MaxDegreeOfParallelism = maxDegreeOfParallelism},
                 line =>
@@ -173,7 +190,7 @@ namespace SkriptInsight.Core.Files
                     {
                         var rawContent = RawContents.ElementAt(line);
                         contexts.TryDequeue(out var context);
-                        context.CurrentMatchStack.Clear();
+                        context!.CurrentMatchStack.Clear();
                         context.TemporaryRangeStack.Clear();
                         context.Matches.Clear();
                         context.IndentationChars = rawContent.TakeWhile(char.IsWhiteSpace).Count();
@@ -181,10 +198,20 @@ namespace SkriptInsight.Core.Files
                         context.CurrentLine = line;
 
                         process.DoWork(this, line, rawContent, context);
+                        Interlocked.Increment(ref progress);
+
+                        var progressValue = (float) progress / lineCount * 100;
+                        workObserver?.OnNext(new WorkDoneProgressReport
+                        {
+                            Message = process.ReportProgressMessage,
+                            Percentage = progressValue
+                        });
 
                         contexts.Enqueue(context);
                     }
                 });
+            
+            workObserver?.OnNext(new WorkDoneProgressEnd());
 
             if (GetType() == typeof(SkriptFile))
             {
@@ -206,7 +233,7 @@ namespace SkriptInsight.Core.Files
             }
 
             WorkspaceManager.CurrentHost.LogInfo(
-                $"Took {sw.ElapsedMilliseconds}ms to run {processName} on {endLine - startLine} line(s) [{startLine}->{endLine}].");
+                $"Took {sw.ElapsedMilliseconds}ms to run {processName} on {lineCount} line(s) [{startLine}->{endLine}].");
         }
 
         protected virtual FileProcess ProvideParseProcess()
@@ -216,16 +243,23 @@ namespace SkriptInsight.Core.Files
 
         public void PrepareNodes(int startLine = -1, int endLine = -1, bool forceParse = false)
         {
+            var workObserver = Task.Run(() => WorkspaceManager.CurrentHost.WorkDoneManager?.Create(new WorkDoneProgressBegin
+            {
+                Title = "Parsing code"
+            })).Result;
+            
             startLine = Math.Max(0, startLine);
             endLine = endLine < 0 ? RawContents.Count : endLine;
             RunProcess(new ProcCreateOrUpdateNodes(), startLine, endLine);
             ProcessNodeIndentation(startLine);
             if (forceParse || (!((WorkspaceManager.CurrentHost?.SupportsExtendedCapabilities ?? false) &&
-                             (WorkspaceManager.CurrentHost?.ExtendedCapabilities?.SupportsViewportReporting ?? false))))
+                                 (WorkspaceManager.CurrentHost?.ExtendedCapabilities?.SupportsViewportReporting ??
+                                  false))))
             {
                 RunProcess(ParseProcess, startLine, endLine);
                 RunCodeInspections(startLine, endLine);
             }
+            workObserver.OnCompleted();
         }
 
         protected virtual void RunCodeInspections(int startLine, int endLine)
@@ -254,8 +288,22 @@ namespace SkriptInsight.Core.Files
                         .GroupBy(i => i.Count)
                         .Select(c => c.Key)
                 ).ToList();
+            
+            var workObserver = Task.Run(() => WorkspaceManager.CurrentHost.WorkDoneManager?.Create(new WorkDoneProgressBegin
+            {
+                Title = "Structurally parsing code",
+                Message = "Analysing indentations for entire file",
+                Percentage = 0
+            })).Result;
 
-            foreach (var level in indentLevels) RunProcess(new ProcCreateOrUpdateNodeChildren(level));
+            for (var index = 0; index < indentLevels.Count; index++)
+            {
+                var level = indentLevels[index];
+                RunProcess(new ProcCreateOrUpdateNodeChildren(level));
+                workObserver?.OnNext("Analysing indentations for entire file", (index + 1 / (float)indentLevels.Count)* 100, false);
+            }
+            
+            workObserver?.OnCompleted();
         }
 
         public void NotifyVisibleNodesRangeChanged()
