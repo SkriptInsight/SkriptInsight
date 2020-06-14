@@ -13,6 +13,7 @@ namespace SkriptInsight.Core.Annotations
         public AnnotationParser()
         {
             RegisterParameterReader(new StringReader());
+            RegisterParameterReader(new TypeReader());
         }
 
         public static AnnotationParser Instance => _instance ??= new AnnotationParser();
