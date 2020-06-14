@@ -12,10 +12,10 @@ namespace SkriptInsight.Tests
         }
         
         [Theory]
-        [InlineData("if true", true)]
-        [InlineData("if false", true)]
-        [InlineData("if \"abc\" is alphanumeric", true)]
-        [InlineData("if {homes::%uuid of player%::%arg-1%} is not set", true)]
+        [InlineData("if true:", true)]
+        [InlineData("if false:", true)]
+        [InlineData("if \"abc\" is alphanumeric:", true)]
+        [InlineData("if {homes::%uuid of player%::%arg-1%} is not set:", true)]
         public void IfSignatureMatchesCorrectly(string code, bool valid)
         {
             Assert.Equal(valid, IfNodeSignature.TryParse(code) != null);
