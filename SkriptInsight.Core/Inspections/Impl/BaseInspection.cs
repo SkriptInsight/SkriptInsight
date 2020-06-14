@@ -1,4 +1,5 @@
 using System.Threading;
+using Humanizer;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Files;
@@ -12,6 +13,9 @@ namespace SkriptInsight.Core.Inspections.Impl
     /// </summary>
     public abstract class BaseInspection : FileProcess
     {
+        public override string ReportProgressTitle => "Running code inspection";
+        public override string ReportProgressMessage => GetType().Name.Replace("Inspection", "").Humanize();
+
         /// <summary>
         /// A ThreadLocal that holds the ProblemHolder instance for this Inspection
         /// </summary>

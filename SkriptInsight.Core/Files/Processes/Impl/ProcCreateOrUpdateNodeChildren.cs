@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using SkriptInsight.Core.Files.Nodes;
 using SkriptInsight.Core.Files.Nodes.Impl;
@@ -7,6 +8,8 @@ namespace SkriptInsight.Core.Files.Processes.Impl
 {
     public class ProcCreateOrUpdateNodeChildren : FileProcess
     {
+        public override string ReportProgressTitle => "Structurally parsing code";
+        public override string ReportProgressMessage => $"Analysing indentations (level {CurrentLevel + 1})";
         public int CurrentLevel { get; }
 
         public ProcCreateOrUpdateNodeChildren(in int currentLevel)

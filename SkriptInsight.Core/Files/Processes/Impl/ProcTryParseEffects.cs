@@ -1,14 +1,21 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Managers;
 using SkriptInsight.Core.Parser;
 using SkriptInsight.Core.SyntaxInfo;
 
 namespace SkriptInsight.Core.Files.Processes.Impl
 {
+    
+    [Description("Grammatically parsing code")]
     public class ProcTryParseEffects : FileProcess
     {
+        public override string ReportProgressTitle => this.GetClassDescription();
+        public override string ReportProgressMessage => "";
+
         public override void DoWork(SkriptFile file, int lineNumber, string rawContent, FileParseContext context)
         {
             var node = file.Nodes[lineNumber];

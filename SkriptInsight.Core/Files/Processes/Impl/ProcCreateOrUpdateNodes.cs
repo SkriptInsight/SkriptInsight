@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Reflection;
 using SkriptInsight.Core.Extensions;
 using SkriptInsight.Core.Files.Nodes;
@@ -11,8 +14,12 @@ using SkriptInsight.Core.Utils;
 
 namespace SkriptInsight.Core.Files.Processes.Impl
 {
+    [Description("")]
     public class ProcCreateOrUpdateNodes : FileProcess
     {
+        public override string ReportProgressTitle => this.GetClassDescription();
+        public override string ReportProgressMessage => "Structurally parsing code";
+
         private static readonly OptionalPatternElement SectionPattern = new OptionalPatternElement
         {
             Element = new LiteralPatternElement(":")
