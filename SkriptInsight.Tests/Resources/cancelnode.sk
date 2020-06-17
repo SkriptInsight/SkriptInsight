@@ -1,0 +1,2 @@
+on join:
+    cancel event # @assertinspection EventCantBeCancelled

@@ -5,9 +5,9 @@ using SkriptInsight.Core.Parser.Types.Impl.Internal;
 namespace SkriptInsight.Core.Annotations.Impl
 {
     [AnnotationAlias("param")]
-    public class ParameterAnnotation : Annotation
+    public class FunctionParameterAnnotation : Annotation
     {
-        public ParameterAnnotation(string parameter, string description)
+        public FunctionParameterAnnotation(string parameter, string description)
         {
             Parameter = parameter;
             Description = description;
