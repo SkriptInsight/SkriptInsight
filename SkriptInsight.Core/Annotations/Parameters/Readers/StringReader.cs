@@ -6,7 +6,7 @@ namespace SkriptInsight.Core.Annotations.Parameters.Readers
     {
         protected override string GenericTryParse(Stack<string> args, ParameterContext context)
         {
-            return context.IsLastParameter ? string.Join("", args) : args.Pop();
+            return context.IsLastParameter ? string.Join(" ", args) : args.Pop();
         }
     }
 }
