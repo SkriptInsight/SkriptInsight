@@ -4,7 +4,7 @@ using SkriptInsight.Core.Parser.Types.Impl.Internal;
 
 namespace SkriptInsight.Core.Annotations.Impl
 {
-    [Alias("param")]
+    [AnnotationAlias("param")]
     public class ParameterAnnotation : Annotation
     {
         public ParameterAnnotation(string parameter, string description)

@@ -3,7 +3,7 @@ using SkriptInsight.Core.Annotations.Parameters;
 
 namespace SkriptInsight.Core.Annotations.Impl
 {
-    [Alias("doc")]
+    [AnnotationAlias("doc")]
     [Description("Annotation used to document this element")]
     public class DocumentationAnnotation : Annotation
     {
