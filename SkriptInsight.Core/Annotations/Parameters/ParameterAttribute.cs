@@ -6,7 +6,7 @@ namespace SkriptInsight.Core.Annotations.Parameters
 {
     [MeansImplicitUse(ImplicitUseTargetFlags.Itself | ImplicitUseTargetFlags.WithMembers)]
     [AttributeUsage(AttributeTargets.Property)]
-    sealed class ParameterAttribute : Attribute
+    public sealed class ParameterAttribute : Attribute
     {
         public int LineNumber { get; }
 
