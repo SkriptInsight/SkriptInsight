@@ -26,13 +26,13 @@ namespace SkriptInsight.JavaMetadataExtractorLib.MetadataRepresentation
             _metaParams = meta.Parameters.Select(c => c.ToDataClass()).ToArray();
         }
 
-        public override AccessFlags Flags  => _metaFlags;
-        
+        public override AccessFlags Flags => _metaFlags;
+
         public override string Name => _metaName;
 
         public override Type Type => _metaType;
 
-        public override JavaMethodParameter[] Parameters => _metaParams; 
+        public override JavaMethodParameter[] Parameters => _metaParams;
 
         public override string ToString()
         {
@@ -40,6 +40,7 @@ namespace SkriptInsight.JavaMetadataExtractorLib.MetadataRepresentation
         }
 
         public event EventHandler<EventArgs> CanLoad;
+
         internal void OnCanLoad()
         {
             CanLoad?.Invoke(this, EventArgs.Empty);
@@ -48,6 +49,7 @@ namespace SkriptInsight.JavaMetadataExtractorLib.MetadataRepresentation
                 if (parameter is DataJavaMethodParameter javaMethodParameter)
                     javaMethodParameter.OnCanLoad();
             }
+
             CanLoad = null;
         }
     }

@@ -9,11 +9,11 @@ namespace SkriptInsight.JavaReader
     {
         public JavaMethod()
         {
-            
         }
-        
+
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private AccessFlags? _flags;
+
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private JavaMethodParameter[] _params;
 
@@ -27,7 +27,7 @@ namespace SkriptInsight.JavaReader
         public virtual AccessFlags Flags => _flags ??= (AccessFlags) InternalMethod.GetAccessFlags();
 
         public virtual string Name => InternalMethod.GetName();
-        
+
         public virtual Type Type => InternalMethod.GetReturnType();
 
         public virtual JavaMethodParameter[] Parameters => _params ??= JavaMethodParameter.FromMethod(InternalMethod);
@@ -36,6 +36,5 @@ namespace SkriptInsight.JavaReader
         {
             return InternalMethod.ToString();
         }
-        
     }
 }

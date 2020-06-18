@@ -14,17 +14,22 @@ namespace SkriptInsight.JavaReader
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private AccessFlags? _accessFlags;
+
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private JavaClass[] _superClasses;
+
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private JavaClass[] _interfaces;
+
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private JavaField[] _fields;
+
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private JavaClass[] _allInterfaces;
+
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private JavaMethod[] _methods;
-        
+
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Apache.NBCEL.ClassFile.JavaClass InternalClass { get; }
 
@@ -35,11 +40,11 @@ namespace SkriptInsight.JavaReader
         }
 
         public virtual string ClassName { get; set; }
-        
+
         public virtual string FullClassName { get; set; }
 
         public virtual string PackageName { get; set; }
-        
+
         private void SetupProperties(Apache.NBCEL.ClassFile.JavaClass javaClass)
         {
             ClassName = javaClass.ClassName.Substring(javaClass.ClassName.LastIndexOf('.') + 1);
@@ -50,7 +55,8 @@ namespace SkriptInsight.JavaReader
         public virtual AccessFlags Flags => _accessFlags ??= (AccessFlags) InternalClass.GetAccessFlags();
 
         public virtual JavaClass[] SuperClasses
-            => _superClasses ??= TryOrNull(() => InternalClass.SuperClasses.Select(c => LoadedClassRepository.Instance[c.ClassName])).ToArray();
+            => _superClasses ??= TryOrNull(() =>
+                InternalClass.SuperClasses.Select(c => LoadedClassRepository.Instance[c.ClassName])).ToArray();
 
         private IEnumerable<T> TryOrNull<T>(Func<IEnumerable<T>> func)
         {
@@ -66,16 +72,18 @@ namespace SkriptInsight.JavaReader
         }
 
         public virtual JavaClass[] Interfaces
-            => _interfaces ??= TryOrNull(() => InternalClass.Interfaces.Select(c => LoadedClassRepository.Instance[c.ClassName])
+            => _interfaces ??= TryOrNull(
+                () => InternalClass.Interfaces.Select(c => LoadedClassRepository.Instance[c.ClassName])
             ).ToArray();
-        
+
         public virtual JavaClass[] AllInterfaces
-            => _allInterfaces ??= TryOrNull(() => InternalClass.AllInterfaces.Select(c => LoadedClassRepository.Instance[c.ClassName])
+            => _allInterfaces ??= TryOrNull(
+                () => InternalClass.AllInterfaces.Select(c => LoadedClassRepository.Instance[c.ClassName])
             ).ToArray();
-        
+
         public virtual JavaField[] Fields
             => _fields ??= InternalClass.Fields.Select(c => new JavaField(c)).ToArray();
-        
+
         public virtual JavaMethod[] Methods
             => _methods ??= InternalClass.Methods.Select(c => new JavaMethod(c)).ToArray();
 
@@ -103,12 +111,13 @@ namespace SkriptInsight.JavaReader
             if (Equals(inter))
                 return true;
             if (AllInterfaces == null) return false;
-            
+
             foreach (var allInterface in AllInterfaces)
             {
                 if (allInterface.Equals(inter) || allInterface.ImplementationOf(inter))
                     return true;
             }
+
             return false;
         }
 

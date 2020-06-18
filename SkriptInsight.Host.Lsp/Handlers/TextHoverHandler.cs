@@ -19,7 +19,7 @@ namespace SkriptInsight.Host.Lsp.Handlers
         public Task<Hover> Handle(HoverParams request, CancellationToken cancellationToken)
         {
             var file = WorkspaceManager.Instance.GetOrCreateByUri(request.TextDocument.Uri.ToUri());
- 
+
             var nodeAtLine = file.Nodes?[(int) request.Position.Line];
 
             if (Debugger.IsAttached && nodeAtLine != null)
@@ -29,14 +29,15 @@ namespace SkriptInsight.Host.Lsp.Handlers
                     Contents = new MarkedStringsOrMarkupContent(new MarkupContent
                     {
                         Kind = MarkupKind.Markdown,
-                        Value = $@"```js{"\n"}node.type = {nodeAtLine.GetType().Name};{"\n"}{JsonConvert.SerializeObject(nodeAtLine, new JsonSerializerSettings
-                        {
-                            Converters = new List<JsonConverter> {new StringEnumConverter {NamingStrategy = new CamelCaseNamingStrategy()}},
-                            ContractResolver = new NoFileContractResolver(),
-                            Formatting = Formatting.Indented,
-                            NullValueHandling = NullValueHandling.Ignore,
-                            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                        })}{"\n"}```"
+                        Value =
+                            $@"```js{"\n"}node.type = {nodeAtLine.GetType().Name};{"\n"}{JsonConvert.SerializeObject(nodeAtLine, new JsonSerializerSettings
+                            {
+                                Converters = new List<JsonConverter> {new StringEnumConverter {NamingStrategy = new CamelCaseNamingStrategy()}},
+                                ContractResolver = new NoFileContractResolver(),
+                                Formatting = Formatting.Indented,
+                                NullValueHandling = NullValueHandling.Ignore,
+                                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                            })}{"\n"}```"
                     })
                 });
 

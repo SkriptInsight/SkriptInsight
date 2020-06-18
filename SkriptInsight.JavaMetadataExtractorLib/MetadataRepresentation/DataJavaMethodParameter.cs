@@ -24,8 +24,9 @@ namespace SkriptInsight.JavaMetadataExtractorLib.MetadataRepresentation
         public override string Name => _metaName;
 
         public override Type Type => _metaType;
-        
+
         public event EventHandler<EventArgs> CanLoad;
+
         internal void OnCanLoad()
         {
             CanLoad?.Invoke(this, EventArgs.Empty);

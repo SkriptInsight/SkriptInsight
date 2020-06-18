@@ -10,13 +10,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\SkriptInsight.JavaMetadataExtractorLib\SkriptInsight.JavaMetadataExtractorLib.csproj" />
-      <ProjectReference Include="..\SkriptInsight.JavaMetadata\SkriptInsight.JavaMetadata.csproj" />
+        <ProjectReference
+            Include="..\SkriptInsight.JavaMetadataExtractorLib\SkriptInsight.JavaMetadataExtractorLib.csproj" />
+        <ProjectReference Include="..\SkriptInsight.JavaMetadata\SkriptInsight.JavaMetadata.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Apache.NBCEL" Version="1.0.9" />
-      <PackageReference Include="CommandLineParser" Version="2.8.0" />
+        <PackageReference Include="Apache.NBCEL" Version="1.0.9" />
+        <PackageReference Include="CommandLineParser" Version="2.8.0" />
     </ItemGroup>
 
 </Project>

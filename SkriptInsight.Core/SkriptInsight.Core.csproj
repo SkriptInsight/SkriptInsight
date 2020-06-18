@@ -29,7 +29,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\SkriptInsight.JavaMetadataExtractorLib\SkriptInsight.JavaMetadataExtractorLib.csproj" />
+        <ProjectReference
+            Include="..\SkriptInsight.JavaMetadataExtractorLib\SkriptInsight.JavaMetadataExtractorLib.csproj" />
     </ItemGroup>
 
     <ItemGroup>

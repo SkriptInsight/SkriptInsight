@@ -13,11 +13,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\SkriptInsight.Core\SkriptInsight.Core.csproj" />
+        <ProjectReference Include="..\SkriptInsight.Core\SkriptInsight.Core.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Skript.json" />
+        <None Remove="Skript.json" />
     </ItemGroup>
 
 </Project>

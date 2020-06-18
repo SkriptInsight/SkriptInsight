@@ -43,16 +43,18 @@ namespace SkriptInsight.Core.Files.Processes.Impl
                 if (file.IsNodeVisible(resultNode))
                 {
                     var ctx = ParseContext.FromCode(rawContent);
-                    
+
                     var signatureMatches = new List<(bool isSectionMismatch, AbstractFileNode node)>();
                     //Try to match to one of our known signatures
-                    foreach (var (signatureNodeType, signatureDelegate) in NodeSignaturesManager.Instance.SignatureTypes)
+                    foreach (var (signatureNodeType, signatureDelegate) in NodeSignaturesManager.Instance.SignatureTypes
+                    )
                     {
                         ctx.Matches.Clear();
                         ctx.CurrentPosition = context.IndentationChars;
-                    
+
                         var isSectionTypeMismatch = resultNode.IsSectionNode !=
-                                                    (signatureNodeType.GetCustomAttribute<SectionNodeAttribute>() != null);
+                                                    (signatureNodeType.GetCustomAttribute<SectionNodeAttribute>() !=
+                                                     null);
 
 
                         var tryParseResult = signatureDelegate.DynamicInvoke(ctx);

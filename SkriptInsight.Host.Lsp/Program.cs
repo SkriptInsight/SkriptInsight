@@ -75,10 +75,10 @@ namespace SkriptInsight.Host.Lsp
 
             WorkspaceManager.CurrentHost = new LspSkriptInsightHost(server);
             WorkspaceManager.CurrentHost.LogInfo("SkriptInsight loaded successfully.");
-            
-            #pragma warning disable 4014
+
+#pragma warning disable 4014
             Task.Run(() => StartDiscordRichPresence(WorkspaceManager.CurrentWorkspace));
-            #pragma warning restore 4014
+#pragma warning restore 4014
 
             await server.WaitForExit;
 

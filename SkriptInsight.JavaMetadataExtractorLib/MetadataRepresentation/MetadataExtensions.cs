@@ -13,27 +13,27 @@ namespace SkriptInsight.JavaMetadataExtractorLib.MetadataRepresentation
         {
             return new DataJavaField(field);
         }
-        
+
         public static DataJavaMethodParameter ToDataClass(this MetadataJavaMethodParameter meta)
         {
             return new DataJavaMethodParameter(meta);
         }
-        
+
         public static DataJavaMethod ToDataClass(this MetadataJavaMethod meta)
         {
             return new DataJavaMethod(meta);
         }
-        
+
         public static DataJavaClass ToDataClass(this MetadataJavaClass meta)
         {
             return new DataJavaClass(meta);
         }
-        
+
         public static JarArchive ToDataClass(this MetadataJarArchive meta)
         {
             var archive = new JarArchive("Memory-File.jar", new byte[0]);
             var javaClasses = meta.JavaClasses.Select(c => (c.Key, c.Value.ToDataClass()));
-            
+
             var repository = SyntheticRepository.GetInstance();
             foreach (var (name, clazz) in javaClasses)
             {

@@ -18,7 +18,7 @@ namespace SkriptInsight.JavaMetadataExtractorLib
             var javaField = new MetadataJavaField
             {
                 Name = field.Name,
-                Type = field.Type.GetSignature() 
+                Type = field.Type.GetSignature()
             };
 
             if (field.ConstantValue != null)
@@ -28,7 +28,7 @@ namespace SkriptInsight.JavaMetadataExtractorLib
                 using var dos = new DataOutputStream(ms);
 
                 field.ConstantValue.Dump(dos);
-                
+
                 //Write the original string there to be able to create a new constantpool from metadata
                 if (field.ConstantValue is ConstantString constantString)
                     dos.WriteUTF(constantString.GetBytes(field.ConstantPool));
@@ -38,7 +38,7 @@ namespace SkriptInsight.JavaMetadataExtractorLib
 
             return javaField;
         }
-        
+
         public static MetadataJavaMethodParameter ToMetadata(this JavaMethodParameter parameter)
         {
             return new MetadataJavaMethodParameter
@@ -47,7 +47,7 @@ namespace SkriptInsight.JavaMetadataExtractorLib
                 Type = parameter.Type.GetSignature()
             };
         }
-        
+
         public static MetadataJavaMethod ToMetadata(this JavaMethod method)
         {
             return new MetadataJavaMethod
@@ -55,10 +55,10 @@ namespace SkriptInsight.JavaMetadataExtractorLib
                 AccessFlags = (JavaAccessFlags) method.Flags,
                 ReturnType = method.Type.GetSignature(),
                 Name = method.Name,
-                Parameters = method.Parameters.Select(p => p.ToMetadata()).ToArray() 
+                Parameters = method.Parameters.Select(p => p.ToMetadata()).ToArray()
             };
         }
-        
+
         public static MetadataJavaClass ToMetadata(this JavaClass javaClass)
         {
             return new MetadataJavaClass

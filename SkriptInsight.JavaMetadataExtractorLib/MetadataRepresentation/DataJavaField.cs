@@ -36,7 +36,7 @@ namespace SkriptInsight.JavaMetadataExtractorLib.MetadataRepresentation
         public override Constant ConstantValue => _metaConstantValue;
 
         private ConstantPool _metaConstantPool;
-        
+
         private AccessFlags _metaFlags;
         private string _metaName;
         private Type _metaType;
@@ -46,21 +46,21 @@ namespace SkriptInsight.JavaMetadataExtractorLib.MetadataRepresentation
         private Constant LoadConstantValue(byte[] metaConstantValue)
         {
             if (metaConstantValue == null) return null;
-            
+
             using var memoryInputStream = new MemoryInputStream(metaConstantValue);
             using var ms = new DataInputStream(memoryInputStream);
             var constant = Constant.ReadConstant(ms);
-            
+
             //Read the actual string from the data and create a constant pool for it.
             if (constant is ConstantString constantString)
             {
                 var originalString = ms.ReadUtfAndIntern();
-                
-                _metaConstantPool = new ConstantPool(new Constant[]{new ConstantUtf8(originalString)});
-                
+
+                _metaConstantPool = new ConstantPool(new Constant[] {new ConstantUtf8(originalString)});
+
                 constantString.SetStringIndex(0);
             }
-            
+
             return constant;
         }
 
@@ -70,6 +70,7 @@ namespace SkriptInsight.JavaMetadataExtractorLib.MetadataRepresentation
         }
 
         public event EventHandler<EventArgs> CanLoad;
+
         internal void OnCanLoad()
         {
             CanLoad?.Invoke(this, EventArgs.Empty);

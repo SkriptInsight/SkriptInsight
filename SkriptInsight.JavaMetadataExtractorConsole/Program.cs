@@ -12,13 +12,12 @@ namespace SkriptInsight.JavaMetadataExtractorConsole
     {
         public class Options
         {
-            
             [Option("none", Required = false, HelpText = "Set to disable output.")]
             public bool None { get; set; }
-            
+
             [Option('v', "verbose", Required = false, HelpText = "Set output to verbose messages.")]
             public bool Verbose { get; set; }
-            
+
             [Option('d', "debug", Required = false, HelpText = "Set output to debug messages.")]
             public bool Debug { get; set; }
 
@@ -49,7 +48,7 @@ namespace SkriptInsight.JavaMetadataExtractorConsole
 
         private static void Log(string msg) => Log(LogLevel.Verbose, msg);
         private static void LogVerbose(string msg) => Log(LogLevel.Verbose, msg);
-        
+
         private static void LogDebug(string msg) => Log(LogLevel.Debug, msg);
 
         private static LogLevel currentLevel = LogLevel.Normal;
@@ -76,8 +75,8 @@ namespace SkriptInsight.JavaMetadataExtractorConsole
                         currentLevel = LogLevel.Verbose;
                     else if (o.Debug)
                         currentLevel = LogLevel.Debug;
-                    
-                    
+
+
                     MetadataIo.LogMessage += (_, s) => Log(s.level, s.message);
 
                     if (File.Exists(JreMetadataFile))
@@ -138,7 +137,8 @@ namespace SkriptInsight.JavaMetadataExtractorConsole
                         {
                             if (o.SkipExistingFiles)
                             {
-                                Log($"INFO: Skipping writing file \"{s}\" because it already exists and the \"skip-existing\" option is enabled.");
+                                Log(
+                                    $"INFO: Skipping writing file \"{s}\" because it already exists and the \"skip-existing\" option is enabled.");
                                 continue;
                             }
 

@@ -10,7 +10,8 @@ namespace SkriptInsight.Core.Parser.Expressions
 {
     public class ConditionalExpression : IExpression
     {
-        public ConditionalExpression(SkriptCondition condition, List<ParseMatch> matches, int patternIndex, Range range, ParseContext context)
+        public ConditionalExpression(SkriptCondition condition, List<ParseMatch> matches, int patternIndex, Range range,
+            ParseContext context)
         {
             Condition = condition;
             Matches = matches;
@@ -33,7 +34,7 @@ namespace SkriptInsight.Core.Parser.Expressions
         }
 
         [CanBeNull] public SkriptCondition Condition { get; set; }
-        
+
         public List<ParseMatch> Matches { get; set; }
 
         public int PatternIndex { get; set; }

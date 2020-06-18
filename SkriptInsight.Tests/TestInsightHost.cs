@@ -49,7 +49,7 @@ namespace SkriptInsight.Tests
         public ExtendedHostCapabilities ExtendedCapabilities { get; set; }
 
         public IProgressManager ProgressManager { get; } = null;
-        
+
         public IServerWorkDoneManager WorkDoneManager { get; } = null;
     }
 }

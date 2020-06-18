@@ -34,23 +34,23 @@ namespace SkriptInsight.JavaMetadataExtractorLib.MetadataRepresentation
         }
 
         public override string ClassName { get; set; }
-        
+
         public override string FullClassName { get; set; }
-        
+
         public override string PackageName { get; set; }
 
         public override AccessFlags Flags => _metaFlags;
 
         public override JavaClass[] SuperClasses => _metaSuperClasses;
-        
+
         public override JavaClass[] Interfaces => _metaInterfaces;
-        
+
         public override JavaClass[] AllInterfaces => _metaAllInterfaces;
-        
+
         public override JavaField[] Fields => _metaFields;
-        
+
         public override JavaMethod[] Methods => _metaMethods;
-        
+
         public override string ToString()
         {
             return FullClassName;
@@ -64,23 +64,23 @@ namespace SkriptInsight.JavaMetadataExtractorLib.MetadataRepresentation
             foreach (var f in SuperClasses)
                 if (f is DataJavaClass javaClass)
                     javaClass.OnCanLoad();
-            
+
             foreach (var f in Interfaces)
                 if (f is DataJavaClass javaInterface)
                     javaInterface.OnCanLoad();
-            
+
             foreach (var f in AllInterfaces)
                 if (f is DataJavaClass javaInterface)
                     javaInterface.OnCanLoad();
-            
+
             foreach (var f in Methods)
                 if (f is DataJavaMethod javaMethod)
                     javaMethod.OnCanLoad();
-            
+
             foreach (var f in Fields)
                 if (f is DataJavaField javaField)
                     javaField.OnCanLoad();
-            
+
             CanLoad = null;
         }
     }

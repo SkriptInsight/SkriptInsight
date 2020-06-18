@@ -52,7 +52,7 @@ namespace SkriptInsight.Core.SyntaxInfo
             }
 
             Expressions.ForEach(e => e.LoadPatterns());
-            
+
             Conditions.ForEach(e => e.LoadPatterns());
         }
     }

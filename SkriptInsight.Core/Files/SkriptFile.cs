@@ -179,7 +179,7 @@ namespace SkriptInsight.Core.Files
                     Title = process.ReportProgressTitle
                 }))?.Result;
             }
-            
+
             WorkspaceManager.CurrentHost.LogInfo(
                 $"Starting {processName} on {lineCount} line(s).");
             Parallel.For(startLine, endLine + 1,
@@ -210,7 +210,7 @@ namespace SkriptInsight.Core.Files
                         contexts.Enqueue(context);
                     }
                 });
-            
+
             workObserver?.OnNext(new WorkDoneProgressEnd());
 
             if (GetType() == typeof(SkriptFile))
@@ -243,11 +243,12 @@ namespace SkriptInsight.Core.Files
 
         public void PrepareNodes(int startLine = -1, int endLine = -1, bool forceParse = false)
         {
-            var workObserver = TaskEx.Run(() => WorkspaceManager.CurrentHost.WorkDoneManager?.Create(new WorkDoneProgressBegin
-            {
-                Title = "Parsing code"
-            }))?.Result;
-            
+            var workObserver = TaskEx.Run(() => WorkspaceManager.CurrentHost.WorkDoneManager?.Create(
+                new WorkDoneProgressBegin
+                {
+                    Title = "Parsing code"
+                }))?.Result;
+
             startLine = Math.Max(0, startLine);
             endLine = endLine < 0 ? RawContents.Count : endLine;
             RunProcess(new ProcCreateOrUpdateNodes(), startLine, endLine);
@@ -259,6 +260,7 @@ namespace SkriptInsight.Core.Files
                 RunProcess(ParseProcess, startLine, endLine);
                 RunCodeInspections(startLine, endLine);
             }
+
             workObserver?.OnCompleted();
         }
 
@@ -288,21 +290,23 @@ namespace SkriptInsight.Core.Files
                         .GroupBy(i => i.Count)
                         .Select(c => c.Key)
                 ).ToList();
-            
-            var workObserver = TaskEx.Run(() => WorkspaceManager.CurrentHost.WorkDoneManager?.Create(new WorkDoneProgressBegin
-            {
-                Title = "Structurally parsing code",
-                Message = "Analysing indentations for entire file",
-                Percentage = 0
-            }))?.Result;
+
+            var workObserver = TaskEx.Run(() => WorkspaceManager.CurrentHost.WorkDoneManager?.Create(
+                new WorkDoneProgressBegin
+                {
+                    Title = "Structurally parsing code",
+                    Message = "Analysing indentations for entire file",
+                    Percentage = 0
+                }))?.Result;
 
             for (var index = 0; index < indentLevels.Count; index++)
             {
                 var level = indentLevels[index];
                 RunProcess(new ProcCreateOrUpdateNodeChildren(level));
-                workObserver?.OnNext("Analysing indentations for entire file", (index + 1 / (float)indentLevels.Count)* 100, false);
+                workObserver?.OnNext("Analysing indentations for entire file",
+                    (index + 1 / (float) indentLevels.Count) * 100, false);
             }
-            
+
             workObserver?.OnCompleted();
         }
 

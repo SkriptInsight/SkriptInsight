@@ -28,6 +28,7 @@ namespace SkriptInsight.Tests.Inspections
         }
 
         public bool SupportsRawRequests => false;
+
         public void SendRawNotification(string name)
         {
             throw new System.NotImplementedException();

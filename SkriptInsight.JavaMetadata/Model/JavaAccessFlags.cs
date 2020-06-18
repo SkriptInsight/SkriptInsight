@@ -29,6 +29,5 @@ namespace SkriptInsight.JavaMetadata.Model
         Enum = 0x4000,
         Mandated = unchecked((short) 0x8000),
         Module = unchecked((short) 0x8000),
-
     }
 }

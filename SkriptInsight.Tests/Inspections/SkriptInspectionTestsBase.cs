@@ -13,12 +13,11 @@ namespace SkriptInsight.Tests.Inspections
 {
     public class SkriptInspectionTestsBase
     {
-        
         public string ReadResource(string name)
         {
             var assembly = Assembly.GetExecutingAssembly();
             var resourcePath = assembly.GetManifestResourceNames()
-                    .Single(str => str.EndsWith(name));
+                .Single(str => str.EndsWith(name));
 
             using var stream = assembly.GetManifestResourceStream(resourcePath);
             using var reader = new StreamReader(stream);
@@ -30,7 +29,7 @@ namespace SkriptInsight.Tests.Inspections
             var parser = new AnnotationParser();
             parser.RegisterAnnotation<AssertInspectionAnnotation>();
             SkriptFile file = null;
-            
+
             var host = new InspectionDelegatingHost((uri, list) =>
             {
                 foreach (var diagnostic in list)
@@ -70,11 +69,10 @@ namespace SkriptInsight.Tests.Inspections
             {
                 Text = code
             });
-            
+
             file.PrepareNodes();
-            
+
             parser.UnregisterAnnotation<AssertInspectionAnnotation>();
         }
-        
     }
 }

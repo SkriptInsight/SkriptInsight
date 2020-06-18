@@ -4,7 +4,8 @@ using SkriptInsight.JavaMetadataExtractorLib.MetadataRepresentation;
 
 namespace SkriptInsight.JavaMetadataExtractorLib
 {
-    public class VirtualDataClass : JavaClass {
+    public class VirtualDataClass : JavaClass
+    {
         public override Field[] GetFields()
         {
             return new Field[0];
@@ -33,6 +34,7 @@ namespace SkriptInsight.JavaMetadataExtractorLib
         }
 
         public override string GetClassName() => _baseClass.FullClassName;
+
         public override string GetPackageName()
         {
             return _baseClass.PackageName;

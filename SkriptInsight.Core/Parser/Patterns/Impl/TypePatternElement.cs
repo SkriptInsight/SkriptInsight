@@ -45,7 +45,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
             .Select(RenderConstraint));
 
         public bool NarrowMatch { get; set; } = true;
-        
+
         public override ParseResult Parse(ParseContext contextToUse)
         {
             return NarrowedParse(contextToUse, NarrowMatch);
@@ -102,7 +102,7 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                 {
                     result = skriptTypeDescriptor?.TryParseValue(contextToUse);
                 }
-                
+
 
                 //This type has a flag to attempt to match conditionals. So, let's try do just that.
                 if (result == null &&
@@ -123,15 +123,15 @@ namespace SkriptInsight.Core.Parser.Patterns.Impl
                             {
                                 //Read on real context until our current position on cloned ctx
                                 contextToUse.ReadUntilPosition(clone.CurrentPosition);
-                                result = new ConditionalExpression(condition, clone.Matches, index, clone.EndRangeMeasure(), contextToUse);
+                                result = new ConditionalExpression(condition, clone.Matches, index,
+                                    clone.EndRangeMeasure(), contextToUse);
                             }
 
                             clone.UndoRangeMeasure();
                         }
                     }
                 }
-                
-                
+
 
                 //This type doesn't have a flag to just match literals So, let's try first matching variables.
                 if (result == null && !Constraint.HasFlagFast(SyntaxValueAcceptanceConstraint.LiteralsOnly))

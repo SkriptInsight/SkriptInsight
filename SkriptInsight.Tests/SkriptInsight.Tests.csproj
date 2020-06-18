@@ -15,12 +15,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\SkriptInsight.Core\SkriptInsight.Core.csproj" />
+        <ProjectReference Include="..\SkriptInsight.Core\SkriptInsight.Core.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Resources\cancelnode.sk" />
-      <EmbeddedResource Include="Resources\cancelnode.sk" />
+        <None Remove="Resources\cancelnode.sk" />
+        <EmbeddedResource Include="Resources\cancelnode.sk" />
     </ItemGroup>
 
 </Project>

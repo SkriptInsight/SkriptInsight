@@ -106,14 +106,16 @@ namespace SkriptInsight.Core.Annotations
                 .GetValueOrDefault(alias,
                     new AnnotationDescription(this, typeof(UnknownAnnotation), () => new UnknownAnnotation(alias)));
 
-            var (parameters,  annotation) = (ann.Parameters, ann.Initializer.Invoke());
-            
+            var (parameters, annotation) = (ann.Parameters, ann.Initializer.Invoke());
+
             var args = new Stack<string>(text.Split(" ").Skip(1).Reverse());
             for (var index = 0; index < parameters.Length; index++)
             {
                 var parameter = parameters[index];
                 var context = new ParameterContext(index, index == parameters.Length - 1);
-                var parameterValue = parameter.ParameterReader?.TryParse(args, context) ?? throw new InvalidOperationException($"Unable to find a type parser for parameter {parameter.Property.Name} on {parameter.Property.DeclaringType?.FullName}.");
+                var parameterValue = parameter.ParameterReader?.TryParse(args, context) ??
+                                     throw new InvalidOperationException(
+                                         $"Unable to find a type parser for parameter {parameter.Property.Name} on {parameter.Property.DeclaringType?.FullName}.");
                 try
                 {
                     parameter.Property.SetValue(annotation, parameterValue);
@@ -121,7 +123,8 @@ namespace SkriptInsight.Core.Annotations
                 catch (Exception e)
                 {
                     throw new InvalidOperationException(
-                        $"Unable to set parameter {parameter.Property.Name} on {parameter.Property.DeclaringType?.FullName}.", e);
+                        $"Unable to set parameter {parameter.Property.Name} on {parameter.Property.DeclaringType?.FullName}.",
+                        e);
                 }
             }
 

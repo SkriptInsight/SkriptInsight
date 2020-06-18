@@ -13,10 +13,8 @@ namespace SkriptInsight.Core.Annotations.Impl
             Description = description;
         }
 
-        [Parameter]
-        public string Parameter { get; set; }
+        [Parameter] public string Parameter { get; set; }
 
-        [Parameter]
-        public string Description { get; set; }
+        [Parameter] public string Description { get; set; }
     }
 }

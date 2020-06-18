@@ -7,7 +7,6 @@ namespace SkriptInsight.Tests
 {
     public class UtilTests
     {
-        
         [Fact]
         public void ConstructionUtilsCanConstructObject()
         {
@@ -21,9 +20,8 @@ namespace SkriptInsight.Tests
         public void CanGetDelegateForFunctionSignature()
         {
             var del = SignatureParserHelper.GetTryParseDelegateForType(typeof(FunctionSignature));
-            
+
             Assert.NotNull(del);
         }
-        
     }
 }

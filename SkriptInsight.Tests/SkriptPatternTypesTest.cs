@@ -244,7 +244,8 @@ namespace SkriptInsight.Tests
 
                 Assert.True(result.IsSuccess, "result.IsSuccess");
                 Assert.Single(result.Matches);
-                Assert.True(result.Context.HasFinishedLine, $"result.Context.HasFinishedLine =>{result.Context.PeekUntilEnd()}");
+                Assert.True(result.Context.HasFinishedLine,
+                    $"result.Context.HasFinishedLine =>{result.Context.PeekUntilEnd()}");
 
                 var match = result.Matches.First();
                 Assert.IsType<ExpressionParseMatch>(match);
@@ -283,7 +284,7 @@ namespace SkriptInsight.Tests
                     }
                 }
             };
-            
+
             Assert.True(pattern.Parse(code).IsSuccess, "pattern.Parse(code).IsSuccess");
         }
 

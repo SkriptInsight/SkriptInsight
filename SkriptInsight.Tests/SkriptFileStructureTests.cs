@@ -27,7 +27,7 @@ namespace SkriptInsight.Tests
 
             WorkspaceManager.Instance.HandleOpenedFile(file);
             file.PrepareNodes();
-            
+
             file.HandleChange(new TextDocumentContentChangeEvent
             {
                 Range = RangeExtensions.From(0, 7, 7),
@@ -66,7 +66,7 @@ namespace SkriptInsight.Tests
 
             WorkspaceManager.Instance.HandleOpenedFile(file);
             file.PrepareNodes();
-            
+
             file.HandleChange(new TextDocumentContentChangeEvent
             {
                 Range = RangeExtensions.From(2, 31, 31),
@@ -95,7 +95,8 @@ namespace SkriptInsight.Tests
                 Assert.Equal(contents[i], file.Nodes[i].ToString());
 
 
-            var results = new[] {"org.bukkit.event.player.AsyncPlayerChatEvent", "", "", "ch.njol.skript.effects.EffMessage"};
+            var results = new[]
+                {"org.bukkit.event.player.AsyncPlayerChatEvent", "", "", "ch.njol.skript.effects.EffMessage"};
 
             for (var i = 0; i < results.Length; i++)
                 if (!string.IsNullOrEmpty(results[i]))

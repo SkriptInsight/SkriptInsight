@@ -7,9 +7,10 @@ namespace SkriptInsight.JavaMetadataExtractorLib.Serialization
     public static class DataInputExtensions
     {
         public static string ReadUtfAndIntern(this DataInputStream stream)
-        { 
+        {
             return string.Intern(stream.ReadUTF());
         }
+
         public static MetadataJarArchive ReadJarArchive(this DataInputStream stream)
         {
             var archive = new MetadataJarArchive();
@@ -63,7 +64,8 @@ namespace SkriptInsight.JavaMetadataExtractorLib.Serialization
         {
             var field = new MetadataJavaField
             {
-                Name = stream.ReadUtfAndIntern(), Type = stream.ReadUtfAndIntern(), AccessFlags = stream.ReadAccessFlagsParameter()
+                Name = stream.ReadUtfAndIntern(), Type = stream.ReadUtfAndIntern(),
+                AccessFlags = stream.ReadAccessFlagsParameter()
             };
 
             var hasConstantValue = stream.ReadBoolean();
@@ -88,12 +90,12 @@ namespace SkriptInsight.JavaMetadataExtractorLib.Serialization
         private static T[] ReadArray<T>(this DataInputStream stream, Func<T> reader)
         {
             var length = stream.ReadInt();
-            
-            
+
+
             var returningArray = new T[length];
             for (var i = 0; i < length; i++)
             {
-                    returningArray[i] = reader.Invoke();
+                returningArray[i] = reader.Invoke();
             }
 
             return returningArray;

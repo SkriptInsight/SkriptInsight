@@ -9,21 +9,20 @@ namespace SkriptInsight.JavaReader
     {
         public JavaField()
         {
-            
         }
-        
+
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private AccessFlags? _flags;
-        
+
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected Field InternalField { get; }
 
         public virtual ConstantPool ConstantPool => InternalField.GetConstantPool();
-        
+
         public virtual AccessFlags Flags => _flags ??= (AccessFlags) InternalField.GetAccessFlags();
 
         public virtual string Name => InternalField.GetName();
-        
+
         public virtual Type Type => InternalField.GetType();
 
         public virtual Constant ConstantValue =>

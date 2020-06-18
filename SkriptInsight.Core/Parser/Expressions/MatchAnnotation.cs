@@ -41,7 +41,7 @@ namespace SkriptInsight.Core.Parser.Expressions
         {
             return ToDiagnostic(expr?.Range);
         }
-        
+
         public Diagnostic ToDiagnostic([CanBeNull] Range range)
         {
             if (range != null && ShouldBeDiagnostic)

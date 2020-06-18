@@ -11,12 +11,12 @@ namespace SkriptInsight.JavaMetadataExtractorLib.Serialization
         {
             Stream = stream;
         }
-        
+
         public override void Close()
         {
             Stream.Dispose();
         }
-        
+
         public override int Available()
         {
             return (int) (Stream.Length - Stream.Position);

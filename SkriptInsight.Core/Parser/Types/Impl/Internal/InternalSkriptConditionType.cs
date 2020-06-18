@@ -7,7 +7,7 @@ namespace SkriptInsight.Core.Parser.Types.Impl.Internal
     public class InternalSkriptConditionType : ISkriptType
     {
         public static InternalSkriptConditionType Instance { get; } = new InternalSkriptConditionType();
-        
+
         public IExpression TryParseValue(ParseContext ctx)
         {
             throw new System.NotImplementedException();

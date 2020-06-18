@@ -27,7 +27,7 @@ namespace SkriptInsight.Tests
         {
             Debugger.Break();
             var code = "{_test}.hello().world().bruh()";
-            
+
             var file = new SkriptFile(new Uri("memory://file"))
             {
                 RawContents = ("on chat:\n" +
@@ -40,7 +40,7 @@ namespace SkriptInsight.Tests
             Debugger.Break();
             _testOutputHelper.WriteLine(node.ToJson());
         }
-        
+
         [Fact]
         public void RandomWeirdPatternMatchesCorrectly()
         {
@@ -70,7 +70,7 @@ namespace SkriptInsight.Tests
             WorkspaceManager.Instance.HandleOpenedFile(file);
             file.PrepareNodes();
             var effMessageNode = file.Nodes[1];
-            
+
             Assert.NotNull(effMessageNode);
             Assert.NotNull(effMessageNode.MatchedSyntax);
             Assert.True(effMessageNode.MatchedSyntax.Result.IsSuccess);

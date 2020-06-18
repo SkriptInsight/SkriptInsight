@@ -16,15 +16,16 @@ namespace SkriptInsight.JavaMetadataExtractorLib
                 //Found jdk directory. Browse to the jre that's built in.
                 javaHome = Path.Combine(javaHome, "jre");
             }
+
             if (!Directory.Exists(javaHome)) return false;
 
             var filePath = Path.Combine(javaHome, "lib", "rt.jar");
             if (!File.Exists(filePath)) return false;
-            
+
             archive = ReadFile(filePath);
             return true;
         }
-        
+
         public static JarArchive ReadFile(string path)
         {
             return new JarArchive(path);

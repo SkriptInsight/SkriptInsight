@@ -55,7 +55,7 @@ namespace SkriptInsight.Tests
         public void ParseContextCanFindCharOutsideOfStuff(string str, char ch, int expectedPos)
         {
             var ctx = ParseContext.FromCode($"{str}");
-            
+
             Assert.Equal(expectedPos, ctx.FindNextCharNotInsideNormalBracket(ch));
         }
 

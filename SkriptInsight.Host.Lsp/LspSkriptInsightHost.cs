@@ -22,7 +22,7 @@ namespace SkriptInsight.Host.Lsp
         }
 
         public ILanguageServer Server { get; set; }
-        
+
         public void LogInfo(string message)
         {
             Server.Window.LogInfo(message);
@@ -62,9 +62,9 @@ namespace SkriptInsight.Host.Lsp
         public bool SupportsExtendedCapabilities => ExtendedCapabilities != null;
 
         public ExtendedHostCapabilities ExtendedCapabilities { get; set; }
-        
+
         public IProgressManager ProgressManager => Server.Client.ProgressManager;
-        
+
         public IServerWorkDoneManager WorkDoneManager => Server.WorkDoneManager;
     }
 }

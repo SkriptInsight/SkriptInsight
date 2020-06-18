@@ -11,7 +11,7 @@ namespace SkriptInsight.JavaMetadataExtractorLib.Serialization
         {
             Stream = stream;
         }
-        
+
         public override void Close()
         {
             Stream.Dispose();
@@ -19,7 +19,7 @@ namespace SkriptInsight.JavaMetadataExtractorLib.Serialization
 
         public override void Write(int b)
         {
-            Stream.WriteByte((byte) b);            
+            Stream.WriteByte((byte) b);
         }
     }
 }

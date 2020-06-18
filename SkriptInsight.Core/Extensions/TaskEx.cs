@@ -14,6 +14,5 @@ namespace SkriptInsight.Core.Extensions
             var resultTask = Task.Run(() => task);
             return resultTask.IsCanceled ? null : resultTask;
         }
-
     }
 }

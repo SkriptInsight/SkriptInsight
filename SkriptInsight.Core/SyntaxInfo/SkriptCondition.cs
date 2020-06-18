@@ -8,23 +8,23 @@ namespace SkriptInsight.Core.SyntaxInfo
         public static readonly SkriptCondition TrueLiteral = new SkriptCondition
         {
             ClassName = "Boolean",
-            Patterns = new []
+            Patterns = new[]
             {
                 "(true|yes|on)"
             },
             AddonName = "Skript"
         };
-        
+
         public static readonly SkriptCondition FalseLiteral = new SkriptCondition
         {
             ClassName = "Boolean",
-            Patterns = new []
+            Patterns = new[]
             {
                 "(false|no|off)"
             },
             AddonName = "Skript"
         };
-        
+
         public string ClassName { get; set; }
     }
 }

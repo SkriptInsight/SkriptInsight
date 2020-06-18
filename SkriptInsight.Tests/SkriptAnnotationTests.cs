@@ -16,8 +16,7 @@ namespace SkriptInsight.Tests
         [AnnotationAlias("onestring", "1str")]
         class OneStringAnnotation : Annotation
         {
-            [Parameter]
-            public string Value { get; set; }
+            [Parameter] public string Value { get; set; }
         }
 
         [Fact]

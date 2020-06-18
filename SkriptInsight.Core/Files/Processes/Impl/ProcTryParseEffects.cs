@@ -9,7 +9,6 @@ using SkriptInsight.Core.SyntaxInfo;
 
 namespace SkriptInsight.Core.Files.Processes.Impl
 {
-    
     [Description("Grammatically parsing code")]
     public class ProcTryParseEffects : FileProcess
     {
@@ -19,11 +18,11 @@ namespace SkriptInsight.Core.Files.Processes.Impl
         public override void DoWork(SkriptFile file, int lineNumber, string rawContent, FileParseContext context)
         {
             var node = file.Nodes[lineNumber];
-            
+
             //Only attempt to parse already matched syntax if the user is changing the contents of the file
             if (!context.File.IsDoingNodesChange && node.MatchedSyntax != null)
                 return;
-            
+
             var workDone = false;
             foreach (var elements in WorkspaceManager.Instance.Current.AddonDocumentations.Select(addon =>
                 node.IsSectionNode
@@ -35,7 +34,7 @@ namespace SkriptInsight.Core.Files.Processes.Impl
                     for (var index = 0; index < effect.PatternNodes.Length; index++)
                     {
                         var effectPattern = effect.PatternNodes[index];
-                        
+
                         context.Matches = new List<ParseMatch>();
                         context.CurrentLine = lineNumber;
                         var result = effectPattern.Parse(context);

@@ -10,10 +10,9 @@ namespace SkriptInsight.Host.Lsp
     public class ViewportChangedParams
     {
         public List<Range> Ranges { get; set; }
-        
-        [JsonIgnore]
-        public DocumentUri Uri { get; set; }
-        
+
+        [JsonIgnore] public DocumentUri Uri { get; set; }
+
         [JsonProperty("uri")]
         public string RawUri
         {

@@ -8,9 +8,8 @@ namespace SkriptInsight.JavaReader
     {
         public JavaMethodParameter()
         {
-            
         }
-        
+
         protected JavaMethodParameter(string name, Type type)
         {
             Name = name;
@@ -25,7 +24,7 @@ namespace SkriptInsight.JavaReader
         public virtual string Name { get; set; }
 
         public virtual Type Type { get; set; }
-        
+
         public static JavaMethodParameter[] FromMethod(Method method)
         {
             var parameters = new List<JavaMethodParameter>();
@@ -43,7 +42,7 @@ namespace SkriptInsight.JavaReader
                 }
 
                 parameters.Add(new JavaMethodParameter(argName, argumentType));
-                
+
                 variableNameIndex += argumentType.GetSize();
             }
 

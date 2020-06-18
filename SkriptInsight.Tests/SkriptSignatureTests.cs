@@ -10,7 +10,7 @@ namespace SkriptInsight.Tests
         {
             WorkspaceManager.CurrentHost = new TestInsightHost();
         }
-        
+
         [Theory]
         [InlineData("if true:", true)]
         [InlineData("if false:", true)]

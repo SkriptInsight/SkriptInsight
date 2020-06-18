@@ -7,7 +7,6 @@ namespace SkriptInsight.Tests.Inspections
     [AnnotationAlias("assertinspection")]
     public class AssertInspectionAnnotation : Annotation
     {
-        [Parameter]
-        public string InspectionType { get; set; }
+        [Parameter] public string InspectionType { get; set; }
     }
 }

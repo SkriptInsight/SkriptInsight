@@ -33,7 +33,7 @@ namespace SkriptInsight.JavaMetadataExtractorLib
 
         public static MetadataJarArchive ReadArchiveMetadata(byte[] bytes) =>
             ReadArchiveMetadataFromStream(new MemoryStream(bytes));
-        
+
         public static MetadataJarArchive ReadArchiveMetadataFromStream(Stream stream)
         {
             using var fileStream = stream;

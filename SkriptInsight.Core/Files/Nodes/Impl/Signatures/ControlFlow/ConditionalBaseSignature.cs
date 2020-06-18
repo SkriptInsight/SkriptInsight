@@ -43,7 +43,7 @@ namespace SkriptInsight.Core.Files.Nodes.Impl.Signatures.ControlFlow
                 NarrowMatch = false,
                 Constraint = SyntaxValueAcceptanceConstraint.AllowConditionalExpressions
             });
-            
+
             AddSectionEnding();
         }
 
@@ -120,7 +120,7 @@ namespace SkriptInsight.Core.Files.Nodes.Impl.Signatures.ControlFlow
             {
                 ctx.ReadUntilPosition(parseContext.CurrentPosition);
             }
-            
+
             return expression;
         }
 

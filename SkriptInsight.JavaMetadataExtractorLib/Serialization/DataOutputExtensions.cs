@@ -17,6 +17,7 @@ namespace SkriptInsight.JavaMetadataExtractorLib.Serialization
                 LogDebug($"Writing the class {key} to file.");
                 stream.WriteJarArchiveClass(key, value);
             }
+
             LogVerbose($"Finished writing {archive.JavaClasses.Count} metadata classes to file.");
         }
 

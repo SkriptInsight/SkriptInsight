@@ -75,17 +75,17 @@ namespace SkriptInsight.Core
         /// </summary>
         [CanBeNull]
         ExtendedHostCapabilities ExtendedCapabilities { get; set; }
-        
+
         /// <summary>
         /// The manager for progress
         /// </summary>
         [CanBeNull]
         IProgressManager ProgressManager { get; }
-        
+
         /// <summary>
         /// The manager for "work done" notifications
         /// </summary>
         [CanBeNull]
-        IServerWorkDoneManager WorkDoneManager { get; } 
+        IServerWorkDoneManager WorkDoneManager { get; }
     }
 }
